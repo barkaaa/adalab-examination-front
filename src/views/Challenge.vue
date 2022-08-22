@@ -10,7 +10,7 @@
       <div class="footer"></div>
     </aside>
     <main>
-      111
+      <router-view/>
     </main>
   </div>
 
@@ -50,7 +50,7 @@ export default {
   }
 
   main {
-    background-color: #000;
+
   }
 }
 
