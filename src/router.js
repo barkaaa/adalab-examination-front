@@ -2,6 +2,7 @@ import Challenge from "@/views/Challenge";
 import Login from "@/views/Login";
 import CommonChallengem from "@/views/CommonChallenge";
 import MarkdownChallenge from "@/views/MarkdownChallenge";
+import Ranking from "@/views/Ranking"
 import {createRouter, createWebHashHistory} from "vue-router"
 
 const routes = [
@@ -9,8 +10,11 @@ const routes = [
         path: "/login",
         name: "login",
         component: Login
-    },
-    {
+    },{
+        path: "/ranking",
+        name: "Ranking",
+         component: Ranking
+    },{
         path: "/challenge",
         name: "Challenge",
         component: Challenge,
