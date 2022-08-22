@@ -1,4 +1,4 @@
-import Home from "@/views/Home";
+import Challenge from "@/views/Challenge";
 import Login from "@/views/Login";
 import {createRouter, createWebHashHistory} from "vue-router"
 
@@ -8,9 +8,9 @@ const routes = [
         name: "login",
         component: Login
     }, {
-        path: "/home",
-        name: "home",
-        component: Home
+        path: "/challenge",
+        name: "Challenge",
+        component: Challenge
     },
 ]
 const router = createRouter({
