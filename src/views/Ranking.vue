@@ -1,7 +1,7 @@
 <template>
 <h1>1:</h1>
-<RankingPlugin>123</RankingPlugin>
-<p v-for="(item,i) in list">{{i}},{{item}}</p>
+<RankingPlugin v-bind:users="users">123</RankingPlugin>
+<!-- <p v-for="(item,i) in list">{{i}},{{item}}</p> -->
 
 </template>
 
@@ -12,7 +12,7 @@ export default {
   name: 'Ranking',
   data(){
     return{
-        list:[1,2,3,4,5,6],
+        users:[1,2,3,4,5,6],
     }
    },
 
