@@ -22,11 +22,10 @@
       </a-menu>
     </a-layout-sider>
     <a-layout>
-      <a-layout-header style="padding-left: 20px"> Header </a-layout-header>
       <a-layout>
-        <a-layout-content>Content</a-layout-content>
+          <a-layout-content>Content</a-layout-content>
+        </a-layout>
       </a-layout>
-    </a-layout>
   </a-layout>
 </template>
 <script>
@@ -81,11 +80,6 @@ export default defineComponent({
 }
 .layout-demo :deep(.arco-layout-sider-light) .logo {
   background: var(--color-fill-2);
-}
-.layout-demo :deep(.arco-layout-header) {
-  height: 64px;
-  line-height: 64px;
-  background: var(--color-bg-3);
 }
 .layout-demo :deep(.arco-layout-content) {
   color: var(--color-text-2);

@@ -22,7 +22,6 @@
       </a-menu>
     </a-layout-sider>
     <a-layout>
-      <a-layout-header style="padding-left: 20px; position: fixed;"> 关卡设置 </a-layout-header>
       <a-layout>
         <a-layout-content>
           <div>
@@ -49,29 +48,27 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-::v-deep .arco-layout-sider-children,
-.arco-menu-vertical .arco-menu-group-title:not(.arco-menu-has-icon),
-.arco-menu-vertical .arco-menu-pop-header:not(.arco-menu-has-icon),
-.arco-menu-vertical .arco-menu-inline-header:not(.arco-menu-has-icon) {
+::v-deep .arco-layout-sider-children {
   background-color: gainsboro;
 }
-::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon) {
+::v-deep .arco-menu-item:not(.arco-menu-has-icon) {
   background-color: gainsboro;
 }
-::v-deep .arco-menu-vertical .arco-menu-inner {
+::v-deep .arco-menu-inner {
   background-color: gainsboro;
 }
 ::v-deep .arco-menu-dark .arco-menu-item.arco-menu-selected,
 .arco-menu-dark .arco-menu-item.arco-menu-selected .arco-icon {
   color: green !important;
   font-size: 28px !important;
+  background-color: rgb(227, 227, 227);
 }
 ::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon) {
   font-size: 20px;
   color: black;
 }
 .layout-demo {
-  height: 1024px;
+  height: 50vw;
   background: var(--color-fill-2);
   border: 1px solid var(--color-border);
 }
@@ -82,11 +79,6 @@ export default defineComponent({
 }
 .layout-demo :deep(.arco-layout-sider-light) .logo {
   background: var(--color-fill-2);
-}
-.layout-demo :deep(.arco-layout-header) {
-  height: 64px;
-  line-height: 64px;
-  background: var(--color-bg-3);
 }
 .layout-demo :deep(.arco-layout-content) {
   color: var(--color-text-2);
