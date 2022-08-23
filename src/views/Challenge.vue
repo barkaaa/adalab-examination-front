@@ -3,6 +3,7 @@
     <aside>
       <div class="timer">
         <timer/>
+        <RankingPlugin v-bind:users="users"></RankingPlugin> 
       </div>
       <div class="leaderboard">
         111
@@ -18,12 +19,40 @@
 
 <script>
 import Timer from "@/components/Timer";
+import RankingPlugin from "@/components/RankingPlugin.vue";
+
 
 export default {
   name: "Challenge",
   components: {
-    Timer
-  }
+    Timer,
+    RankingPlugin
+}, data() {
+    return {
+      users: [
+        { name: "王狗剩", clear: 7 },
+        { name: "李根宝", clear: 9 },
+        { name: "David", clear: 1 },
+        { name: "Dick", clear: 12 },
+        { name: "Link", clear: 1 },
+        { name: "王狗剩", clear: 7 },
+        { name: "李根宝", clear: 9 },
+        { name: "David", clear: 1 },
+        { name: "Dick", clear: 12 },
+        { name: "Link", clear: 1 },
+        { name: "王狗剩", clear: 7 },
+        { name: "李根宝", clear: 9 },
+        { name: "David", clear: 1 },
+        { name: "Dick", clear: 12 },
+        { name: "Link", clear: 1 },
+        { name: "王狗剩", clear: 7 },
+        { name: "李根宝", clear: 9 },
+        { name: "David", clear: 1 },
+        { name: "Dick", clear: 12 },
+        { name: "Link", clear: 1 },
+      ],
+    };
+  },
 }
 </script>
 
