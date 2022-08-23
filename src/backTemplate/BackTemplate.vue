@@ -23,14 +23,13 @@
     </a-layout-sider>
     <a-layout>
       <a-layout>
-          <a-layout-content>Content</a-layout-content>
-        </a-layout>
+        <a-layout-content>Content</a-layout-content>
       </a-layout>
+    </a-layout>
   </a-layout>
 </template>
 <script>
 import { defineComponent } from "vue";
-import { Message } from "@arco-design/web-vue";
 import { IconBarChart, IconPen, IconUser } from "@arco-design/web-vue/es/icon";
 
 export default defineComponent({
@@ -40,36 +39,32 @@ export default defineComponent({
     IconUser,
   },
   methods: {
-    onClickMenuItem(key) {
-      Message.info({ content: `You select ${key}`, showIcon: true });
-    },
+    onClickMenuItem() {},
   },
 });
 </script>
 <style scoped>
-::v-deep .arco-layout-sider-children,
-.arco-menu-vertical .arco-menu-group-title:not(.arco-menu-has-icon),
-.arco-menu-vertical .arco-menu-pop-header:not(.arco-menu-has-icon),
-.arco-menu-vertical .arco-menu-inline-header:not(.arco-menu-has-icon){
+::v-deep .arco-layout-sider-children {
   background-color: gainsboro;
 }
-::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon){
+::v-deep .arco-menu-item:not(.arco-menu-has-icon) {
   background-color: gainsboro;
 }
-::v-deep .arco-menu-vertical .arco-menu-inner{
+::v-deep .arco-menu-inner {
   background-color: gainsboro;
 }
 ::v-deep .arco-menu-dark .arco-menu-item.arco-menu-selected,
 .arco-menu-dark .arco-menu-item.arco-menu-selected .arco-icon {
   color: green !important;
   font-size: 28px !important;
+  background-color: rgb(227, 227, 227);
 }
-::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon){
-    font-size: 20px;
-    color: black;
+::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon) {
+  font-size: 20px;
+  color: black;
 }
 .layout-demo {
-  height: 1024px;
+  height: 50vw;
   background: var(--color-fill-2);
   border: 1px solid var(--color-border);
 }
