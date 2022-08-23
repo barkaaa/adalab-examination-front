@@ -3,7 +3,7 @@ import Login from "@/views/Login";
 import CommonChallengem from "@/views/CommonChallenge";
 import MarkdownChallenge from "@/views/MarkdownChallenge";
 import Ranking from "@/views/Ranking";
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import MissionSet from "@/hubaba/MissionSet";
 import UserManagement from "@/hubaba/UserManagement";
 import Test1 from "@/hubaba/TestOne";
@@ -56,6 +56,6 @@ const routes = [
 ];
 const router = createRouter({
   routes,
-  history: createWebHashHistory(),
+  history: createWebHistory(),
 });
 export default router;
