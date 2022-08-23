@@ -63,7 +63,7 @@ export default defineComponent({
   color: green !important;
   font-size: 28px !important;
 }
-::v-deep .arco-menu-vertical .arco-menu-item[data-v-68180409]:not(.arco-menu-has-icon){
+::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon){
     font-size: 20px;
     color: black;
 }
