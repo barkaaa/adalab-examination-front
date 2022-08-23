@@ -64,7 +64,7 @@ export default defineComponent({
   color: black;
 }
 .layout-demo {
-  height: 50vw;
+  height: 100vh;
   background: var(--color-fill-2);
   border: 1px solid var(--color-border);
 }

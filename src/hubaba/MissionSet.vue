@@ -3,7 +3,7 @@
     <a-layout-sider theme="dark" breakpoint="lg" :width="300">
       <div class="logo" />
       <a-menu
-        :default-selected-keys="['0_1']"
+        :default-selected-keys="['mission']"
         :style="{ width: '100%' }"
         @menu-item-click="onClickMenuItem"
       >
@@ -11,11 +11,11 @@
           <IconBarChart></IconBarChart>
           排行榜单
         </a-menu-item>
-        <a-menu-item key="0_2">
+        <a-menu-item key="userManagement">
           <IconUser></IconUser>
           用户管理
         </a-menu-item>
-        <a-menu-item key="0_3">
+        <a-menu-item key="mission">
           <IconPen></IconPen>
           关卡设置
         </a-menu-item>
@@ -43,7 +43,9 @@ export default defineComponent({
     IconUser,
   },
   methods: {
-    onClickMenuItem() {},
+    onClickMenuItem(key) {
+      this.$router.push(key);
+    },
   },
 });
 </script>
@@ -68,7 +70,7 @@ export default defineComponent({
   color: black;
 }
 .layout-demo {
-  height: 50vw;
+  height: 100vh;
   background: var(--color-fill-2);
   border: 1px solid var(--color-border);
 }
