@@ -4,7 +4,8 @@ import CommonChallengem from "@/views/CommonChallenge";
 import MarkdownChallenge from "@/views/MarkdownChallenge";
 import Ranking from "@/views/Ranking"
 import {createRouter, createWebHashHistory} from "vue-router"
-import Template from "@/backTemplate/Template"
+import BackTemplate from "@/backTemplate/BackTemplate"
+import MissionSet from "@/hubaba/MissionSet"
 
 
 const routes = [
@@ -34,8 +35,12 @@ const routes = [
     },{
         path: "/template",
         name: "template",
-        component: Template,
-    },
+        component: BackTemplate,
+    },{
+        path: "/mission",
+        name: "mission",
+        component: MissionSet,
+    }
 ]
 const router = createRouter({
     routes, history: createWebHashHistory(),
