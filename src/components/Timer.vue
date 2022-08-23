@@ -58,14 +58,16 @@ export default {
     .username {
       font-size: 18px;
     }
-    .avatar{
+
+    .avatar {
       width: 32px;
     }
   }
 
   .bottom {
-   display: flex;
+    display: flex;
     justify-content: center;
+
     .countdown {
       font-size: 36px;
       margin-bottom: 6px;
