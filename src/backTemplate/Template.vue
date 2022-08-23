@@ -1,0 +1,105 @@
+<template>
+  <a-layout class="layout-demo">
+    <a-layout-sider theme="dark" breakpoint="lg" :width="300">
+      <div class="logo" />
+      <a-menu
+        :default-selected-keys="['0_1']"
+        :style="{ width: '100%' }"
+        @menu-item-click="onClickMenuItem"
+      >
+        <a-menu-item key="0_1">
+          <IconBarChart></IconBarChart>
+          排行榜单
+        </a-menu-item>
+        <a-menu-item key="0_2">
+          <IconUser></IconUser>
+          用户管理
+        </a-menu-item>
+        <a-menu-item key="0_3">
+          <IconPen></IconPen>
+          关卡设置
+        </a-menu-item>
+      </a-menu>
+    </a-layout-sider>
+    <a-layout>
+      <a-layout-header style="padding-left: 20px"> Header </a-layout-header>
+      <a-layout>
+        <a-layout-content>Content</a-layout-content>
+      </a-layout>
+    </a-layout>
+  </a-layout>
+</template>
+<script>
+import { defineComponent } from "vue";
+import { Message } from "@arco-design/web-vue";
+import { IconBarChart, IconPen, IconUser } from "@arco-design/web-vue/es/icon";
+
+export default defineComponent({
+  components: {
+    IconBarChart,
+    IconPen,
+    IconUser,
+  },
+  methods: {
+    onClickMenuItem(key) {
+      Message.info({ content: `You select ${key}`, showIcon: true });
+    },
+  },
+});
+</script>
+<style scoped>
+::v-deep .arco-layout-sider-children,
+.arco-menu-vertical .arco-menu-group-title:not(.arco-menu-has-icon),
+.arco-menu-vertical .arco-menu-pop-header:not(.arco-menu-has-icon),
+.arco-menu-vertical .arco-menu-inline-header:not(.arco-menu-has-icon){
+  background-color: gainsboro;
+}
+::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon){
+  background-color: gainsboro;
+}
+::v-deep .arco-menu-vertical .arco-menu-inner{
+  background-color: gainsboro;
+}
+::v-deep .arco-menu-dark .arco-menu-item.arco-menu-selected,
+.arco-menu-dark .arco-menu-item.arco-menu-selected .arco-icon {
+  color: green !important;
+  font-size: 28px !important;
+}
+::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon){
+    font-size: 20px;
+    color: black;
+}
+.layout-demo {
+  height: 1024px;
+  background: var(--color-fill-2);
+  border: 1px solid var(--color-border);
+}
+.layout-demo :deep(.arco-layout-sider) .logo {
+  height: 32px;
+  margin: 12px 8px;
+  background: rgba(129, 127, 127, 0.2);
+}
+.layout-demo :deep(.arco-layout-sider-light) .logo {
+  background: var(--color-fill-2);
+}
+.layout-demo :deep(.arco-layout-header) {
+  height: 64px;
+  line-height: 64px;
+  background: var(--color-bg-3);
+}
+.layout-demo :deep(.arco-layout-content) {
+  color: var(--color-text-2);
+  font-weight: 400;
+  font-size: 14px;
+  background: var(--color-bg-3);
+}
+.layout-demo :deep(.arco-layout-content) {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--color-balck);
+  font-size: 16px;
+  font-stretch: condensed;
+  text-align: center;
+}
+</style>
