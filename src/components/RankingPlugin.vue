@@ -20,15 +20,14 @@
 <div class="container">
   <div class="skills php">60%</div>
 </div>
+<p v-for="(item,i) in users">{{i}}huihuihui{{item}}</p>
 </template>
 
 <script>
 export default {
   name: 'RankingPlugin',
   props: {
-    img: String,
-    username:String,
-    rank:String
+    users:Array,
   }
 }
 </script>
