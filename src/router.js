@@ -5,6 +5,11 @@ import MarkdownChallenge from "@/views/MarkdownChallenge";
 import {createRouter, createWebHashHistory} from "vue-router"
 
 const routes = [
+
+    {
+        path: "/",
+        redirect: "/login"
+    },
     {
         path: "/login",
         name: "login",
@@ -14,7 +19,7 @@ const routes = [
         path: "/challenge",
         name: "Challenge",
         component: Challenge,
-        // redirect:"/challenge/common",
+        redirect:"/challenge/common",
         children: [
             {
                 path: 'common',

@@ -30,14 +30,14 @@ export default {
 <style scoped lang="less">
 .main-box {
   display: flex;
-  height: 1024px;
+  height: 800px;
   background-color: #eee;
 
   aside {
     .timer {
-      margin: 67px 31px 0 31px;
+      margin: 60px 30px 0 30px;
       border-bottom: 2px solid #000;
-      padding: 33px;
+      padding-bottom: 33px;
     }
 
     .leaderboard {
