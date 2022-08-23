@@ -8,9 +8,9 @@
 export default {
   name: "Login",
   created() {
-    this.axios.get("/login").then((data) => {
-      console.log(data)
-    })
+    // this.axios.get("/login").then((data) => {
+    //   console.log(data)
+    // })
   }
 }
 </script>

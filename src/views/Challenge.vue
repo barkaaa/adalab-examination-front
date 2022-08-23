@@ -57,17 +57,18 @@ export default {
 </script>
 
 <style scoped lang="less">
+
 .main-box {
   display: flex;
-  height: 800px;
-
-
+  width: 100%;
   aside {
+    width: 20%;
+    background-color: #eee;
+
     .timer {
-      margin: 60px 30px 0 30px;
-      border-bottom: 2px solid #000;
-      padding-bottom: 33px;
-      background-color: #eee;
+      margin: 16% 7% 0 7%;
+      border-bottom: 1px solid #000;
+      padding-bottom: 12%;
     }
 
     .leaderboard {
@@ -80,7 +81,7 @@ export default {
   }
 
   main {
-
+    width: 80%;
   }
 }
 
