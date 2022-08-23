@@ -25,6 +25,7 @@
       <a-layout>
         <a-layout-content>
           <div>
+            <!-- 上传文件 -->
             <a-upload action="/">
               <template #upload-button>
                 <div
@@ -46,6 +47,11 @@
                 </div>
               </template>
             </a-upload>
+            <a-space class="wrapper" direction="vertical">
+              <a-button type="primary" long @click="addOneQuestion"
+                >手动创建试卷</a-button
+              >
+            </a-space>
           </div>
         </a-layout-content>
       </a-layout>
@@ -53,10 +59,16 @@
   </a-layout>
 </template>
 <script>
+import { ref } from "vue";
 import { defineComponent } from "vue";
-import { IconBarChart, IconPen, IconUser } from "@arco-design/web-vue/es/icon";
+import { IconBarChart, IconPen, IconUser,} from "@arco-design/web-vue/es/icon";
 
 export default defineComponent({
+  data() {
+    return {
+      newMission: "",
+    };
+  },
   components: {
     IconBarChart,
     IconPen,
@@ -66,10 +78,46 @@ export default defineComponent({
     onClickMenuItem(key) {
       this.$router.push(key);
     },
+    addOneQuestion() {
+      this.$router.push("test1");
+    },
+  },
+  setup() {
+    const visible = ref(false);
+
+    const handleClick = () => {
+      visible.value = true;
+    };
+    const handleBeforeOk = (done) => {
+      window.setTimeout(() => {
+        done();
+        // prevent close
+        // done(false)
+      }, 3000);
+    };
+    const handleCancel = () => {
+      visible.value = false;
+    };
+
+    return {
+      visible,
+      handleClick,
+      handleBeforeOk,
+      handleCancel,
+    };
   },
 });
 </script>
+
+
+
 <style scoped>
+.wrapper {
+  width: 384px;
+  padding: 30px;
+  border-radius: 4px;
+}
+
 ::v-deep .arco-layout-sider-children {
   background-color: gainsboro;
 }

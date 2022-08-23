@@ -6,6 +6,7 @@ import Ranking from "@/views/Ranking";
 import { createRouter, createWebHashHistory } from "vue-router";
 import MissionSet from "@/hubaba/MissionSet";
 import UserManagement from "@/hubaba/UserManagement";
+import Test1 from "@/hubaba/TestOne";
 
 const routes = [
   {
@@ -47,6 +48,10 @@ const routes = [
     path: "/mission",
     name: "mission",
     component: MissionSet,
+  },{
+    path: "/test1",
+    name: "test1",
+    component: Test1,
   },
 ];
 const router = createRouter({
