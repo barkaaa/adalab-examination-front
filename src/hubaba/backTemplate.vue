@@ -49,10 +49,12 @@ export default defineComponent({
 </script>
 <style scoped>
 ::v-deep .arco-layout-sider-children,
-.arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon),
 .arco-menu-vertical .arco-menu-group-title:not(.arco-menu-has-icon),
 .arco-menu-vertical .arco-menu-pop-header:not(.arco-menu-has-icon),
 .arco-menu-vertical .arco-menu-inline-header:not(.arco-menu-has-icon){
+  background-color: gainsboro;
+}
+::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon){
   background-color: gainsboro;
 }
 ::v-deep .arco-menu-vertical .arco-menu-inner{
