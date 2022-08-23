@@ -63,6 +63,7 @@ export default defineComponent({
   font-size: 20px;
   color: black;
 }
+
 .layout-demo {
   height: 100vh;
   background: var(--color-fill-2);

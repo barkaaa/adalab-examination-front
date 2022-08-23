@@ -25,7 +25,27 @@
       <a-layout>
         <a-layout-content>
           <div>
-            <a-upload draggable action="/" />
+            <a-upload action="/">
+              <template #upload-button>
+                <div
+                  style="
+                    background-color: var(--color-fill-2);
+                    color: var(--color-text-1);
+                    border: 1px dashed var(--color-fill-4);
+                    height: 158px;
+                    width: 380px;
+                    border-radius: 2;
+                    line-height: 158px;
+                    text-align: center;
+                  "
+                >
+                  <div>
+                    <span style="color: #3370ff"> Click to browse</span>
+                    or drag and drop your files
+                  </div>
+                </div>
+              </template>
+            </a-upload>
           </div>
         </a-layout-content>
       </a-layout>
