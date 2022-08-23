@@ -1,19 +1,44 @@
 <template>
   <div class="box">
     <div class="top">
-      <span class="username">George</span>
+      <span class="username">username</span>
       <img src="../assets/user-avatar-full-fill.png" class="avatar" alt=""/>
     </div>
     <div class="bottom">
-      <div class="countdown">23:59:50</div>
+      <div class="countdown">
+        <a-col :flex="1">
+          <a-countdown
+              title="还剩："
+              :value="now + 1000 * 60 * 60 * 24 * 4"
+              :now="now"
+              format="D 天 H 时 m 分"
+          />
+        </a-col>
+      </div>
     </div>
 
   </div>
 </template>
 
 <script>
+import {ref} from "vue";
+
 export default {
-  name: "CountDown"
+  name: "CountDown",
+  setup() {
+    const now = Date.now();
+    const start = ref(false);
+
+    const handleFinish = () => {
+      Message.info('Finish');
+    };
+
+    return {
+      now,
+      start,
+      handleFinish,
+    };
+  },
 }
 </script>
 
