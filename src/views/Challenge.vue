@@ -31,13 +31,14 @@ export default {
 .main-box {
   display: flex;
   height: 800px;
-  background-color: #eee;
+
 
   aside {
     .timer {
       margin: 60px 30px 0 30px;
       border-bottom: 2px solid #000;
       padding-bottom: 33px;
+      background-color: #eee;
     }
 
     .leaderboard {
