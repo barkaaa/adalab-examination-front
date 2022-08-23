@@ -9,6 +9,11 @@ import MissionSet from "@/hubaba/MissionSet"
 
 
 const routes = [
+
+    {
+        path: "/",
+        redirect: "/login"
+    },
     {
         path: "/login",
         name: "login",
@@ -21,7 +26,7 @@ const routes = [
         path: "/challenge",
         name: "Challenge",
         component: Challenge,
-        // redirect:"/challenge/common",
+        redirect:"/challenge/common",
         children: [
             {
                 path: 'common',
