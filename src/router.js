@@ -8,8 +8,8 @@ import BackTemplateVue from "@/hubaba/BackTemplate";
 
 const routes = [
     {
-        path: "/login",
-        name: "login",
+        path: "/",
+        name: "Login",
         component: Login
     },{
         path: "/ranking",
