@@ -44,7 +44,6 @@
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Login",
-<<<<<<< Updated upstream
   data() {
     return {
       username: "",
@@ -55,9 +54,9 @@ export default {
   methods: {
     async login() {
       let res = await this.axios.post("/api/manage/login", {
-        username:this.username, password:this.password
-      }).then(() =>{
-        this.$router.push({path:"/userManagement"})
+        username: this.username, password: this.password
+      }).then(() => {
+        this.$router.push({path: "/userManagement"})
       })
 
     }
@@ -66,17 +65,17 @@ export default {
     mainStyle: String,
     inputStyle: String,
   },
-};
-=======
+
   async created() {
-   let res = await fetch("api/login").then((res)=>{res.json()});
+    let res = await fetch("api/login").then((res) => {
+      res.json()
+    });
     console.log(res)
     // this.axios.get("/login").then((data) => {
     //   console.log(data)
     // })
   }
 }
->>>>>>> Stashed changes
 </script>
 
 <style>
@@ -127,13 +126,15 @@ input:active {
 #done {
   background: lightgreen;
 }
-#building{
-  background:url("../assets/img/loginbackground.jpg");
-  width:100%;
-  height:100%;
-  position:fixed;
-  background-size:100% 100%;
+
+#building {
+  background: url("../assets/img/loginbackground.jpg");
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background-size: 100% 100%;
 }
+
 .button {
   cursor: pointer;
   user-select: none;

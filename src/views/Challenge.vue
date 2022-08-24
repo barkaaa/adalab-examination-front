@@ -20,7 +20,7 @@
         <a-button type="primary">
 
           <template #icon>
-            <icon-double-right />
+            <icon-double-right/>
           </template>
           提交
         </a-button>
@@ -33,42 +33,35 @@
 <script>
 import Timer from "@/components/Timer";
 import RankingPlugin from "@/components/RankingPlugin.vue";
-<<<<<<< Updated upstream
+
 import axios from "axios";
 
-=======
 
 import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
->>>>>>> Stashed changes
+
 export default {
   name: "Challenge",
   mounted() {
     console.log('123');
     this.axios.get('/api/student/getRanking')
-      .then(res=>{
-        this.users = res.data;
-        //console.log(res.data[0].id);
-      });
+        .then(res => {
+          this.users = res.data;
+          //console.log(res.data[0].id);
+        });
   },
-  methods:{
-    getData(){
+  methods: {
+    getData() {
       this.axios.get('/student/getRanking')
-      .then(res=>{
-        console.log(res.data);
-      });
+          .then(res => {
+            console.log(res.data);
+          });
     }
   },
   components: {
     Timer,
-<<<<<<< Updated upstream
     RankingPlugin,
-    axios
-}, data() {
-=======
-    IconDoubleRight,
-    RankingPlugin
   }, data() {
->>>>>>> Stashed changes
+
     return {
       users: [
         {name: "王狗剩", clear: 7},
