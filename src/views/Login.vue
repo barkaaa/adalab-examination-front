@@ -25,7 +25,7 @@
         :style="inputStyle"
     />
     <br />
-    <img src="../assets/github.svg" alt="Login using Github" />
+
   </div>
 </template>
 

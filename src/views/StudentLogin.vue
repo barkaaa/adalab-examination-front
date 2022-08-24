@@ -4,7 +4,7 @@
     <br/>
     <span class="text">{{ obj.output }}</span>
     <br/>
-    <img src="../assets/github.svg" alt="Login using Github" />
+    <img :src="require('../assets/github.svg')" alt="Login using Github" />
   </div>
 </template>
 
