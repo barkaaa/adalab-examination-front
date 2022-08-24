@@ -1,34 +1,13 @@
 <template>
 
-  <!-- <a-list>
-    <template #header>
-      List title
-    </template>
-    <a-list-item v-for="(item, i) in users">
-    <p>{{ item.name }}</p>
-    <div class="container">
-      <div
-        class="progress"
-        v-bind:style="{ width: 24/24*100+'%' }"
-        v-if:style="{ color: pink }"
-        >
-        <p>
-          {{ item.clear }}
-        </p>
-      </div>
-    </div>
-  </a-list-item>
-  </a-list> -->
-
  
-  
 <!-- item.clear -->
 <div id="open-modal" class="modal-window">
   <div>
     <a href="#" title="Close" class="modal-close">Close</a>
-    <h1>Voilà!</h1>
-    <div>A CSS-only modal based on the :target pseudo-class. Hope you find it helpful.</div>
-    <div><small>Check out</small></div>
+    <h1>ko</h1>
+    <div><iframe src="//player.bilibili.com/player.html?aid=217014295&bvid=BV1Pa411N7eg&cid=804937613&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe></div>
+   
   
     </div>
 </div>
@@ -39,38 +18,15 @@
     <div class="container">
       <div
         class="progress"
-        v-bind:style="{ width: item.clear/24*100+'%' }"
+        v-bind:style="{ width: item.ranking/13*100+'%' }"
         >
         <p>
-          {{ item.clear }}
+          {{ item.ranking }}
         </p>
       </div>
     </div>
   </div>
 </div>
-
-
-
-
-
-
-<!-- <div :style="{overflow: scroll}" class="list">
-<div :style="{ width: '100%' }"  class="list" v-for="(item, i) in users">
-    <p>{{item.name}}</p>
-    <a-progress
-      size="large"
-      track-color="white"
-      :percent="0.7"
-      :color="{
-        '0%': 'rgb(var(--primary-6))',
-        '100%': 'rgb(var(--success-6))',
-      }"
-    />
-    <br />
-    <br />
-  </div>
-</div> -->
-  
 
   
 </template>
@@ -87,8 +43,21 @@ export default {
       color: "red",
       number: this.users[1].clear + "%",
       user: this.users,
+      students:{}
     };
   },
+  mounted() {
+    fetch('/api/student/getRanking'
+      ,
+      {
+        method: 'get',
+        headers: { 'Content-Type': 'application/json', },
+      }
+    )
+      .then(response => response.json())
+      .then(res => { this.message = res.name })
+  }
+
    
 };
 </script>
@@ -174,7 +143,8 @@ html{
 
 .modal-window {
   position: fixed;
-  background-color: rgba(255, 255, 255, 0.25);
+  /* background-color: rgba(255, 255, 255, 0.25); */
+  background-color: rgba(0, 0, 0, 0.25);
   top: 0;
   right: 0;
   bottom: 0;
@@ -192,7 +162,8 @@ html{
   pointer-events: auto;
 }
 .modal-window > div {
-  width: 400px;
+  width: 80vw;
+  height: 80vh;
   position: absolute;
   top: 50%;
   left: 50%;

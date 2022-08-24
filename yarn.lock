@@ -2912,6 +2912,11 @@
   "resolved" "https://registry.npmmirror.com/easy-stack/-/easy-stack-1.0.1.tgz"
   "version" "1.0.1"
 
+"easy-typer-js@^2.1.0":
+  "integrity" "sha512-P1G1oPO26lPfuPdaS3KyywFc36HRVKBJvzxJiOMbn5+Z3n9JLzhTT4cJK121mnjujyOWQiRla4ikHZQHPcoa/g=="
+  "resolved" "https://registry.npmjs.org/easy-typer-js/-/easy-typer-js-2.1.0.tgz"
+  "version" "2.1.0"
+
 "ee-first@1.1.1":
   "integrity" "sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow=="
   "resolved" "https://registry.npmmirror.com/ee-first/-/ee-first-1.1.1.tgz"
