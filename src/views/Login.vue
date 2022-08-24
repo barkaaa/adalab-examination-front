@@ -1,22 +1,29 @@
 <template>
+  <div id="building">
+
+  </div>
+
   <div class="main" :style="mainStyle">
     <h1>Adalab Management</h1>
     <input
+        class="input"
         type="text"
         name="username"
         id="username"
         placeholder="User Name"
         :style="input"
     />
-    <br />
-    <input
+    <br/>
+    <br/>
+    <input class="input"
         type="password"
         name="password"
         id="password"
         placeholder="P@$$W0RD"
         :style="input"
     />
-    <br />
+    <br/>
+    <br/>
     <input
         type="button"
         value="Done!"
@@ -24,7 +31,7 @@
         id="done"
         :style="inputStyle"
     />
-    <br />
+    <br/>
 
   </div>
 </template>
@@ -47,7 +54,7 @@ export default {
 .main {
   background: rgba(255, 255, 255, 0.4);
   position: absolute;
-  top: 20%;
+  top: 25%;
   left: 30%;
   width: 40%;
   text-align: center;
@@ -83,18 +90,16 @@ input:active {
 #done {
   background: lightgreen;
 }
+#building{
+  background:url("../assets/img/loginbackground.jpg");
+  width:100%;
+  height:100%;
+  position:fixed;
+  background-size:100% 100%;
+}
 .button {
   cursor: pointer;
   user-select: none;
 }
-img {
-  height: 2.2rem;
-  margin: 10px;
-  user-select: none;
-}
-img:hover {
-  box-shadow: 0 0 8px -5px #000000;
-  cursor: pointer;
-  border-radius: 200rem;
-}
+
 </style>
