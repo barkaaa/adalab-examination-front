@@ -1,22 +1,6 @@
 <template>
   <div class="box">
-    <a-steps :current="2" line-less>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
 
-    </a-steps>
     <div class="problem_box">
       <h3>请回答以下问题</h3>
       <a-textarea placeholder="请在这里输入" allow-clear auto-size/>
@@ -39,9 +23,7 @@
       <a-checkbox value="1">Option 1</a-checkbox>
       <a-checkbox value="1">Option 1</a-checkbox>
     </div>
-    <div class="submit_box">
-      <a-button type="primary" :loading="bLoading" @click="nextChallenge" style="width: 100px;">提交</a-button>
-    </div>
+
   </div>
 </template>
 
@@ -69,21 +51,14 @@ export default {
 
 <style scoped lang="less">
 .box {
-  margin: 8% 10% 0 10%;
   width: 80%;
-  height: 92%;
-
-  //.arco-steps-item {
-  //  padding-bottom: 10%;
-  //}
-
   .problem_box {
     margin-top: 4%;
-    width: 100%;
+
 
     .arco-textarea-wrapper {
       height: 20%;
-      width: 100%;
+
       background-color: #fff;
       padding: 1%;
       border: 1px solid #EEE;
@@ -102,16 +77,9 @@ export default {
       width: 20%;
       height: 10%;
     }
-
-
-
   }
 
-  .submit_box {
-    margin: 5% 0;
-    display: flex;
-    justify-content: center;
-  }
+
 
 
 }

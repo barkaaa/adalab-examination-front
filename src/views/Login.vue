@@ -44,6 +44,7 @@
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Login",
+<<<<<<< Updated upstream
   data() {
     return {
       username: "",
@@ -66,6 +67,16 @@ export default {
     inputStyle: String,
   },
 };
+=======
+  async created() {
+   let res = await fetch("api/login").then((res)=>{res.json()});
+    console.log(res)
+    // this.axios.get("/login").then((data) => {
+    //   console.log(data)
+    // })
+  }
+}
+>>>>>>> Stashed changes
 </script>
 
 <style>

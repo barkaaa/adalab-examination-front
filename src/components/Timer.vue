@@ -2,7 +2,7 @@
   <div class="box">
     <div class="top">
       <span class="username">username</span>
-      <img src="../assets/logo.png" class="avatar" alt=""/>
+      <img :src="require('../assets/img/avatar.png')" class="avatar" alt=""/>
     </div>
     <div class="bottom">
       <div class="countdown">
@@ -49,16 +49,16 @@ export default {
   border: 3px solid #000;
 
   .top {
-    //display: flex;
+    display: flex;
     justify-content: space-between;
     width: 100%;
+    margin-bottom: 10%;
     .username {
       font-size: 120%;
     }
 
     .avatar {
-      width: 30%;
-      height: 20px;
+      width: 10%
     }
   }
 
