@@ -18,10 +18,10 @@
     <div class="container">
       <div
         class="progress"
-        v-bind:style="{ width: item.clear/24*100+'%' }"
+        v-bind:style="{ width: item.ranking/13*100+'%' }"
         >
         <p>
-          {{ item.clear }}
+          {{ item.ranking }}
         </p>
       </div>
     </div>
