@@ -3,6 +3,7 @@
     <aside>
       <div class="timer">
         <timer/>
+        <RankingPlugin v-bind:users="users"></RankingPlugin> 
       </div>
       <div class="leaderboard">
         111
@@ -18,26 +19,56 @@
 
 <script>
 import Timer from "@/components/Timer";
+import RankingPlugin from "@/components/RankingPlugin.vue";
+
 
 export default {
   name: "Challenge",
   components: {
-    Timer
-  }
+    Timer,
+    RankingPlugin
+}, data() {
+    return {
+      users: [
+        { name: "王狗剩", clear: 7 },
+        { name: "李根宝", clear: 9 },
+        { name: "David", clear: 1 },
+        { name: "Dick", clear: 12 },
+        { name: "Link", clear: 1 },
+        { name: "王狗剩", clear: 7 },
+        { name: "李根宝", clear: 9 },
+        { name: "David", clear: 1 },
+        { name: "Dick", clear: 12 },
+        { name: "Link", clear: 1 },
+        { name: "王狗剩", clear: 7 },
+        { name: "李根宝", clear: 9 },
+        { name: "David", clear: 1 },
+        { name: "Dick", clear: 12 },
+        { name: "Link", clear: 1 },
+        { name: "王狗剩", clear: 7 },
+        { name: "李根宝", clear: 9 },
+        { name: "David", clear: 1 },
+        { name: "Dick", clear: 12 },
+        { name: "Link", clear: 1 },
+      ],
+    };
+  },
 }
 </script>
 
 <style scoped lang="less">
+
 .main-box {
   display: flex;
-  height: 1024px;
-  background-color: #eee;
-
+  width: 100%;
   aside {
+    width: 20%;
+    background-color: #eee;
+
     .timer {
-      margin: 67px 31px 0 31px;
-      border-bottom: 2px solid #000;
-      padding: 33px;
+      margin: 16% 7% 0 7%;
+      border-bottom: 1px solid #000;
+      padding-bottom: 12%;
     }
 
     .leaderboard {
@@ -50,7 +81,7 @@ export default {
   }
 
   main {
-
+    width: 80%;
   }
 }
 

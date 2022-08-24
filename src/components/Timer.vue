@@ -1,52 +1,75 @@
 <template>
   <div class="box">
     <div class="top">
-      <span class="username">George</span>
-      <img src="../assets/user-avatar-full-fill.png" class="avatar" alt=""/>
+      <span class="username">username</span>
+      <img src="../assets/logo.png" class="avatar" alt=""/>
     </div>
     <div class="bottom">
-      <div class="countdown">23:59:50</div>
+      <div class="countdown">
+        <a-col :flex="1">
+          <a-countdown
+              :value="now + 1000 * 60 * 60 * 24 * 4"
+              :now="now"
+              format="D 天 H 时 m 分"
+          />
+        </a-col>
+      </div>
     </div>
 
   </div>
 </template>
 
 <script>
+import {ref} from "vue";
+
 export default {
-  name: "CountDown"
+  name: "CountDown",
+  setup() {
+    const now = Date.now();
+    const start = ref(false);
+
+    const handleFinish = () => {
+      Message.info('Finish');
+    };
+
+    return {
+      now,
+      start,
+      handleFinish,
+    };
+  },
 }
 </script>
 
 <style scoped lang="less">
 .box {
-  padding: 16px 22px 22px 13px;
-  width: 249px;
-  height: 112px;
-  border-radius: 15px;
-  border: 2px solid #000;
+  padding: 3% 4% 3% 4%;
+  width: 92%;
+  border-radius: 10px;
+  border: 3px solid #000;
 
   .top {
-    display: flex;
+    //display: flex;
     justify-content: space-between;
-    margin-bottom: 16px;
-
+    width: 100%;
     .username {
-      font-size: 18px;
+      font-size: 120%;
     }
-    .avatar{
-      width: 32px;
+
+    .avatar {
+      width: 30%;
+      height: 20px;
     }
   }
 
   .bottom {
-   display: flex;
+    display: flex;
     justify-content: center;
     .countdown {
-      font-size: 36px;
-      margin-bottom: 6px;
+      font-size: 10%;
+      margin-bottom: 3%;
     }
   }
 
 }
-
 </style>

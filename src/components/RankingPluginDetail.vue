@@ -1,11 +1,28 @@
 <template>
 
+<!-- <a-steps :current="2" line-less>
+      <a-step></a-step>
+      <a-step></a-step>
+      <a-step></a-step>
+      <a-step></a-step>
+      <a-step></a-step>
+      <a-step></a-step>
+      <a-step></a-step>
+      <a-step></a-step>
+      <a-step></a-step>
+      <a-step></a-step>
+      <a-step></a-step>
+      <a-step></a-step>
+      <a-step></a-step>
+      <a-step></a-step>
+
+    </a-steps> -->
+
  
 <!-- item.clear -->
 <div id="open-modal" class="modal-window">
   <div>
     <a href="#" title="Close" class="modal-close">Close</a>
-    <h1>ko</h1>
     <div><iframe src="//player.bilibili.com/player.html?aid=217014295&bvid=BV1Pa411N7eg&cid=804937613&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe></div>
    
   
@@ -13,19 +30,10 @@
 </div>
 
 <div class="list">
-<div  v-for="(item, i) in users">
-    <a class="btn" href="#open-modal"><p>{{ item.name }}</p></a>
-    <div class="container">
-      <div
-        class="progress"
-        v-bind:style="{ width: item.clear/24*100+'%' }"
-        >
-        <p>
-          {{ item.clear }}
-        </p>
-      </div>
-    </div>
-  </div>
+<a-step :current="2" v-for="(item, i) in users" line-less>
+    <!-- <a class="btn" href="#open-modal"><p>{{ item.name }}</p></a> -->
+    <a-step></a-step>
+  </a-step>
 </div>
 
   
@@ -34,7 +42,7 @@
 <script>
 
 export default {
-  name: "RankingPlugin",
+  name: "RankingPluginDetail",
   props: {
     users: Array,
   },
@@ -46,17 +54,7 @@ export default {
       students:{}
     };
   },
-  mounted() {
-    fetch('/api/student/getRanking'
-      ,
-      {
-        method: 'get',
-        headers: { 'Content-Type': 'application/json', },
-      }
-    )
-      .then(response => response.json())
-      .then(res => { this.message = res.name })
-  }
+  
 
    
 };

@@ -3,7 +3,7 @@
     <a-layout-sider theme="dark" breakpoint="lg" :width="300">
       <div class="logo" />
       <a-menu
-        :default-selected-keys="['0_1']"
+        :default-selected-keys="['mission']"
         :style="{ width: '100%' }"
         @menu-item-click="onClickMenuItem"
       >
@@ -11,11 +11,11 @@
           <IconBarChart></IconBarChart>
           排行榜单
         </a-menu-item>
-        <a-menu-item key="0_2">
+        <a-menu-item key="userManagement">
           <IconUser></IconUser>
           用户管理
         </a-menu-item>
-        <a-menu-item key="0_3">
+        <a-menu-item key="mission">
           <IconPen></IconPen>
           关卡设置
         </a-menu-item>
@@ -23,27 +23,101 @@
     </a-layout-sider>
     <a-layout>
       <a-layout>
-        <a-layout-content>Content</a-layout-content>
+        <a-layout-content>
+          <div>
+            <!-- 上传文件 -->
+            <a-upload action="/">
+              <template #upload-button>
+                <div
+                  style="
+                    background-color: var(--color-fill-2);
+                    color: var(--color-text-1);
+                    border: 1px dashed var(--color-fill-4);
+                    height: 158px;
+                    width: 380px;
+                    border-radius: 2;
+                    line-height: 158px;
+                    text-align: center;
+                  "
+                >
+                  <div>
+                    <span style="color: #3370ff"> Click to browse</span>
+                    or drag and drop your files
+                  </div>
+                </div>
+              </template>
+            </a-upload>
+            <a-space class="wrapper" direction="vertical">
+              <a-button type="primary" long @click="addOneQuestion"
+                >手动创建试卷</a-button
+              >
+            </a-space>
+          </div>
+        </a-layout-content>
       </a-layout>
     </a-layout>
   </a-layout>
 </template>
 <script>
+import { ref } from "vue";
 import { defineComponent } from "vue";
-import { IconBarChart, IconPen, IconUser } from "@arco-design/web-vue/es/icon";
+import { IconBarChart, IconPen, IconUser,} from "@arco-design/web-vue/es/icon";
 
 export default defineComponent({
+  data() {
+    return {
+      newMission: "",
+    };
+  },
   components: {
     IconBarChart,
     IconPen,
     IconUser,
   },
   methods: {
-    onClickMenuItem() {},
+    onClickMenuItem(key) {
+      this.$router.push(key);
+    },
+    addOneQuestion() {
+      this.$router.push("test1");
+    },
+  },
+  setup() {
+    const visible = ref(false);
+
+    const handleClick = () => {
+      visible.value = true;
+    };
+    const handleBeforeOk = (done) => {
+      window.setTimeout(() => {
+        done();
+        // prevent close
+        // done(false)
+      }, 3000);
+    };
+    const handleCancel = () => {
+      visible.value = false;
+    };
+
+    return {
+      visible,
+      handleClick,
+      handleBeforeOk,
+      handleCancel,
+    };
   },
 });
 </script>
+
+
+
 <style scoped>
+.wrapper {
+  width: 384px;
+  padding: 30px;
+  border-radius: 4px;
+}
+
 ::v-deep .arco-layout-sider-children {
   background-color: gainsboro;
 }
@@ -63,7 +137,6 @@ export default defineComponent({
   font-size: 20px;
   color: black;
 }
-
 .layout-demo {
   height: 100vh;
   background: var(--color-fill-2);
