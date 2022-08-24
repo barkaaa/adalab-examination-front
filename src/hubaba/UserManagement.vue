@@ -3,7 +3,7 @@
     <a-layout-sider theme="dark" breakpoint="lg" :width="300">
       <div class="logo"/>
       <a-menu
-          :default-selected-keys="['0_1']"
+          :default-selected-keys="['userManagement']"
           :style="{ width: '100%' }"
           @menu-item-click="onClickMenuItem"
       >
@@ -11,107 +11,81 @@
           <IconBarChart></IconBarChart>
           排行榜单
         </a-menu-item>
-        <a-menu-item>
+        <a-menu-item key="userManagement">
           <IconUser></IconUser>
           用户管理
         </a-menu-item>
-        <a-menu-item key="BackTemplate">
+        <a-menu-item key="mission">
           <IconPen></IconPen>
           关卡设置
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
     <a-layout>
-<!--      <a-layout-header style="padding-left: 20px"> Header</a-layout-header>-->
-      <a-layout>
-        <a-layout-content class="content">
-          <a-table :columns="columns" :data="data" :scroll="scroll"/>
-          <a-split direction="vertical" :default-size="0.9" :style="{height: '500px', marginTop: '300px'}">
-          </a-split>
-        </a-layout-content>
-      </a-layout>
+      <a-layout-content class="content">
+        <a-table :columns="columns" :data="tableData" :column-resizable="true"
+                 :pagination="pagination" class="table"/>
+      </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 <script>
-import {defineComponent, reactive} from "vue";
 import {IconBarChart, IconPen, IconUser} from "@arco-design/web-vue/es/icon";
 
-export default defineComponent({
-  setup() {
-    const scroll = {
-      x: '80%',
-      y: '100%'
-    };
-    const columns = [
-      {
-        title: 'Name',
-        dataIndex: 'name',
-      },
-      {
-        title: 'Salary',
-        dataIndex: 'salary',
-      },
-      {
-        title: 'Address',
-        dataIndex: 'address',
-      },
-      {
-        title: 'Email',
-        dataIndex: 'email',
-      },
-    ];
-    const data = reactive([{
-      key: '1',
-      name: 'Jane Doe',
-      salary: 23000,
-      address: '32 Park Road, London',
-      email: 'jane.doe@example.com'
-    }, {
-      key: '2',
-      name: 'Alisa Ross',
-      salary: 25000,
-      address: '35 Park Road, London',
-      email: 'alisa.ross@example.com'
-    }, {
-      key: '3',
-      name: 'Kevin Sandra',
-      salary: 22000,
-      address: '31 Park Road, London',
-      email: 'kevin.sandra@example.com'
-    }, {
-      key: '4',
-      name: 'Ed Hellen',
-      salary: 17000,
-      address: '42 Park Road, London',
-      email: 'ed.hellen@example.com'
-    }, {
-      key: '5',
-      name: 'William Smith',
-      salary: 27000,
-      address: '62 Park Road, London',
-      email: 'william.smith@example.com'
-    }]);
+export default {
+  data() {
     return {
-      scroll,
-      columns,
-      data
+      columns: [
+        {
+          title: 'Id',
+          dataIndex: 'id',
+        },
+        {
+          title: 'Name',
+          dataIndex: 'name',
+        },
+        {
+          title: 'Tel',
+          dataIndex: 'tel',
+        },
+        {
+          title: 'Age',
+          dataIndex: 'age',
+        },
+        {
+          title: 'Url',
+          dataIndex: 'url',
+        }, {
+          title: 'Ranking',
+          dataIndex: 'ranking',
+        },
+      ],
+      tableData: [],
+      pagination: {
+        pageSize: 10,
+      }
     }
   },
-
   components: {
     IconBarChart,
     IconPen,
     IconUser,
   },
+  created() {
+    fetch("/api/student/getRanking")
+        .then((res) => res.json())
+        .then((response) => {
+          console.log(23423423423423);
+          console.log(response);
+          this.tableData = response;
+        });
+  },
   methods: {
     onClickMenuItem(key) {
-      this.$router.push({
-        name: `${key}`,
-      });
+      this.$router.push(key);
     },
   },
-});
+};
 </script>
 <style scoped>
 ::v-deep .arco-layout-sider-children,
@@ -141,7 +115,7 @@ export default defineComponent({
 }
 
 .layout-demo {
-  height: 100%;
+  height: 100vh;
   background: var(--color-fill-2);
   border: 1px solid var(--color-border);
 }
@@ -180,9 +154,12 @@ export default defineComponent({
 }
 
 .content {
-  width: 60vw;
-  height: 70vh;
-  margin: 0 auto;
-  text-align: center;
+  height: 90%;
+}
+
+.table {
+  height: 100%;
+  width: 80%;
+  margin: 5vh auto 5vh;
 }
 </style>

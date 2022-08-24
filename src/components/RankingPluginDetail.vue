@@ -30,10 +30,14 @@
 </div>
 
 <div class="list">
-<a-step :current="2" v-for="(item, i) in users" line-less>
+<div  v-for="(item, i) in users">
+<p>{{item.name}}</p>
     <!-- <a class="btn" href="#open-modal"><p>{{ item.name }}</p></a> -->
-    <a-step></a-step>
-  </a-step>
+    <div style="display:flex;flex-direction: row;justify-content:space-around">
+      <div v-for="count in 15" class="dot"><p>{{count}}</p></div>
+    </div>
+    <br>
+</div>
 </div>
 
   
@@ -74,48 +78,16 @@ html{
   text-align: center;
 } */
 
-.container {
-  width: 95%;
-  background-color: #ddd;
-  border-radius: 15px;
-  /* border-top-left-radius: 15px;
-  border-bottom-left-radius: 15px; */
-  margin: 0px;
-  padding: 0px;
-  
-  
-}
 
-.html {
-  width: 90%;
-  background-color: #4caf50;
-}
-.css {
-  width: 80%;
-  background-color: #2196f3;
-}
-.js {
-  width: 65%;
-  background-color: #f44336;
-}
 
-.progress {
-  /* background: linear-gradient(90deg,yellow,blue); */
-  background-color: #4caf50;
-  border-radius: 15px;
-  
 
-}
-.progress p{
-  text-align: center;
-  margin: 0px;
-  padding: 0px;
 
-}
 .list{
   overflow: scroll;
-  overflow-x: hidden
-  
+  overflow-x: hidden;
+  /* width:50%;
+  height:50%; */
+
   
 }
 .list::-webkit-scrollbar{
@@ -127,7 +99,7 @@ html{
 .list div{
   margin: 0px;
   padding: 0px;
-  
+  text-align: center;
 }
 
 
@@ -192,7 +164,28 @@ html{
 .modal-close:hover {
   color: black;
 }
+a-steps{
+  display: flex;
+}
+.a-step{
+  background-color: black;
+}
 
-
-
+.dot{
+  width: 30px;
+  height: 30px;
+  background-color: rgba(0, 0, 0, 0.1);
+  top: 0;;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.dot:hover{
+  background-color: aqua;
+}
+/* .dotContainer{
+  display: flex;
+  flex-direction: row;
+} */
 </style>
