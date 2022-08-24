@@ -20,13 +20,30 @@
 <script>
 import Timer from "@/components/Timer";
 import RankingPlugin from "@/components/RankingPlugin.vue";
-
+import axios from "axios";
 
 export default {
   name: "Challenge",
+  mounted() {
+    console.log('123');
+    this.axios.get('/api/student/getRanking')
+      .then(res=>{
+        this.users = res.data;
+        //console.log(res.data[0].id);
+      });
+  },
+  methods:{
+    getData(){
+      this.axios.get('/student/getRanking')
+      .then(res=>{
+        console.log(res.data);
+      });
+    }
+  },
   components: {
     Timer,
-    RankingPlugin
+    RankingPlugin,
+    axios
 }, data() {
     return {
       users: [
