@@ -1,7 +1,7 @@
 <template>
-  
+<!--   
   <RankingPlugin v-bind:users="users">123</RankingPlugin>
-  <!-- <p v-for="(item,i) in list">{{i}},{{item}}</p> -->
+  
   <a href="#dick">xixi</a>
   <div id="dick">fuq<a href=""><p>x</p></a></div>
 
@@ -11,12 +11,13 @@
   <div class="interior">
     <a >Basic CSS-Only Modal</a>
   </div>
-</div>
+</div> -->
+<RankingPluginDetail v-bind:users="users"></RankingPluginDetail>
 
 </template>
 
 <script>
-import RankingPlugin from "@/components/RankingPlugin.vue";
+import RankingPluginDetail from "@/components/RankingPluginDetail.vue";
 
 export default {
   name: "Ranking",
@@ -35,7 +36,7 @@ export default {
   //     username:String,
   //     rank:String
   //   }
-  components: { RankingPlugin },
+  components: { RankingPluginDetail },
 };
 </script>
 
