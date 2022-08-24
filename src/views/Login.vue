@@ -7,33 +7,53 @@
         id="username"
         placeholder="User Name"
         :style="input"
+        v-model="username"
     />
-    <br />
+    <br/>
     <input
         type="password"
         name="password"
         id="password"
-        placeholder="P@$$W0RD"
+        placeholder="PASSW0RD"
         :style="input"
+        v-model="password"
     />
-    <br />
+    <br/>
     <input
         type="button"
         value="Done!"
         class="button"
         id="done"
         :style="inputStyle"
+        @click="login"
     />
-    <br />
+    <br/>
 
   </div>
 </template>
 
 <script>
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Login",
+  data() {
+    return {
+      username: "",
+      password: ""
+    };
+  },
   //Custom style for main and input for make the page responsive:
+  methods: {
+    async login() {
+      let res = await this.axios.post("/api/manage/login", {
+        username:this.username, password:this.password
+      }).then(() =>{
+        this.$router.push({path:"/userManagement"})
+      })
+
+    }
+  },
   props: {
     mainStyle: String,
     inputStyle: String,
@@ -44,6 +64,7 @@ export default {
 <style>
 /* Import Poppins font: */
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
 .main {
   background: rgba(255, 255, 255, 0.4);
   position: absolute;
@@ -58,10 +79,12 @@ export default {
   padding-bottom: 5%;
   font-family: "Poppins", sans-serif;
 }
+
 h1 {
   cursor: default;
   user-select: none;
 }
+
 input {
   border-radius: 3rem;
   border: none;
@@ -74,24 +97,30 @@ input {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
 }
+
 input:hover {
   box-shadow: 0 0 8px -5px #000000;
 }
+
 input:active {
   box-shadow: 0 0 8px -5px #000000;
 }
+
 #done {
   background: lightgreen;
 }
+
 .button {
   cursor: pointer;
   user-select: none;
 }
+
 img {
   height: 2.2rem;
   margin: 10px;
   user-select: none;
 }
+
 img:hover {
   box-shadow: 0 0 8px -5px #000000;
   cursor: pointer;
