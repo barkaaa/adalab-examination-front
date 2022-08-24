@@ -3,6 +3,7 @@ import Login from "@/views/Login";
 import CommonChallengem from "@/views/CommonChallenge";
 import MarkdownChallenge from "@/views/MarkdownChallenge";
 import Ranking from "@/views/Ranking"
+import Student from "@/views/StudentLogin"
 import {createRouter, createWebHashHistory} from "vue-router"
 import BackTemplateVue from "@/hubaba/BackTemplate";
 
@@ -11,7 +12,13 @@ const routes = [
         path: "/",
         name: "Login",
         component: Login
-    },{
+    },
+    {
+        path: "/student",
+        name: "StudentLogin",
+        component: Student
+    },
+    {
         path: "/ranking",
         name: "Ranking",
          component: Ranking
