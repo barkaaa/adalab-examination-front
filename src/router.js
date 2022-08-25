@@ -53,10 +53,6 @@ const routes = [
   {
     path: "/mission",
     name: "mission",
-    component: MissionSet,
-  },{
-    path: "/test1",
-    name: "test1",
     component: Test1,
   },
 ];

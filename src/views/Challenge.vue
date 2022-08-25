@@ -3,15 +3,28 @@
     <aside>
       <div class="timer">
         <timer/>
-        <RankingPlugin v-bind:users="users"></RankingPlugin> 
       </div>
+      <RankingPlugin v-bind:users="users"></RankingPlugin>
       <div class="leaderboard">
         111
       </div>
       <div class="footer"></div>
     </aside>
     <main>
+      <a-steps :current="2" small>
+        <a-step v-for="i in 12"></a-step>
+      </a-steps>
       <router-view/>
+      <icon-arrow-fall/>
+      <div class="submit_box">
+        <a-button type="primary">
+
+          <template #icon>
+            <icon-double-right/>
+          </template>
+          提交
+        </a-button>
+      </div>
     </main>
   </div>
 
@@ -20,53 +33,57 @@
 <script>
 import Timer from "@/components/Timer";
 import RankingPlugin from "@/components/RankingPlugin.vue";
+
 import axios from "axios";
+
+
+import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
 
 export default {
   name: "Challenge",
   mounted() {
     console.log('123');
     this.axios.get('/api/student/getRanking')
-      .then(res=>{
-        this.users = res.data;
-        //console.log(res.data[0].id);
-      });
+        .then(res => {
+          this.users = res.data;
+          //console.log(res.data[0].id);
+        });
   },
-  methods:{
-    getData(){
+  methods: {
+    getData() {
       this.axios.get('/student/getRanking')
-      .then(res=>{
-        console.log(res.data);
-      });
+          .then(res => {
+            console.log(res.data);
+          });
     }
   },
   components: {
     Timer,
     RankingPlugin,
-    axios
-}, data() {
+  }, data() {
+
     return {
       users: [
-        { name: "王狗剩", clear: 7 },
-        { name: "李根宝", clear: 9 },
-        { name: "David", clear: 1 },
-        { name: "Dick", clear: 12 },
-        { name: "Link", clear: 1 },
-        { name: "王狗剩", clear: 7 },
-        { name: "李根宝", clear: 9 },
-        { name: "David", clear: 1 },
-        { name: "Dick", clear: 12 },
-        { name: "Link", clear: 1 },
-        { name: "王狗剩", clear: 7 },
-        { name: "李根宝", clear: 9 },
-        { name: "David", clear: 1 },
-        { name: "Dick", clear: 12 },
-        { name: "Link", clear: 1 },
-        { name: "王狗剩", clear: 7 },
-        { name: "李根宝", clear: 9 },
-        { name: "David", clear: 1 },
-        { name: "Dick", clear: 12 },
-        { name: "Link", clear: 1 },
+        {name: "王狗剩", clear: 7},
+        {name: "李根宝", clear: 9},
+        {name: "David", clear: 1},
+        {name: "Dick", clear: 12},
+        {name: "Link", clear: 1},
+        {name: "王狗剩", clear: 7},
+        {name: "李根宝", clear: 9},
+        {name: "David", clear: 1},
+        {name: "Dick", clear: 12},
+        {name: "Link", clear: 1},
+        {name: "王狗剩", clear: 7},
+        {name: "李根宝", clear: 9},
+        {name: "David", clear: 1},
+        {name: "Dick", clear: 12},
+        {name: "Link", clear: 1},
+        {name: "王狗剩", clear: 7},
+        {name: "李根宝", clear: 9},
+        {name: "David", clear: 1},
+        {name: "Dick", clear: 12},
+        {name: "Link", clear: 1},
       ],
     };
   },
@@ -78,8 +95,9 @@ export default {
 .main-box {
   display: flex;
   width: 100%;
+
   aside {
-    width: 20%;
+    width: 25%;
     background-color: #eee;
 
     .timer {
@@ -91,14 +109,22 @@ export default {
     .leaderboard {
 
     }
-    .footer{
+
+    .footer {
 
     }
 
   }
 
   main {
-    width: 80%;
+    width: 75%;
+    margin: 8% 7% 0 7%;
+
+    .submit_box {
+      margin: 5% 0;
+      display: flex;
+      justify-content: center;
+    }
   }
 }
 

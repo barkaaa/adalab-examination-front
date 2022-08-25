@@ -1,39 +1,83 @@
 <template>
-  markdown闯关
-  <a-space>
-    <a-button type="primary" :loading="loading" @click="handleClick" shape="round">{{ btm }}</a-button>
-  </a-space>
+  <div class="box">
+    <markdown-preview value="content" />
+  </div>
 </template>
 
 <script>
-import {onBeforeMount, ref} from 'vue';
-
+import { MarkdownPreview } from 'vue-meditor'
 export default {
   name: "MarkdownChallenge",
-
-  setup() {
-    let loading = ref(false);
-    let btm = ref("点击提交");
-    const handleClick = () => {
-      loading.value = !loading.value
-      btm = '正在测评'
-    }
-    onBeforeMount(()=>{
-
-
-      // 获取markdown数据
-
-      // 解析markdown数据并渲染到页面中
-      // this.markdownIt.render()
-    })
+  components:{
+    MarkdownPreview
+  },
+  data() {
     return {
-      loading, btm, handleClick
+      content: ""
     }
+  },
+  mounted() {
 
+    this.content = " # adalab-examination-front\n" +
+        "\n" +
+        "## Project setup\n" +
+        "```\n" +
+        "yarn install\n" +
+        "```\n" +
+        "\n" +
+        "### Compiles and hot-reloads for development\n" +
+        "```\n" +
+        "yarn serve\n" +
+        "```\n" +
+        "\n" +
+        "### Compiles and minifies for production\n" +
+        "```\n" +
+        "yarn build\n" +
+        "```\n" +
+        "\n" +
+        "### Lints and fixes files\n" +
+        "```\n" +
+        "yarn lint\n" +
+        "```\n" +
+        "\n" +
+        "### Customize configuration\n" +
+        "See [Configuration Reference](https://cli.vuejs.org/config/).\n" +
+        " # adalab-examination-front\n" +
+        "\n" +
+        "## Project setup\n" +
+        "```\n" +
+        "yarn install\n" +
+        "```\n" +
+        "\n" +
+        "### Compiles and hot-reloads for development\n" +
+        "```\n" +
+        "yarn serve\n" +
+        "```\n" +
+        "\n" +
+        "### Compiles and minifies for production\n" +
+        "```\n" +
+        "yarn build\n" +
+        "```\n" +
+        "\n" +
+        "### Lints and fixes files\n" +
+        "```\n" +
+        "yarn lint\n" +
+        "```\n" +
+        "\n" +
+        "### Customize configuration\n" +
+        "See [Configuration Reference](https://cli.vuejs.org/config/).\n"
+    this.content = this.markded.parse(md);
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+.box {
+  width: 80%;
+
+  .content-box {
+    margin-top: 4%;
+  }
+}
 
 </style>
