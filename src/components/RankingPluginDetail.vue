@@ -37,9 +37,9 @@
 
   <div class="list">
     <div id="bigContainer" v-for="(item, i) in users">
-      <p @click="getData()">{{ item.name }}</p>
+      <p class="studentName" @click="getData()">{{ item.name }}</p>
       <!-- <a class="btn" href="#open-modal"><p>{{ item.name }}</p></a> -->
-      <div
+      <div class="dots"
         style="
           display: flex;
           flex-direction: row;
@@ -208,5 +208,14 @@ icon-history {
 }
 #bigContainer{
   display: flex;
+}
+.dots{
+  flex: 10;
+}
+.studentName{
+  flex:3;
+}
+.btn{
+  flex:4;
 }
 </style>
