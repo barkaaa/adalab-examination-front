@@ -1,9 +1,14 @@
 import {createApp} from 'vue'
+
 import App from './App.vue'
 import router from "./router";
 import ArcoVue from '@arco-design/web-vue';
 import '@arco-design/web-vue/dist/arco.css';
 import axios from "axios";
+// 额外引入图标库
+import ArcoVueIcon from '@arco-design/web-vue/es/icon';
+
+
 // import Hljs from "highlight.js"
 // 解析markdown
 // import {marked} from 'marked'
@@ -27,5 +32,7 @@ const app = createApp(App);
 app.config.globalProperties.axios = axios;
 app.use(ArcoVue);
 app.use(router);
+// 额外引入图标库
+app.use(ArcoVueIcon);
 
 app.mount('#app')
