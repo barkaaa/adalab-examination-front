@@ -1,29 +1,83 @@
 <template>
-markdown闯关
-  <a-space>
-    <a-button type="primary" :loading="loading" @click="handleClick" shape="round" >{{btm}}</a-button>
-  </a-space>
+  <div class="box">
+    <markdown-preview value="content" />
+  </div>
 </template>
 
 <script>
-import { ref } from 'vue';
+import { MarkdownPreview } from 'vue-meditor'
 export default {
   name: "MarkdownChallenge",
+  components:{
+    MarkdownPreview
+  },
   data() {
     return {
-      loading : ref(false),
-      btm:'点击提交'
+      content: ""
     }
   },
-  methods:{
-    handleClick(){
-      this.loading= !this.loading
-      this.btm = '正在测评'
-    }
-  },
+  mounted() {
+
+    this.content = " # adalab-examination-front\n" +
+        "\n" +
+        "## Project setup\n" +
+        "```\n" +
+        "yarn install\n" +
+        "```\n" +
+        "\n" +
+        "### Compiles and hot-reloads for development\n" +
+        "```\n" +
+        "yarn serve\n" +
+        "```\n" +
+        "\n" +
+        "### Compiles and minifies for production\n" +
+        "```\n" +
+        "yarn build\n" +
+        "```\n" +
+        "\n" +
+        "### Lints and fixes files\n" +
+        "```\n" +
+        "yarn lint\n" +
+        "```\n" +
+        "\n" +
+        "### Customize configuration\n" +
+        "See [Configuration Reference](https://cli.vuejs.org/config/).\n" +
+        " # adalab-examination-front\n" +
+        "\n" +
+        "## Project setup\n" +
+        "```\n" +
+        "yarn install\n" +
+        "```\n" +
+        "\n" +
+        "### Compiles and hot-reloads for development\n" +
+        "```\n" +
+        "yarn serve\n" +
+        "```\n" +
+        "\n" +
+        "### Compiles and minifies for production\n" +
+        "```\n" +
+        "yarn build\n" +
+        "```\n" +
+        "\n" +
+        "### Lints and fixes files\n" +
+        "```\n" +
+        "yarn lint\n" +
+        "```\n" +
+        "\n" +
+        "### Customize configuration\n" +
+        "See [Configuration Reference](https://cli.vuejs.org/config/).\n"
+    this.content = this.markded.parse(md);
+  }
 }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+.box {
+  width: 80%;
+
+  .content-box {
+    margin-top: 4%;
+  }
+}
 
 </style>

@@ -3,7 +3,9 @@ import Login from "@/views/Login";
 import CommonChallengem from "@/views/CommonChallenge";
 import MarkdownChallenge from "@/views/MarkdownChallenge";
 import Ranking from "@/views/Ranking";
-import { createRouter, createWebHashHistory } from "vue-router";
+import Student from "@/views/StudentLogin"
+import {createRouter, createWebHistory} from "vue-router";
+import MissionSet from "@/hubaba/MissionSet";
 import UserManagement from "@/hubaba/UserManagement";
 import Test1 from "@/hubaba/TestOne";
 
@@ -14,9 +16,14 @@ const routes = [
   },
   {
     path: "/login",
-    name: "login",
-    component: Login,
+    name: "Login",
+    component: Login
   },
+    {
+        path: "/student",
+        name: "StudentLogin",
+        component: Student
+    },
   {
     path: "/ranking",
     name: "Ranking",
@@ -50,7 +57,6 @@ const routes = [
   },
 ];
 const router = createRouter({
-  routes,
-  history: createWebHashHistory(),
-});
-export default router;
+    routes, history: createWebHistory(),
+})
+export default router
