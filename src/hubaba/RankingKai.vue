@@ -1,11 +1,11 @@
 <template>
   <a-layout class="layout-demo">
     <a-layout-sider theme="dark" breakpoint="lg" :width="300">
-      <div class="logo"/>
+      <div class="logo" />
       <a-menu
-          :default-selected-keys="['userManagement']"
-          :style="{ width: '100%' }"
-          @menu-item-click="onClickMenuItem"
+        :default-selected-keys="['rankingkai']"
+        :style="{ width: '100%' }"
+        @menu-item-click="onClickMenuItem"
       >
         <a-menu-item key="rankingkai">
           <IconBarChart></IconBarChart>
@@ -22,94 +22,57 @@
       </a-menu>
     </a-layout-sider>
     <a-layout>
-      <a-layout-content class="content">
-        <a-table :columns="columns" :data="tableData" :column-resizable="true"
-                 :pagination="pagination" class="table"/>
-      </a-layout-content>
+      <a-layout>
+        <a-layout-content><RankingPluginDetail v-bind:users="users" /></a-layout-content>
+      </a-layout>
     </a-layout>
   </a-layout>
 </template>
 <script>
-import {IconBarChart, IconPen, IconUser} from "@arco-design/web-vue/es/icon";
+import { defineComponent } from "vue";
+import { IconBarChart, IconPen, IconUser } from "@arco-design/web-vue/es/icon";
+import RankingPluginDetail from "@/components/RankingPluginDetail.vue";
 
-export default {
+export default defineComponent({
   data() {
     return {
-      columns: [
-        {
-          title: 'Id',
-          dataIndex: 'id',
-        },
-        {
-          title: 'Name',
-          dataIndex: 'name',
-        },
-        {
-          title: 'Tel',
-          dataIndex: 'tel',
-        },
-        {
-          title: 'Age',
-          dataIndex: 'age',
-        },
-        {
-          title: 'Url',
-          dataIndex: 'url',
-        }, {
-          title: 'Ranking',
-          dataIndex: 'ranking',
-        },
+      users: [
+        { name: "王狗剩", clear: 7 },
+        { name: "李根宝", clear: 9 },
+        { name: "David", clear: 1 },
       ],
-      tableData: [],
-      pagination: {
-        pageSize: 10,
-      }
-    }
+    };
   },
+
   components: {
     IconBarChart,
     IconPen,
     IconUser,
-  },
-  created() {
-    fetch("/api/student/getRanking")
-        .then((res) => res.json())
-        .then((response) => {
-          console.log(23423423423423);
-          console.log(response);
-          this.tableData = response;
-        });
+    RankingPluginDetail,
   },
   methods: {
     onClickMenuItem(key) {
-      this.$router.push(key);
+        this.$router.push(key);
     },
   },
-};
+});
 </script>
 <style scoped>
-::v-deep .arco-layout-sider-children,
-.arco-menu-vertical .arco-menu-group-title:not(.arco-menu-has-icon),
-.arco-menu-vertical .arco-menu-pop-header:not(.arco-menu-has-icon),
-.arco-menu-vertical .arco-menu-inline-header:not(.arco-menu-has-icon) {
+::v-deep .arco-layout-sider-children {
   background-color: gainsboro;
 }
-
-::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon) {
+::v-deep .arco-menu-item:not(.arco-menu-has-icon) {
   background-color: gainsboro;
 }
-
-::v-deep .arco-menu-vertical .arco-menu-inner {
+::v-deep .arco-menu-inner {
   background-color: gainsboro;
 }
-
 ::v-deep .arco-menu-dark .arco-menu-item.arco-menu-selected,
 .arco-menu-dark .arco-menu-item.arco-menu-selected .arco-icon {
   color: green !important;
   font-size: 28px !important;
   background-color: rgb(227, 227, 227);
 }
-
 ::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon) {
   font-size: 20px;
   color: black;
@@ -120,30 +83,20 @@ export default {
   background: var(--color-fill-2);
   border: 1px solid var(--color-border);
 }
-
 .layout-demo :deep(.arco-layout-sider) .logo {
   height: 32px;
   margin: 12px 8px;
   background: rgba(129, 127, 127, 0.2);
 }
-
 .layout-demo :deep(.arco-layout-sider-light) .logo {
   background: var(--color-fill-2);
 }
-
-.layout-demo :deep(.arco-layout-header) {
-  height: 64px;
-  line-height: 64px;
-  background: var(--color-bg-3);
-}
-
 .layout-demo :deep(.arco-layout-content) {
   color: var(--color-text-2);
   font-weight: 400;
   font-size: 14px;
   background: var(--color-bg-3);
 }
-
 .layout-demo :deep(.arco-layout-content) {
   display: flex;
   flex-direction: column;
@@ -153,14 +106,5 @@ export default {
   font-stretch: condensed;
   text-align: center;
 }
-
-.content {
-  height: 90%;
-}
-
-.table {
-  height: 100%;
-  width: 80%;
-  margin: 5vh auto 5vh;
-}
 </style>
+    

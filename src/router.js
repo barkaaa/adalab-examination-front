@@ -5,7 +5,7 @@ import MarkdownChallenge from "@/views/MarkdownChallenge";
 import Ranking from "@/views/Ranking";
 import Student from "@/views/StudentLogin"
 import {createRouter, createWebHistory} from "vue-router";
-import MissionSet from "@/hubaba/MissionSet";
+import RankingKai from "./hubaba/RankingKai.vue";
 import UserManagement from "@/hubaba/UserManagement";
 import Test1 from "@/hubaba/TestOne";
 
@@ -54,6 +54,11 @@ const routes = [
     path: "/mission",
     name: "mission",
     component: Test1,
+  },
+  {
+    path: "/rankingkai",
+    name: "rankingkai",
+    component: RankingKai,
   },
 ];
 const router = createRouter({

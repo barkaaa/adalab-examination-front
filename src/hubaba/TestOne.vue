@@ -7,7 +7,7 @@
         :style="{ width: '100%' }"
         @menu-item-click="onClickMenuItem"
       >
-        <a-menu-item key="0_1">
+        <a-menu-item key="rankingkai">
           <IconBarChart></IconBarChart>
           排行榜单
         </a-menu-item>
@@ -72,7 +72,7 @@
             <a-tab-pane
               v-for="(mission, index) in missions"
               v-bind:key="index"
-              v-model:nowMission="key"
+              v-model:key="nowMission"
               :title="'第' + (index + 1) + '关'"
             >
               <div v-if="mission.type == 'common'" :style="{ display: 'grid' }">
@@ -85,18 +85,55 @@
                     hoverable
                   >
                     <template #extra>
-                      <a-link props @click="moreDetails">修改</a-link>
+                      <a-link props key="index" @click="moreDetails(index)"
+                        >修改</a-link
+                      >
                     </template>
+                    <a-modal v-model:visible="visible3[index]">
+                      <template #title>题号{{ index + 1 }}</template>
+                      <div style="display: flex; flex-direction: column">
+                        <a-select
+                          v-model="question.questionType"
+                          :style="{ width: '320px' }"
+                          placeholder="选择问题类型 ..."
+                        >
+                          <a-option>填空</a-option>
+                          <a-option>选择</a-option>
+                        </a-select>
+                        问题描述
+                        <a-textarea
+                          v-model="newDescription"
+                          default-value=""
+                          auto-size
+                        />
+                        <div v-show="isChoose == '选择'">
+                          选择题选项
+                          <div
+                            v-for="index in choicesNumber"
+                            v-bind:key="index"
+                          >
+                            {{ alphabet[index - 1] }}.
+                            <a-textarea
+                              v-model="choices[index - 1]"
+                              default-value=""
+                              auto-size
+                            />
+                          </div>
+                          <a-button @click="addChoice">添加选项</a-button>
+                        </div>
+                      </div>
+                    </a-modal>
                     <a-collapse
                       v-if="question.questionType == '选择'"
                       :bordered="false"
                     >
-                      <a-collapse-item :header="question.description.ask">
+                      <a-collapse-item :header="question.description">
                         <div
-                          v-for="(answer, index) in question.description.answer"
+                          v-for="(answer, index) in question.options"
                           v-bind:key="index"
+                          v-bind:text="answer"
                         >
-                          {{ alphabet[index] }}. {{ answer }}
+                          <!-- {{ alphabet[index] }}. {{ answer }} -->
                         </div>
                       </a-collapse-item>
                     </a-collapse>
@@ -122,7 +159,6 @@
                       >
                         <a-option>填空</a-option>
                         <a-option>选择</a-option>
-                        <a-option>判断</a-option>
                       </a-select>
                       问题描述
                       <a-textarea
@@ -205,13 +241,11 @@ export default defineComponent({
     addOneQuestion() {
       this.$router.push("test1");
     },
-    moreDetails(key) {
-      console.log(key);
-    },
   },
   setup() {
     const visible1 = ref(false);
     const visible2 = ref(false);
+    const visible3 = ref([]);
     var nowMission = ref();
     var missions = [
       {
@@ -226,27 +260,25 @@ export default defineComponent({
           },
           {
             questionType: "选择",
-            description: {
-              ask:
-                "2 test test test test test test test test test test test " +
-                "test test test test test test test test test test test test test " +
-                "test test test test test test test test test test test test test " +
-                "test test test test test test test test test test test test test " +
-                "test test test test test test test test test test test test test " +
-                "test test test test test test test test test test test test test " +
-                "test test test test test test test test test test test test test " +
-                "test test test test test test test test test test test test test " +
-                "test test test test test test test test test test test test test " +
-                "test test test test test test test test test test test test test " +
-                "test test test test test test test test test test test test test " +
-                "test test test test test test test test test test test test test " +
-                "test test test test test test test test test test test test test " +
-                "test test test test test test test test test test test test test",
-              answer: ["选a", "选b", "选c"],
-            },
+            description:
+              "2 test test test test test test test test test test test " +
+              "test test test test test test test test test test test test test " +
+              "test test test test test test test test test test test test test " +
+              "test test test test test test test test test test test test test " +
+              "test test test test test test test test test test test test test " +
+              "test test test test test test test test test test test test test " +
+              "test test test test test test test test test test test test test " +
+              "test test test test test test test test test test test test test " +
+              "test test test test test test test test test test test test test " +
+              "test test test test test test test test test test test test test " +
+              "test test test test test test test test test test test test test " +
+              "test test test test test test test test test test test test test " +
+              "test test test test test test test test test test test test test " +
+              "test test test test test test test test test test test test test",
+            options: ["选a", "选b", "选c"],
           },
           {
-            questionType: "判断",
+            questionType: "填空",
             description:
               "3 test test test test test test test test test test test " +
               "test test test test test test test test test test test test test " +
@@ -280,14 +312,15 @@ export default defineComponent({
       visible2.value = true;
       choicesNumber.value = 4;
     };
+    const moreDetails = (index) => {
+      visible3.value[index] = true;
+    };
     const OkNewquestion = (done) => {
       if (isChoose.value == "选择") {
         missions[0].textContents.push({
           questionType: "选择",
-          description: {
-            ask: deepCopy(newDescription.value),
-            answer: deepCopy(choices.value),
-          },
+          description: deepCopy(newDescription.value),
+          options: deepCopy(choices.value),
         });
       } else {
         missions[0].textContents.push({
@@ -308,6 +341,7 @@ export default defineComponent({
         // done(false)
       }, 3000);
     };
+
     const handleCancel = () => {
       visible1.value = false;
       visible2.value = false;
@@ -322,9 +356,11 @@ export default defineComponent({
     return {
       visible1,
       visible2,
+      visible3,
       nowMission,
       handleClick1,
       handleClick2,
+      moreDetails,
       handleBeforeOk,
       handleCancel,
       missions,
@@ -344,7 +380,7 @@ export default defineComponent({
   width: 75vm;
   margin-left: 60px;
   margin-right: 60px;
-  margin-bottom: 24px;
+  margin-bottom: 0px;
   transition-property: all;
 }
 .card-demo:hover {
