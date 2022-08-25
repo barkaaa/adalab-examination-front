@@ -34,7 +34,7 @@
 <p>{{item.name}}</p>
     <!-- <a class="btn" href="#open-modal"><p>{{ item.name }}</p></a> -->
     <div style="display:flex;flex-direction: row;justify-content:space-around">
-      <div v-for="count in 15" class="dot"><p>{{count}}</p></div>
+      <div v-for="count in 13" class="dot"><p>{{count}}</p></div>
     </div>
     <br>
 </div>
@@ -52,10 +52,8 @@ export default {
   },
   data() {
     return {
-      color: "red",
-      number: this.users[1].clear + "%",
-      user: this.users,
-      students:{}
+      
+      
     };
   },
   
@@ -70,6 +68,7 @@ html{
   scrollbar-width: none;
    
 }
+
 * {
   box-sizing: border-box;
   
@@ -87,6 +86,7 @@ html{
   overflow-x: hidden;
   /* width:50%;
   height:50%; */
+  
 
   
 }

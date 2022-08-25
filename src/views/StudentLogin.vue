@@ -9,7 +9,9 @@
     <br/>
     <span class="text">{{ obj.output }}</span>
     <br/>
-    <img :src="require('../assets/github.svg')" alt="Login using Github" />
+    <br/>
+    <a href="https://github.com/login/oauth/authorize?client_id=d9f9e0e5413419ab273e&redirect_uri=http://localhost:8080/callback&scope=user&state=1">
+    <img :src="require('../assets/github.svg')" alt="Login using Github" /></a>
   </div>
 </template>
 
@@ -59,23 +61,26 @@ export default {
 
 <style scoped>
 .main {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, .8);
   position: absolute;
   top: 30%;
   left: 30%;
   width: 40%;
   text-align: center;
-  border-radius: 3rem;
+  border-radius: 1.5rem;
   box-shadow: 0 0 8px -5px #000000;
   padding: 3% 5px 5%;
   font-family: "Poppins", sans-serif;
 }
 span {
+  color: #19c745;
   font-size: 3em;
+  display: inline-block;
+  line-height: 2em;
 }
 img {
   height: 2.2rem;
-  margin: 10px;
+  margin: 0;
   user-select: none;
   cursor: pointer;
   -webkit-transition: all .4s ease;
