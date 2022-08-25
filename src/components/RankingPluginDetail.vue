@@ -31,10 +31,10 @@
 
 <div class="list">
 <div  v-for="(item, i) in users">
-<p>{{item.name}}</p>
+<p @click="getData()">{{item.name}}</p>
     <!-- <a class="btn" href="#open-modal"><p>{{ item.name }}</p></a> -->
     <div style="display:flex;flex-direction: row;justify-content:space-around">
-      <div v-for="count in 13" class="dot"><p>{{count}}</p></div>
+      <div v-for="count in 13" class="dot" :class="[count<=item.ranking?'statusGreen':'statusNormal']"><p>{{count}}</p></div>
     </div>
     <br>
 </div>
@@ -49,6 +49,14 @@ export default {
   name: "RankingPluginDetail",
   props: {
     users: Array,
+  },
+  methods: {
+    getData() {
+      this.axios.post('api/student/studentCode/FilesTree')
+          .then(res => {
+            console.log(res.data);
+          });
+    }
   },
   data() {
     return {
@@ -188,4 +196,8 @@ a-steps{
   display: flex;
   flex-direction: row;
 } */
+/* 状态 */
+.statusGreen{
+  background-color: rgb(170, 170, 170);
+}
 </style>

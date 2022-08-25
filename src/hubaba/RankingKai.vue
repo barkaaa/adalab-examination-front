@@ -42,6 +42,13 @@ export default defineComponent({
         { name: "David", clear: 1 },
       ],
     };
+  },mounted() {
+    console.log('123');
+    this.axios.get('/api/student/getRanking')
+      .then(res=>{
+        this.users = res.data;
+        //console.log(res.data[0].id);
+      });
   },
 
   components: {
