@@ -235,7 +235,7 @@ export default defineComponent({
     },
     saveMission(){
       this.axios
-        .post("api/student/studentCode/FilesTree", this.missions)
+        .post("", this.missions)
         .then((res) => {
           console.log(res.data);
         })
