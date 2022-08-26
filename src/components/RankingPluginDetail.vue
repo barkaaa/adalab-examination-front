@@ -1,6 +1,5 @@
 <template>
-
-<!-- <a-steps :current="2" line-less>
+  <!-- <a-steps :current="2" line-less>
       <a-step></a-step>
       <a-step></a-step>
       <a-step></a-step>
@@ -18,98 +17,116 @@
 
     </a-steps> -->
 
- 
-<!-- item.clear -->
-<div id="open-modal" class="modal-window">
-  <div>
-    <a href="#" title="Close" class="modal-close">Close</a>
-    <div><iframe src="//player.bilibili.com/player.html?aid=217014295&bvid=BV1Pa411N7eg&cid=804937613&page=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe></div>
-   
-  
+  <!-- item.clear -->
+  <div id="open-modal" class="modal-window">
+    <div>
+      <a href="#" title="Close" class="modal-close">Close</a>
+      <div>
+        <iframe
+          src="//player.bilibili.com/player.html?aid=217014295&bvid=BV1Pa411N7eg&cid=804937613&page=1"
+          scrolling="no"
+          border="0"
+          frameborder="no"
+          framespacing="0"
+          allowfullscreen="true"
+        >
+        </iframe>
+      </div>
     </div>
-</div>
+  </div>
 
-<div class="list">
-<div  v-for="(item, i) in users">
-<p>{{item.name}}</p>
-    <!-- <a class="btn" href="#open-modal"><p>{{ item.name }}</p></a> -->
-    <div style="display:flex;flex-direction: row;justify-content:space-around">
-      <div v-for="count in 13" class="dot"><p>{{count}}</p></div>
+  <div class="list">
+    <div id="bigContainer" v-for="(item, i) in users">
+      <p class="studentName" @click="getData()">{{ item.name }}</p>
+      <!-- <a class="btn" href="#open-modal"><p>{{ item.name }}</p></a> -->
+      <div class="dots"
+        style="
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+        "
+      >
+        <div
+          v-for="count in 13"
+          class="dot"
+          :class="[count <= item.ranking ? 'statusGreen' : 'statusNormal']"
+          @click="getPersonelInfo(item)"
+        >
+          <p>{{ count }}</p>
+        </div>
+      </div>
+      <div class="btn">
+        <a href="#open-modal"><icon-history :style="[{ fontSize: '32px' }, { color: 'grey' }]" /></a>
+        <a href="#open-modal"><icon-user :style="[{ fontSize: '32px' }, { color: 'grey' }]" /></a>
+        <a href="#open-modal"><icon-desktop :style="[{ fontSize: '32px' }, { color: 'grey' }]" /></a>
+      </div>
+      <br />
     </div>
-    <br>
-</div>
-</div>
-
-  
+  </div>
 </template>
 
 <script>
-
 export default {
   name: "RankingPluginDetail",
   props: {
     users: Array,
   },
-  data() {
-    return {
-      
-      
-    };
+  methods: {
+    getData() {
+      this.axios.post("api/student/studentCode/FilesTree").then((res) => {
+        console.log(res.data);
+      });
+    },
+     getPersonelInfo(users) {
+      this.axios.post("api/student/studentCode/FilesTree/${users.name}").then((res) => {
+        console.log(res.data);
+      });
+    },
   },
-  
-
-   
+  data() {
+    return {};
+  },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-html{
+html {
   scrollbar-width: none;
-   
 }
 
 * {
   box-sizing: border-box;
-  
 }
 /* template{
   text-align: center;
 } */
 
-
-
-
-
-.list{
+.list {
   overflow: scroll;
   overflow-x: hidden;
   /* width:50%;
   height:50%; */
-  
-
-  
+  padding-left: 5vw;
+  padding-right: 5vw;
+  padding-top: 10vw;
+  padding-bottom: 5vh;
 }
-.list::-webkit-scrollbar{
-  display:none;
-  
+.list::-webkit-scrollbar {
+  display: none;
 }
 
-
-.list div{
+.list div {
   margin: 0px;
   padding: 0px;
   text-align: center;
 }
-
-
 
 /* a-progress{
   text-align: center;
   size: large;
   
 } */
-
 
 .modal-window {
   position: fixed;
@@ -138,7 +155,7 @@ html{
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   padding: 2em;
   background: #ffffff;
 }
@@ -164,28 +181,48 @@ html{
 .modal-close:hover {
   color: black;
 }
-a-steps{
+a-steps {
   display: flex;
 }
-.a-step{
+.a-step {
   background-color: black;
 }
 
-.dot{
+.dot {
   width: 30px;
   height: 30px;
   background-color: rgba(0, 0, 0, 0.1);
-  top: 0;;
+  top: 0;
   border-radius: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.dot:hover{
+.dot:hover {
   background-color: aqua;
+}
+icon-history {
+  size: 30px;
 }
 /* .dotContainer{
   display: flex;
   flex-direction: row;
 } */
+/* 状态 */
+.statusGreen {
+  background-color: pink;
+}
+#bigContainer{
+  display: flex;
+}
+.dots{
+  flex: 10;
+}
+.studentName{
+  flex:3;
+}
+.btn{
+  flex:4;
+}
+
 </style>

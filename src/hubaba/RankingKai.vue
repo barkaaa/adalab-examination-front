@@ -37,11 +37,16 @@ export default defineComponent({
   data() {
     return {
       users: [
-        { name: "王狗剩", clear: 7 },
-        { name: "李根宝", clear: 9 },
-        { name: "David", clear: 1 },
+        
       ],
     };
+  },mounted() {
+    console.log('123');
+    this.axios.get('/api/student/getRanking')
+      .then(res=>{
+        this.users = res.data;
+        //console.log(res.data[0].id);
+      });
   },
 
   components: {
