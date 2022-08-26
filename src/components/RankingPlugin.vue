@@ -116,6 +116,7 @@ a {
   overflow: scroll;
   overflow-x: hidden;
   margin: 1vw;
+  height: 63vh;
 }
 .list::-webkit-scrollbar {
   display: none;
@@ -189,7 +190,7 @@ a {
   width: 1vh;
 } */
 .name {
-  width: 50px;
+  width: 100px;
   font-size: 4px;
   height: 15px;
 }
