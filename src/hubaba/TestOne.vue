@@ -79,67 +79,90 @@
                 <div style="display: flex; flex-direction: column">
                   <a-card
                     v-for="(question, index) in missions[index].textContents"
-                    v-bind:key="index"
+                    :key="question"
                     class="card-demo"
-                    :title="index + 1 + '. ' + question.questionType"
+                    :title="'问题' + (index + 1)"
                     hoverable
                   >
                     <template #extra>
-                      <a-link props key="index" @click="moreDetails(index)"
+                      <a-link
+                        props
+                        key="index"
+                        @click="moreDetails(index, question)"
                         >修改</a-link
                       >
                     </template>
-                    <a-modal v-model:visible="visible3[index]">
+                    <a-modal
+                      v-model:visible="visible3[index]"
+                      @close="saveChange(question)"
+                      ok-text="保存并关闭，点右上角X同理"
+                      hide-cancel
+                    >
                       <template #title>题号{{ index + 1 }}</template>
                       <div style="display: flex; flex-direction: column">
+                        题型
                         <a-select
-                          v-model="question.questionType"
+                          :default-value="question.questionType"
+                          v-model="changeTypeMark"
                           :style="{ width: '320px' }"
-                          placeholder="选择问题类型 ..."
                         >
                           <a-option>填空</a-option>
                           <a-option>选择</a-option>
                         </a-select>
                         问题描述
-                        <a-textarea
-                          v-model="newDescription"
-                          default-value=""
-                          auto-size
-                        />
-                        <div v-show="isChoose == '选择'">
+                        <a-textarea v-model="question.description" auto-size />
+                        <div v-if="changeTypeMark == '选择'">
                           选择题选项
                           <div
-                            v-for="index in choicesNumber"
+                            v-for="index in changeOptionsMark"
                             v-bind:key="index"
                           >
                             {{ alphabet[index - 1] }}.
                             <a-textarea
-                              v-model="choices[index - 1]"
-                              default-value=""
+                              v-model="changeChoices[index - 1]"
                               auto-size
                             />
                           </div>
-                          <a-button @click="addChoice">添加选项</a-button>
+                          <a-button @click="addOptionsMark">添加选项</a-button>
                         </div>
                       </div>
                     </a-modal>
+                    <div style="font-size: 20px; text-align: left">
+                      <span style="color: rgb(90, 160, 160)">题型：</span
+                      >{{ question.questionType }}
+                    </div>
+                    <a-divider />
+                    <div
+                      style="
+                        font-size: 20px;
+                        text-align: left;
+                        color: rgb(90, 160, 160);
+                      "
+                    >
+                      题目描述:
+                    </div>
+                    <div
+                      style="
+                        text-align: left;
+                        margin-top: 10px;
+                        margin-left: 40px;
+                      "
+                    >
+                      {{ question.description }}
+                    </div>
                     <a-collapse
                       v-if="question.questionType == '选择'"
                       :bordered="false"
                     >
-                      <a-collapse-item :header="question.description">
+                      <a-collapse-item header="展开选项">
                         <div
                           v-for="(answer, index) in question.options"
                           v-bind:key="index"
-                          v-bind:text="answer"
                         >
-                          <!-- {{ alphabet[index] }}. {{ answer }} -->
+                          {{ alphabet[index] }}. {{ answer }}
                         </div>
                       </a-collapse-item>
                     </a-collapse>
-                    <div v-else>
-                      {{ question.description }}
-                    </div>
                   </a-card>
                 </div>
                 <div>
@@ -147,7 +170,6 @@
                   <a-modal
                     v-model:visible="visible2"
                     @cancel="handleCancel"
-                    @close="handleClose"
                     :on-before-ok="OkNewquestion"
                   >
                     <template #title> 添加问题 </template>
@@ -192,7 +214,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { defineComponent } from "vue";
 import { IconBarChart, IconPen, IconUser } from "@arco-design/web-vue/es/icon";
 
@@ -247,7 +269,7 @@ export default defineComponent({
     const visible2 = ref(false);
     const visible3 = ref([]);
     var nowMission = ref();
-    var missions = [
+    var missions = reactive([
       {
         type: "common",
         textContents: [
@@ -287,12 +309,16 @@ export default defineComponent({
         ],
       },
       { type: "file" },
-    ];
+    ]);
 
     var isChoose = ref();
     var newDescription = ref();
     var choicesNumber = ref(4);
     var choices = ref([]);
+    var changeTypeMark = ref();
+    var changeOptionsMark = ref(0);
+    var changeChoices = ref([]);
+    var changeDescription = ref();
 
     const deepCopy = (obj) => {
       if (typeof obj != "object") {
@@ -312,8 +338,17 @@ export default defineComponent({
       visible2.value = true;
       choicesNumber.value = 4;
     };
-    const moreDetails = (index) => {
+    const moreDetails = (index, question) => {
       visible3.value[index] = true;
+      changeTypeMark.value = question.questionType;
+      if (question.options) {
+        changeOptionsMark.value = question.options.length;
+        changeChoices.value = question.options;
+      } else {
+        changeOptionsMark.value = 4;
+        changeChoices.value = [];
+        question.options = [];
+      }
     };
     const OkNewquestion = (done) => {
       if (isChoose.value == "选择") {
@@ -353,6 +388,14 @@ export default defineComponent({
       choicesNumber.value++;
     };
 
+    const addOptionsMark = () => {
+      changeOptionsMark.value++;
+    };
+
+    const saveChange = (question) => {
+      question.questionType = deepCopy(changeTypeMark.value);
+    };
+
     return {
       visible1,
       visible2,
@@ -370,16 +413,25 @@ export default defineComponent({
       addChoice,
       newDescription,
       OkNewquestion,
+      changeTypeMark,
+      changeOptionsMark,
+      addOptionsMark,
+      changeChoices,
+      saveChange,
+      changeDescription,
     };
   },
 });
 </script>
 
 <style scoped>
+::v-deep .arco-collapse-item-header-title {
+  color: rgb(110, 110, 180);
+}
 .card-demo {
   width: 75vm;
-  margin-left: 60px;
-  margin-right: 60px;
+  margin-left: 120px;
+  margin-right: 120px;
   margin-bottom: 0px;
   transition-property: all;
 }
@@ -413,7 +465,7 @@ export default defineComponent({
   color: black;
 }
 .layout-demo {
-  height: 100vh;
+  height: 99vh;
   background: var(--color-fill-2);
   border: 1px solid var(--color-border);
 }
