@@ -143,6 +143,7 @@ a {
   background-color: #2196f3;
 }
 .status3 {
-  background-color: #4caf50;
+  /* background-color: #0f0; */
+  background: linear-gradient(90deg, #0f0, #0ff);
 }
 </style>
