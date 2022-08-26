@@ -5,15 +5,7 @@
       <a href="#" title="Close" class="modal-close">Close</a>
       <h1>ko</h1>
       <div>
-        <iframe
-          src="//player.bilibili.com/player.html?aid=217014295&bvid=BV1Pa411N7eg&cid=804937613&page=1"
-          scrolling="no"
-          border="0"
-          frameborder="no"
-          framespacing="0"
-          allowfullscreen="true"
-        >
-        </iframe>
+       
       </div>
     </div>
   </div>
