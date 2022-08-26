@@ -50,14 +50,15 @@
           v-for="count in 13"
           class="dot"
           :class="[count <= item.ranking ? 'statusGreen' : 'statusNormal']"
+          @click="getPersonelInfo(item)"
         >
           <p>{{ count }}</p>
         </div>
       </div>
       <div class="btn">
-        <icon-history :style="[{ fontSize: '32px' }, { color: 'grey' }]" />
-        <icon-user :style="[{ fontSize: '32px' }, { color: 'grey' }]" />
-        <icon-desktop :style="[{ fontSize: '32px' }, { color: 'grey' }]" />
+        <a href="#open-modal"><icon-history :style="[{ fontSize: '32px' }, { color: 'grey' }]" /></a>
+        <a href="#open-modal"><icon-user :style="[{ fontSize: '32px' }, { color: 'grey' }]" /></a>
+        <a href="#open-modal"><icon-desktop :style="[{ fontSize: '32px' }, { color: 'grey' }]" /></a>
       </div>
       <br />
     </div>
@@ -73,6 +74,11 @@ export default {
   methods: {
     getData() {
       this.axios.post("api/student/studentCode/FilesTree").then((res) => {
+        console.log(res.data);
+      });
+    },
+     getPersonelInfo(users) {
+      this.axios.post("api/student/studentCode/FilesTree/${users.name}").then((res) => {
         console.log(res.data);
       });
     },
@@ -204,7 +210,7 @@ icon-history {
 } */
 /* 状态 */
 .statusGreen {
-  background-color: rgb(8, 235, 46);
+  background-color: pink;
 }
 #bigContainer{
   display: flex;
@@ -218,4 +224,5 @@ icon-history {
 .btn{
   flex:4;
 }
+
 </style>
