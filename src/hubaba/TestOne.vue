@@ -86,6 +86,7 @@
                         />
                       </div>
                       <a-button @click="addOptionsMark">添加选项</a-button>
+                      <a-button @click="minusOptionsMark">减少选项</a-button>
                       <a-divider />
                       <a-space direction="vertical" size="large">
                         是否为多选
@@ -233,9 +234,9 @@ export default defineComponent({
     addOneQuestion() {
       this.$router.push("test1");
     },
-    saveMission(){
+    saveMission() {
       this.axios
-        .post("", this.missions)
+        .put("api/questionnaire/addorupdate", this.missions)
         .then((res) => {
           console.log(res.data);
         })
@@ -394,11 +395,14 @@ export default defineComponent({
       changeOptionsMark.value++;
     };
 
+    const minusOptionsMark = () => {
+      changeOptionsMark.value--;
+      changeChoices.value.length = changeChoices.value.length - 1;
+    };
+
     const saveChange = (question) => {
       question.questionType = deepCopy(changeTypeMark.value);
     };
-
-    
 
     return {
       visible1,
@@ -423,6 +427,7 @@ export default defineComponent({
       saveChange,
       changeDescription,
       arrayDeepCopy,
+      minusOptionsMark,
     };
   },
 });
