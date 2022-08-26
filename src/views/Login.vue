@@ -71,9 +71,6 @@ export default {
       res.json()
     });
     console.log(res)
-    // this.axios.get("/login").then((data) => {
-    //   console.log(data)
-    // })
   }
 }
 </script>

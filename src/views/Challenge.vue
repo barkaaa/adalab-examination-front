@@ -18,7 +18,6 @@
       <icon-arrow-fall/>
       <div class="submit_box">
         <a-button type="primary">
-
           <template #icon>
             <icon-double-right/>
           </template>
@@ -33,10 +32,6 @@
 <script>
 import Timer from "@/components/Timer";
 import RankingPlugin from "@/components/RankingPlugin.vue";
-
-import axios from "axios";
-
-
 import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
 
 export default {
@@ -60,7 +55,9 @@ export default {
   components: {
     Timer,
     RankingPlugin,
-  }, data() {
+    IconDoubleRight
+  },
+  data() {
 
     return {
       users: [

@@ -1,24 +1,21 @@
 <template>
   <div class="box">
-    <markdown-preview value="content" />
+    <div v-html="content"/>
   </div>
 </template>
 
 <script>
-import { MarkdownPreview } from 'vue-meditor'
+
 export default {
   name: "MarkdownChallenge",
-  components:{
-    MarkdownPreview
-  },
+
   data() {
     return {
-      content: ""
+      content: " "
     }
   },
   mounted() {
-
-    this.content = " # adalab-examination-front\n" +
+    let md = " # adalab-examination-front\n" +
         "\n" +
         "## Project setup\n" +
         "```\n" +
@@ -41,31 +38,7 @@ export default {
         "```\n" +
         "\n" +
         "### Customize configuration\n" +
-        "See [Configuration Reference](https://cli.vuejs.org/config/).\n" +
-        " # adalab-examination-front\n" +
-        "\n" +
-        "## Project setup\n" +
-        "```\n" +
-        "yarn install\n" +
-        "```\n" +
-        "\n" +
-        "### Compiles and hot-reloads for development\n" +
-        "```\n" +
-        "yarn serve\n" +
-        "```\n" +
-        "\n" +
-        "### Compiles and minifies for production\n" +
-        "```\n" +
-        "yarn build\n" +
-        "```\n" +
-        "\n" +
-        "### Lints and fixes files\n" +
-        "```\n" +
-        "yarn lint\n" +
-        "```\n" +
-        "\n" +
-        "### Customize configuration\n" +
-        "See [Configuration Reference](https://cli.vuejs.org/config/).\n"
+        "See [Configuration Reference](https://cli.vuejs.org/config/).\n";
     this.content = this.markded.parse(md);
   }
 }

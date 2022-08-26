@@ -1,11 +1,11 @@
 <template>
   <a-layout class="layout-demo">
     <a-layout-sider theme="dark" breakpoint="lg" :width="300">
-      <div class="logo" />
+      <div class="logo"/>
       <a-menu
-        :default-selected-keys="['0_1']"
-        :style="{ width: '100%' }"
-        @menu-item-click="onClickMenuItem"
+          :default-selected-keys="['0_1']"
+          :style="{ width: '100%' }"
+          @menu-item-click="onClickMenuItem"
       >
         <a-menu-item key="0_1">
           <IconBarChart></IconBarChart>
@@ -21,16 +21,14 @@
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
-    <a-layout>
-      <a-layout>
-        <a-layout-content>Content</a-layout-content>
-      </a-layout>
+    <a-layout style="padding: 0 24px;">
+      <router-view/>
     </a-layout>
   </a-layout>
 </template>
 <script>
-import { defineComponent } from "vue";
-import { IconBarChart, IconPen, IconUser } from "@arco-design/web-vue/es/icon";
+import {defineComponent} from "vue";
+import {IconBarChart, IconPen, IconUser} from "@arco-design/web-vue/es/icon";
 
 export default defineComponent({
   components: {
@@ -39,7 +37,8 @@ export default defineComponent({
     IconUser,
   },
   methods: {
-    onClickMenuItem() {},
+    onClickMenuItem() {
+    },
   },
 });
 </script>
@@ -47,18 +46,22 @@ export default defineComponent({
 ::v-deep .arco-layout-sider-children {
   background-color: gainsboro;
 }
+
 ::v-deep .arco-menu-item:not(.arco-menu-has-icon) {
   background-color: gainsboro;
 }
+
 ::v-deep .arco-menu-inner {
   background-color: gainsboro;
 }
+
 ::v-deep .arco-menu-dark .arco-menu-item.arco-menu-selected,
 .arco-menu-dark .arco-menu-item.arco-menu-selected .arco-icon {
   color: green !important;
   font-size: 28px !important;
   background-color: rgb(227, 227, 227);
 }
+
 ::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon) {
   font-size: 20px;
   color: black;
@@ -69,20 +72,24 @@ export default defineComponent({
   background: var(--color-fill-2);
   border: 1px solid var(--color-border);
 }
+
 .layout-demo :deep(.arco-layout-sider) .logo {
   height: 32px;
   margin: 12px 8px;
   background: rgba(129, 127, 127, 0.2);
 }
+
 .layout-demo :deep(.arco-layout-sider-light) .logo {
   background: var(--color-fill-2);
 }
+
 .layout-demo :deep(.arco-layout-content) {
   color: var(--color-text-2);
   font-weight: 400;
   font-size: 14px;
   background: var(--color-bg-3);
 }
+
 .layout-demo :deep(.arco-layout-content) {
   display: flex;
   flex-direction: column;
@@ -91,5 +98,9 @@ export default defineComponent({
   font-size: 16px;
   font-stretch: condensed;
   text-align: center;
+}
+
+.main-box {
+  padding: 30px 30px 0 30px;
 }
 </style>
