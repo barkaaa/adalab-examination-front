@@ -1,17 +1,4 @@
 <template>
-  <!-- item.clear -->
-  <div id="open-modal" class="modal-window">
-    <div>
-      <a href="#" title="Close" class="modal-close">Close</a>
-      <h1>ko</h1>
-      <div>
-       
-      </div>
-    </div>
-  </div>
-
-
-
   <h1 id="rankingList">排行榜</h1>
   <div class="list">
     <div class="outer-container" v-for="(item, i) in users">
