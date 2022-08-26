@@ -30,6 +30,14 @@ export default {
       ],
     };
   },
+   mounted() {
+    console.log('123');
+    this.axios.get('/api/student/getRanking')
+      .then(res=>{
+        this.users = res.data;
+        //console.log(res.data[0].id);
+      });
+  },
 
   //   props: {
   //     img: String,

@@ -80,14 +80,14 @@ export default {
 @import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
 
 .main {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgb(239, 237, 237);
   position: absolute;
   top: 20%;
   left: 30%;
   width: 40%;
   text-align: center;
   padding: 5px;
-  border-radius: 3rem;
+  border-radius: 1.5rem;
   box-shadow: 0px 0px 8px -5px #000000;
   padding-top: 3%;
   padding-bottom: 5%;
@@ -100,7 +100,7 @@ h1 {
 }
 
 input {
-  border-radius: 3rem;
+  border-radius: 1.5rem;
   border: none;
   padding: 10px;
   text-align: center;

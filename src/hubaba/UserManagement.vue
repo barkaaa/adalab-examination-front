@@ -7,7 +7,7 @@
           :style="{ width: '100%' }"
           @menu-item-click="onClickMenuItem"
       >
-        <a-menu-item key="0_1">
+        <a-menu-item key="rankingkai">
           <IconBarChart></IconBarChart>
           排行榜单
         </a-menu-item>
@@ -24,42 +24,130 @@
     <a-layout>
       <a-layout-content class="content">
         <a-table :columns="columns" :data="tableData" :column-resizable="true"
-                 :pagination="pagination" class="table"/>
+                 :pagination="pagination" class="table">
+          <template #header="{record}">
+            <a-switch checked-color="#41AD59" unchecked-color="#E3E3EC"
+                      :default-checked="record.ranking>=5"/>
+          </template>
+          <template #option="{ record }">
+            <a-button @click="handleClick(record.name)">
+              <icon-robot type="icon-person" :size="20"/>
+            </a-button>
+          </template>
+        </a-table>
+        <a-modal v-model:visible="visible" @ok="handleOk" :hide-cancel="true"
+                 :closable="false">
+          <template #title>asdasd</template>
+          <a-descriptions style="margin-top: 20px" :data="list" :column="1"
+                          :align="align" :size="size">
+            <a-descriptions-item v-for="item of list"
+                                 :label="item.label">
+              <template #label>
+                <icon-font :type="item.cName" :size="20"
+                           style="vertical-align: middle"></icon-font>
+                {{ item.label }}
+              </template>
+              <a-tag>{{ item.value }}</a-tag>
+            </a-descriptions-item>
+          </a-descriptions>
+          <button @click="dasda">aadasdasdasd</button>
+        </a-modal>
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 <script>
-import {IconBarChart, IconPen, IconUser} from "@arco-design/web-vue/es/icon";
+import {IconBarChart, IconPen, IconRobot, IconUser} from "@arco-design/web-vue/es/icon";
+import {getCurrentInstance, ref} from "vue";
+import {Icon} from '@arco-design/web-vue';
 
+const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3611034_pmqkuts7v7b.js'});
 export default {
+  setup() {
+    let data = ref([]);
+    const visible = ref(false);
+    const size = ref('large');
+    let currentInstance = getCurrentInstance();
+    const {axios} = currentInstance.appContext.config.globalProperties
+    const align = {
+      value: 'right'
+    }
+    const handleClick = async (name) => {
+      visible.value = true;
+      data = await axios.post("api/student/getDetail", {name});
+      console.log(data);
+      console.log(data.data.name)
+    }
+    const handleOk = () => {
+      visible.value = false;
+    }
+    const list = [{
+      label: 'Status',
+      value: 'status',
+      cName: "icon-sort",
+    }, {
+      label: 'Days needed',
+      value: '123-1234-1234',
+      cName: "icon-arrows-alt",
+    }, {
+      label: 'Actual Days',
+      value: 'Beijing',
+      cName: "icon-arrows-alt",
+    }, {
+      label: 'Date Created',
+      value: 'Beijing',
+      cName: "icon-shijian",
+    }, {
+      label: 'Last Edited',
+      value: 'Yingdu Building, Zhichun Road, Beijing',
+      cName: "icon-shijian",
+    }, {
+      label: 'Current Week',
+      value: 'Yingdu Building, Zhichun Road, Beijing',
+      cName: "icon-accesskeys",
+    }, {
+      label: 'Type',
+      value: 'Yingdu Building, Zhichun Road, Beijing',
+      cName: "icon-sort",
+    }];
+    return {
+      visible,
+      handleClick,
+      handleOk,
+      data,
+      list,
+      size,
+      align
+    }
+  },
   data() {
     return {
       columns: [
         {
-          title: 'Id',
-          dataIndex: 'id',
-        },
-        {
-          title: 'Name',
-          dataIndex: 'name',
-        },
-        {
-          title: 'Tel',
-          dataIndex: 'tel',
-        },
-        {
-          title: 'Age',
-          dataIndex: 'age',
-        },
-        {
-          title: 'Url',
-          dataIndex: 'url',
+          title: 'Header',
+          slotName: 'header',
         }, {
-          title: 'Ranking',
+          title: '姓名',
+          dataIndex: 'name',
+        }, {
+          title: '在职？',
+          dataIndex: 'isWork',
+        }, {
+          title: '年龄',
+          dataIndex: 'age',
+        }, {
+          title: '电话',
+          dataIndex: 'tel',
+        }, {
+          title: '当前进度',
           dataIndex: 'ranking',
-        },
-      ],
+        }, {
+          title: '链接-详情、网页',
+          dataIndex: 'webPage',
+        }, {
+          title: 'Details',
+          slotName: 'option'
+        }],
       tableData: [],
       pagination: {
         pageSize: 10,
@@ -70,6 +158,8 @@ export default {
     IconBarChart,
     IconPen,
     IconUser,
+    IconRobot,
+    IconFont
   },
   created() {
     fetch("/api/student/getRanking")
@@ -84,10 +174,22 @@ export default {
     onClickMenuItem(key) {
       this.$router.push(key);
     },
+    dasda(){
+      console.log(this.data.data.name)
+    }
   },
 };
 </script>
 <style scoped>
+
+::v-deep .arco-descriptions-item-label-block {
+  font-size: 16px !important;
+}
+
+::v-deep .arco-tag-size-medium {
+  font-size: 14px !important;
+}
+
 ::v-deep .arco-layout-sider-children,
 .arco-menu-vertical .arco-menu-group-title:not(.arco-menu-has-icon),
 .arco-menu-vertical .arco-menu-pop-header:not(.arco-menu-has-icon),
@@ -155,6 +257,11 @@ export default {
 
 .content {
   height: 90%;
+}
+
+::v-deep .arco-table .arco-table-th {
+  font-size: 14px;
+  font-weight: bolder !important;
 }
 
 .table {
