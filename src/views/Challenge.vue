@@ -11,7 +11,7 @@
     </aside>
     <main>
       <a-steps :current="cur" small>
-        <a-step v-for="i in 12"></a-step>
+        <a-step v-for="i in 12" @click="gotoChallenge(i)"></a-step>
       </a-steps>
       <router-view v-if="fresh"/>
       <div class="submit_box">
@@ -20,7 +20,6 @@
             <icon-double-right/>
           </template>
           提交
-          {{ fresh }}
         </a-button>
       </div>
     </main>
@@ -48,24 +47,26 @@ export default {
       fresh.value = false;
       await nextTick();
       fresh.value = true;
-
     }
+    const gotoChallenge = async (i) => {
+      challenge.cur = i;
+      fresh.value = false;
+      await nextTick();
+      fresh.value = true;
+    }
+
     return {
-      challenge, cur, nextChallenge, fresh
+      challenge, cur, nextChallenge, fresh, gotoChallenge
     }
   },
   mounted() {
-    this.axios.get('/api/student/getRanking')
-        .then(res => {
-          this.users = res.data;
-          //console.log(res.data[0].id);
-        });
+    this.getData();
   },
   methods: {
     getData() {
-      this.axios.get('/student/getRanking')
+      this.axios.get('api/examination/student-info')
           .then(res => {
-            console.log(res.data);
+            this.users = res.data;
           });
     },
 
