@@ -22,7 +22,7 @@
                v-model:selectedKeys="selectedKeys" :pagination="pagination">
 
         <template #edit="{record}">
-          <a-button @click="edit(record.name)" status="success">
+          <a-button @click="edit(record.stage,record.id)" status="success">
             <template #icon>
               <icon-edit/>
             </template>
@@ -76,8 +76,8 @@ export default {
         dataIndex: 'stage',
       },
       {
-        title: 'Name',
-        dataIndex: 'name',
+        title: 'URL',
+        dataIndex: 'url',
       },
       {
         title: "Type",
@@ -110,21 +110,21 @@ export default {
     }
   },
   methods: {
-    edit(name) {
+    edit(stage, id) {
       this.$router.push(
-          {name: 'mdedit', params: {name}})
+          {name: 'mdedit', params: {stage, id}})
     },
-    handleOk() {
-
-      console.log(this.fileName)
-      this.$axios.post("/api/levels/add", {
+    async handleOk() {
+      await this.axios.post("/api/levels/add", {
         stage: this.stage,
-        name: this.fileName
+        url: this.url
       })
-      this.getData();
+      this.visible = false;
+      await this.getData();
+
     },
     async getData() {
-      const res = await this.$axios.get("/api/levels/all");
+      const res = await this.axios.get("/api/levels/all");
       this.tData = res.data;
     },
     customRequest(option) {
@@ -148,15 +148,13 @@ export default {
               return onError(xhr.responseText);
             }
             onSuccess(xhr.response);
-            console.log(this)
-            this.fileName = xhr.responseText;
-            console.log(this.fileName)
+            let parse = JSON.parse(xhr.responseText);
+            this.url = parse.url;
           }
       )
 
       const formData = new FormData();
       formData.append('file', fileItem.file);
-      formData.append("storagePath", "md")
       xhr.open('post', '/api/oss/uploadFiles', true);
       xhr.send(formData);
       return {

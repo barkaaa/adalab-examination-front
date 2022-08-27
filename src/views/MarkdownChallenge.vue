@@ -5,40 +5,29 @@
 </template>
 
 <script>
+import {useChallengeStore} from "../store/challenge"
+import {storeToRefs} from 'pinia';
 
 export default {
   name: "MarkdownChallenge",
-
+  setup() {
+    const challenge = useChallengeStore();
+    let {cur} = storeToRefs(challenge);
+    return {
+      challenge, cur
+    }
+  },
   data() {
     return {
       content: " "
     }
   },
-  mounted() {
-    let md = " # adalab-examination-front\n" +
-        "\n" +
-        "## Project setup\n" +
-        "```\n" +
-        "yarn install\n" +
-        "```\n" +
-        "\n" +
-        "### Compiles and hot-reloads for development\n" +
-        "```\n" +
-        "yarn serve\n" +
-        "```\n" +
-        "\n" +
-        "### Compiles and minifies for production\n" +
-        "```\n" +
-        "yarn build\n" +
-        "```\n" +
-        "\n" +
-        "### Lints and fixes files\n" +
-        "```\n" +
-        "yarn lint\n" +
-        "```\n" +
-        "\n" +
-        "### Customize configuration\n" +
-        "See [Configuration Reference](https://cli.vuejs.org/config/).\n";
+  async mounted() {
+    let res = await this.axios.get("/api/levels/getone", {
+      params: {stage: this.cur}
+    })
+    let url = res.data.url;
+    let md = (await this.axios.get(url)).data
     this.content = this.markded.parse(md);
   }
 }

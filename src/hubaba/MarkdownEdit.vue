@@ -22,9 +22,21 @@ export default {
     }
   },
   methods: {
-    submit() {
-      let res = this.contentEditor.getValue();
-      console.log(res)
+    async submit() {
+      let content = this.contentEditor.getValue();
+      // 保存文件到云端
+      let res = await this.axios.put("/api/oss/saveMarkdown", {
+        content
+      })
+      let url = res.data.url;
+
+      let id = this.$route.params.id;
+      // 修改数据库记录
+      await this.axios.put("/api/levels/update", {
+        id, url
+      })
+
+      this.$router.push("/backpanel/two")
     },
     navToSetting() {
       this.$router.push("/backpanel/two")
@@ -36,14 +48,16 @@ export default {
   },
   async mounted() {
     // 根据文件名获取url
-    const res = await this.$axios.get("/api/oss/getSingeNatureUrl", {
+    const res = await this.axios.get("/api/levels/getone", {
       params: {
-        fileName: "md/"+this.$route.params.name,
-        expSeconds: 1000
+        stage: this.$route.params.stage,
       }
     })
-    let url = res.data;
-    this.initialValue = (await this.$axios.get(url)).data
+    let url = res.data.url;
+    console.log(url)
+
+    this.initialValue = (await this.axios.get(url)).data;
+    console.log(this.initialValue)
     this.contentEditor = new Vditor('vditor', {
       height: 600,
       toolbarConfig: {
@@ -58,22 +72,34 @@ export default {
         enable: false,
       },
       upload: {
-        "msg": "",
-        "code": 0,
-        "data": {
-          "errFiles": ['filename', 'filename2'],
-          "succMap": {
-            "filename3": "filepath3",
-            "filename3": "filepath3"
-          }
-        }
-      },
-      after: () => {
+
+        url: '/api/oss/uploadFiles',   // 上传url
+        linkToImgUrl: '/api/oss/uploadFiles',
+        fieldName: 'file',
+        filename(name) {
+          return name.replace(/[^(a-zA-Z0-9\u4e00-\u9fa5\.)]/g, '').replace(/[\?\\/:|<>\*\[\]\(\)\$%\{\}@~]/g, '').replace('/\\s/g', '')
+        },
+        format(files, responseText) {
+          let res = JSON.parse(responseText);
+          let succ = {};
+          succ[res.fileName] = res.url;
+          console.log(succ)
+          return JSON.stringify({
+            "msg": "",
+            "code": 0,
+            "data": {
+              "errFiles": ['filename', 'filename2'],
+              "succMap": succ
+            }
+          })
+        },
+      }, after: () => {
         this.contentEditor.setValue(this.initialValue)
       },
     })
   }
 }
+
 </script>
 
 <style></style>

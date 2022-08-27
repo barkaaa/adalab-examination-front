@@ -1,5 +1,7 @@
 <template>
+
   <a-layout class="layout-demo">
+
     <a-layout-sider theme="dark" breakpoint="lg" :width="300">
       <div class="logo"/>
       <a-menu
@@ -31,13 +33,14 @@
           </template>
           <template #option="{ record }">
             <a-button @click="handleClick(record.name)">
+
               <icon-robot type="icon-person" :size="20"/>
             </a-button>
           </template>
         </a-table>
         <a-modal v-model:visible="visible" @ok="handleOk" :hide-cancel="true"
                  :closable="false">
-          <template #title>asdasd</template>
+          <template #title>{{d.name}}</template>
           <a-descriptions style="margin-top: 20px" :data="list" :column="1"
                           :align="align" :size="size">
             <a-descriptions-item v-for="item of list"
@@ -47,6 +50,7 @@
                            style="vertical-align: middle"></icon-font>
                 {{ item.label }}
               </template>
+
               <a-tag>{{ item.value }}</a-tag>
             </a-descriptions-item>
           </a-descriptions>
@@ -55,69 +59,76 @@
       </a-layout-content>
     </a-layout>
   </a-layout>
+
+
 </template>
 <script>
 import {IconBarChart, IconPen, IconRobot, IconUser} from "@arco-design/web-vue/es/icon";
-import {getCurrentInstance, ref} from "vue";
+import {getCurrentInstance, reactive, ref} from "vue";
 import {Icon} from '@arco-design/web-vue';
 
 const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3611034_pmqkuts7v7b.js'});
 export default {
   setup() {
-    let data = ref([]);
     const visible = ref(false);
-    const size = ref('large');
+    const d = ref({});
+    let size = ref('large');
     let currentInstance = getCurrentInstance();
     const {axios} = currentInstance.appContext.config.globalProperties
     const align = {
       value: 'right'
     }
-    const handleClick = async (name) => {
+    const handleClick = (name) => {
       visible.value = true;
-      data = await axios.post("api/student/getDetail", {name});
-      console.log(data);
-      console.log(data.data.name)
+      axios.post("api/student/getDetail", {name}).then((res) => {
+        d.value = res.data;
+        console.log(d.value)
+        // 修改list
+        list.map((item)=>{
+          item.value = d.value[item.label]
+        })
+      });
     }
     const handleOk = () => {
       visible.value = false;
     }
-    const list = [{
-      label: 'Status',
-      value: 'status',
+    const list = reactive([{
+      label: 'name',
+      value: "",
       cName: "icon-sort",
     }, {
-      label: 'Days needed',
-      value: '123-1234-1234',
+      label: 'ranking',
+      value: '',
       cName: "icon-arrows-alt",
     }, {
       label: 'Actual Days',
-      value: 'Beijing',
+      value: '',
       cName: "icon-arrows-alt",
     }, {
       label: 'Date Created',
-      value: 'Beijing',
+      value: '',
       cName: "icon-shijian",
     }, {
       label: 'Last Edited',
-      value: 'Yingdu Building, Zhichun Road, Beijing',
+      value: '',
       cName: "icon-shijian",
     }, {
       label: 'Current Week',
-      value: 'Yingdu Building, Zhichun Road, Beijing',
+      value: '',
       cName: "icon-accesskeys",
     }, {
       label: 'Type',
-      value: 'Yingdu Building, Zhichun Road, Beijing',
+      value: '',
       cName: "icon-sort",
-    }];
+    }]);
     return {
       visible,
       handleClick,
       handleOk,
-      data,
       list,
       size,
-      align
+      align,
+      d
     }
   },
   data() {
@@ -174,8 +185,7 @@ export default {
     onClickMenuItem(key) {
       this.$router.push(key);
     },
-    dasda(){
-      console.log(this.data.data.name)
+    dasda() {
     }
   },
 };

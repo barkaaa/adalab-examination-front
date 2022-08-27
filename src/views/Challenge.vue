@@ -6,22 +6,21 @@
       </div>
       <RankingPlugin v-bind:users="users"></RankingPlugin>
       <div class="leaderboard">
-        111
       </div>
       <div class="footer"></div>
     </aside>
     <main>
-      <a-steps :current="2" small>
+      <a-steps :current="cur" small>
         <a-step v-for="i in 12"></a-step>
       </a-steps>
-      <router-view/>
-      <icon-arrow-fall/>
+      <router-view v-if="fresh"/>
       <div class="submit_box">
-        <a-button type="primary">
+        <a-button type="primary" @click="nextChallenge">
           <template #icon>
             <icon-double-right/>
           </template>
           提交
+          {{ fresh }}
         </a-button>
       </div>
     </main>
@@ -33,11 +32,29 @@
 import Timer from "@/components/Timer";
 import RankingPlugin from "@/components/RankingPlugin.vue";
 import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
+import {useChallengeStore} from "../store/challenge"
+import {storeToRefs} from 'pinia';
+import {ref, nextTick} from "vue";
 
 export default {
   name: "Challenge",
+
+  setup() {
+    const challenge = useChallengeStore();
+    let {cur} = storeToRefs(challenge);
+    let fresh = ref(true);
+    const nextChallenge = async () => {
+      challenge.cur++;
+      fresh.value = false;
+      await nextTick();
+      fresh.value = true;
+
+    }
+    return {
+      challenge, cur, nextChallenge, fresh
+    }
+  },
   mounted() {
-    console.log('123');
     this.axios.get('/api/student/getRanking')
         .then(res => {
           this.users = res.data;
@@ -50,7 +67,8 @@ export default {
           .then(res => {
             console.log(res.data);
           });
-    }
+    },
+
   },
   components: {
     Timer,
@@ -58,7 +76,6 @@ export default {
     IconDoubleRight
   },
   data() {
-
     return {
       users: [
         {name: "王狗剩", clear: 7},
