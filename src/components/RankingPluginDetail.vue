@@ -23,40 +23,24 @@
       <a href="#" title="Close" class="modal-close">Close</a>
       <div>
         <VueTable></VueTable>
-       <!--  -->
-        <a-trigger trigger="click">
-    <a-button>Click Me</a-button>
-    <template #content>
-      <div class="trigger-demo-nest">
-        <a-empty />
-        <a-trigger position="right">
-          <a-button>Hover Me</a-button>
-          <template #content>
-            <div class="trigger-demo-nest">
-              <a-empty />
-              <a-trigger trigger="click" position="right">
-                <a-button>Click Me</a-button>
-                <template #content>
-                  <div class="trigger-demo-nest">
-                    <a-empty />
-                    <a-trigger position="right">
-                      <a-button>Hover Me</a-button>
-                      <template #content>
-                        <a-empty class="trigger-demo-nest" />
-                      </template>
-                    </a-trigger>
-                  </div>
-                </template>
-              </a-trigger>
-            </div>
+        <!--  -->
+        <a-table :data="data" style="margin-top: 30px">
+          <template #columns>
+            <a-table-column title="Optional">
+              <template #cell="{ record }">
+                <a-button href="#open-modal">删除</a-button>
+              </template>
+            </a-table-column>
+            <a-table-column title="测评结果" data-index="result"></a-table-column>
+            <a-table-column title="commitID&Link" data-index="link"></a-table-column>
+            <a-table-column title="关卡" data-index="episode"></a-table-column>
+            <a-table-column title="提交时间" data-index="commitTime"></a-table-column>
           </template>
-        </a-trigger>
-      </div>
-    </template>
-  </a-trigger>
-      <!--  -->
-      {{arr1}}
-      {{arr2}}
+        </a-table>
+       
+        <!--  -->
+        {{ arr1 }}
+        {{ arr2 }}
       </div>
     </div>
   </div>
@@ -65,80 +49,146 @@
     <div id="bigContainer" v-for="(item, i) in users">
       <p class="studentName" @click="getData()">{{ item.name }}</p>
       <!-- <a class="btn" href="#open-modal"><p>{{ item.name }}</p></a> -->
-      <div class="dots"
+      <div
+        class="dots"
         style="
           display: flex;
           flex-direction: row;
           justify-content: space-around;
+          align-items: center;
         "
       >
         <div
           v-for="count in 13"
           class="dot"
           :class="[count <= item.episode ? 'statusGreen' : 'statusNormal']"
-          @click="getPersonelInfo('DingZHneg',count)"
+          @click="getPersonelInfo('DingZHneg', count)"
         >
           <p class="number">{{ count }}</p>
         </div>
       </div>
-      <div class="btn">
-        <a href="#open-modal" @click="getPersonelInfo('DingZHneg',count)"><icon-history :style="[{ fontSize: '25px' }, { color: 'grey' }]" /></a>
-        <a href="#open-modal"><icon-user :style="[{ fontSize: '25px' }, { color: 'grey' }]" /></a>
-        <a href="#open-modal"><icon-desktop :style="[{ fontSize: '25px' }, { color: 'grey' }]" /></a>
+      <div
+        class="btn"
+        style="align-items: center; display: flex; justify-content: center"
+      >
+        <a href="#open-modal" @click="getPersonelInfo('DingZHneg', count)"
+          ><icon-history :style="[{ fontSize: '25px' }, { color: 'grey' }]"
+        /></a>
+        <a href="#open-modal"
+          ><icon-user :style="[{ fontSize: '25px' }, { color: 'grey' }]"
+        /></a>
+        <a :href="'https://' + item.name + '.github.io'"
+          ><icon-desktop :style="[{ fontSize: '25px' }, { color: 'grey' }]"
+        /></a>
       </div>
       <br />
     </div>
   </div>
- 
-  <a-steps label-placement="vertical" :current="3" >
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-  </a-steps>
 
+  <!-- <a-steps label-placement="vertical" :current="3">
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+  </a-steps> -->
 </template>
 
 <script>
 import VueTable from "./VueTable.vue";
+import { reactive } from 'vue'
 export default {
-    name: "RankingPluginDetail",
-    props: {
-        users: Array,
+  name: "RankingPluginDetail",
+  props: {
+    users: Array,
+  },
+  data() {
+    return {
+      arr1: {},
+      arr2: {},
+    };
+  },
+  methods: {
+    getData() {
+      this.axios
+        .post("api/studentInfo/studentCode/FilesTree/DingZHneg", { step: 1 })
+        .then((res) => {
+          console.log(res.data);
+          this.arr1 = res.data;
+        });
     },
-     data() {
-        return {
-            arr1: {},
-            arr2: {}
-        };
+    getPersonelInfo(user, level) {
+      this.axios
+        .post("api/studentInfo/studentCode/FilesTree/DingZHneg", { step: 1 })
+        .then((res) => {
+          console.log(res.data);
+          this.arr2 = res.data;
+        });
     },
-    methods: {
-        getData() {
-            this.axios.post("api/student/studentCode/FilesTree/DingZHneg", { step: 1 }).then((res) => {
-                console.log(res.data);
-                this.arr1 = res.data;
-            });
-        },
-        getPersonelInfo(user, level) {
-            this.axios.post("api/student/studentCode/FilesTree/DingZHneg", { step: 1 }).then((res) => {
-                console.log(res.data);
-                this.arr2 = res.data;
-            });
-        },
-    },
-   
-    components: { VueTable }
+  },
+  setup() {
+    const columns = [
+      {
+        title: '测评结果',
+        dataIndex: 'result',
+      },
+      {
+        title: 'commitID&Link',
+        dataIndex: 'link',
+      },
+      {
+        title: '关卡',
+        dataIndex: 'episode',
+      },
+      {
+        title: '提交时间',
+        dataIndex: 'commitTime',
+      }
+    ];
+    const data = reactive([{
+      key: '1',
+      result: 11,
+      link:12,
+      episode:12,
+      commitTime:12
+    }, {
+      key: '2',
+      result: 11,
+      link:12,
+      episode:12,
+      commitTime:12
+
+    }, {
+      key: '3',
+      result: 11,
+      link:12,
+      episode:12,
+      commitTime:12
+    }, {
+      key: '4',
+      result: 11,
+      link:12,
+      episode:12,
+      commitTime:12
+    }]);
+    return {
+      columns,
+      data,
+    }
+  },
+  
+
+  components: { VueTable },
 };
 </script>
 
@@ -263,20 +313,19 @@ icon-history {
 .statusGreen {
   background-color: pink;
 }
-#bigContainer{
+#bigContainer {
   display: flex;
 }
-.dots{
+.dots {
   flex: 2;
   border-style: solid;
   border: #aaa;
 }
-.studentName{
-  flex:1;
-  
+.studentName {
+  flex: 1;
 }
-.btn{
-  flex:1;
+.btn {
+  flex: 1;
 }
 /*  */
 .trigger-demo-nest {
@@ -290,11 +339,10 @@ icon-history {
 .trigger-demo-nest-popup-content {
   text-align: right;
 }
-.number{
-  color:rgba(0, 0, 0, 0.5);
+.number {
+  color: rgba(0, 0, 0, 0.5);
 }
-a-steps{
+a-steps {
   width: 30px;
 }
 </style>
-
