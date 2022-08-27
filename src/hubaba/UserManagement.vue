@@ -1,14 +1,10 @@
 <template>
-
   <a-layout class="layout-demo">
-
     <a-layout-sider theme="dark" breakpoint="lg" :width="300">
       <div class="logo"/>
-      <a-menu
-          :default-selected-keys="['userManagement']"
-          :style="{ width: '100%' }"
-          @menu-item-click="onClickMenuItem"
-      >
+      <a-menu :default-selected-keys="['userManagement']"
+              :style="{ width: '100%' }"
+              @menu-item-click="onClickMenuItem">
         <a-menu-item key="rankingkai">
           <IconBarChart></IconBarChart>
           排行榜单
@@ -25,79 +21,67 @@
     </a-layout-sider>
     <a-layout>
       <a-layout-content class="content">
-        <a-table :columns="columns" :data="tableData" :column-resizable="true"
-                 :pagination="pagination" class="table">
+        <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table">
           <template #header="{record}">
-            <a-switch checked-color="#41AD59" unchecked-color="#E3E3EC"
-                      :default-checked="record.ranking>=5"/>
+            <a-switch checked-color="#41AD59" unchecked-color="#E3E3EC" :default-checked="record.ranking>=5"/>
           </template>
           <template #option="{ record }">
             <a-button @click="handleClick(record.name)">
-
               <icon-robot type="icon-person" :size="20"/>
             </a-button>
           </template>
         </a-table>
-        <a-modal v-model:visible="visible" @ok="handleOk" :hide-cancel="true"
-                 :closable="false">
-          <template #title>{{d.name}}</template>
-          <a-descriptions style="margin-top: 20px" :data="list" :column="1"
-                          :align="align" :size="size">
-            <a-descriptions-item v-for="item of list"
-                                 :label="item.label">
+        <a-modal v-model:visible="visible" @ok="handleOk" :hide-cancel="true" :closable="false">
+          <template #title>{{ tData.name + "的详细信息" }}</template>
+          <a-descriptions style="margin-top: 20px" :data="list" :column="1" :align="align" :size="size">
+            <a-descriptions-item v-for="item of list" :label="item.label">
               <template #label>
-                <icon-font :type="item.cName" :size="20"
-                           style="vertical-align: middle"></icon-font>
+                <icon-font :type="item.cName" :size="20" style="vertical-align: middle">
+                </icon-font>
                 {{ item.label }}
               </template>
-
               <a-tag>{{ item.value }}</a-tag>
             </a-descriptions-item>
           </a-descriptions>
-          <button @click="dasda">aadasdasdasd</button>
         </a-modal>
       </a-layout-content>
     </a-layout>
   </a-layout>
-
-
 </template>
 <script>
 import {IconBarChart, IconPen, IconRobot, IconUser} from "@arco-design/web-vue/es/icon";
-import {getCurrentInstance, reactive, ref} from "vue";
+import {getCurrentInstance, ref} from "vue";
 import {Icon} from '@arco-design/web-vue';
 
 const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3611034_pmqkuts7v7b.js'});
 export default {
   setup() {
+    let tData = ref({});
     const visible = ref(false);
-    const d = ref({});
-    let size = ref('large');
+    const size = ref('large');
     let currentInstance = getCurrentInstance();
     const {axios} = currentInstance.appContext.config.globalProperties
     const align = {
       value: 'right'
     }
-    const handleClick = (name) => {
+    const handleClick =(name) => {
       visible.value = true;
-      axios.post("api/student/getDetail", {name}).then((res) => {
-        d.value = res.data;
-        console.log(d.value)
-        // 修改list
-        list.map((item)=>{
-          item.value = d.value[item.label]
+      axios.post("api/student/getDetail", {name}).then((res)=> {
+        tData.value = res.data;
+        list.map((item) => {
+          item.value = tData.value[item.label];
         })
       });
     }
     const handleOk = () => {
       visible.value = false;
     }
-    const list = reactive([{
+    const list = [{
       label: 'name',
       value: "",
       cName: "icon-sort",
     }, {
-      label: 'ranking',
+      label: 'Days needed',
       value: '',
       cName: "icon-arrows-alt",
     }, {
@@ -120,15 +104,15 @@ export default {
       label: 'Type',
       value: '',
       cName: "icon-sort",
-    }]);
+    }];
     return {
       visible,
       handleClick,
       handleOk,
+      tData,
       list,
       size,
-      align,
-      d
+      align
     }
   },
   data() {
@@ -151,7 +135,7 @@ export default {
           dataIndex: 'tel',
         }, {
           title: '当前进度',
-          dataIndex: 'ranking',
+          dataIndex: 'schedule',
         }, {
           title: '链接-详情、网页',
           dataIndex: 'webPage',
@@ -170,22 +154,18 @@ export default {
     IconPen,
     IconUser,
     IconRobot,
-    IconFont
+    IconFont,
   },
   created() {
     fetch("/api/student/getRanking")
         .then((res) => res.json())
         .then((response) => {
-          console.log(23423423423423);
-          console.log(response);
           this.tableData = response;
         });
   },
   methods: {
     onClickMenuItem(key) {
       this.$router.push(key);
-    },
-    dasda() {
     }
   },
 };

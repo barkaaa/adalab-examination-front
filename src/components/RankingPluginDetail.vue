@@ -22,15 +22,39 @@
     <div>
       <a href="#" title="Close" class="modal-close">Close</a>
       <div>
-        <iframe
-          src="//player.bilibili.com/player.html?aid=217014295&bvid=BV1Pa411N7eg&cid=804937613&page=1"
-          scrolling="no"
-          border="0"
-          frameborder="no"
-          framespacing="0"
-          allowfullscreen="true"
-        >
-        </iframe>
+       <!--  -->
+        <a-trigger trigger="click">
+    <a-button>Click Me</a-button>
+    <template #content>
+      <div class="trigger-demo-nest">
+        <a-empty />
+        <a-trigger position="right">
+          <a-button>Hover Me</a-button>
+          <template #content>
+            <div class="trigger-demo-nest">
+              <a-empty />
+              <a-trigger trigger="click" position="right">
+                <a-button>Click Me</a-button>
+                <template #content>
+                  <div class="trigger-demo-nest">
+                    <a-empty />
+                    <a-trigger position="right">
+                      <a-button>Hover Me</a-button>
+                      <template #content>
+                        <a-empty class="trigger-demo-nest" />
+                      </template>
+                    </a-trigger>
+                  </div>
+                </template>
+              </a-trigger>
+            </div>
+          </template>
+        </a-trigger>
+      </div>
+    </template>
+  </a-trigger>
+      <!--  -->
+      {{arr2}}
       </div>
     </div>
   </div>
@@ -50,7 +74,7 @@
           v-for="count in 13"
           class="dot"
           :class="[count <= item.ranking ? 'statusGreen' : 'statusNormal']"
-          @click="getPersonelInfo(item)"
+          @click="getPersonelInfo('DingZHneg',count)"
         >
           <p>{{ count }}</p>
         </div>
@@ -72,19 +96,24 @@ export default {
     users: Array,
   },
   methods: {
-    getData() {
-      this.axios.post("api/student/studentCode/FilesTree").then((res) => {
+    getData(user,level) {
+      this.axios.post("api/student/studentCode/FilesTree/DingZHneg",{step:1}).then((res) => {
         console.log(res.data);
+        this.arr1 = res.data;
       });
     },
-     getPersonelInfo(users) {
-      this.axios.post("api/student/studentCode/FilesTree/${users.name}").then((res) => {
+     getPersonelInfo(user,level) {
+      this.axios.post("api/student/studentCode/FilesTree/DingZHneg",{step:1}).then((res) => {
         console.log(res.data);
+        this.arr2 = res.data;
       });
     },
   },
   data() {
-    return {};
+    return {
+      arr1:{},
+      arr2:{}
+    };
   },
 };
 </script>
@@ -223,6 +252,18 @@ icon-history {
 }
 .btn{
   flex:4;
+}
+/*  */
+.trigger-demo-nest {
+  padding: 10px;
+  width: 200px;
+  background-color: var(--color-bg-popup);
+  border-radius: 4px;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.15);
+}
+
+.trigger-demo-nest-popup-content {
+  text-align: right;
 }
 
 </style>
