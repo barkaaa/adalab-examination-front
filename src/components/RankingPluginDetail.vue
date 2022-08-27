@@ -26,12 +26,11 @@
         <!--  -->
         <a-table :data="data" style="margin-top: 30px">
           <template #columns>
-            <a-table-column title="Optional">
+            <a-table-column title="测评结果">
               <template #cell="{ record }">
                 <a-button href="#open-modal">删除</a-button>
               </template>
             </a-table-column>
-            <a-table-column title="测评结果" data-index="result"></a-table-column>
             <a-table-column title="commitID&Link" data-index="link"></a-table-column>
             <a-table-column title="关卡" data-index="episode"></a-table-column>
             <a-table-column title="提交时间" data-index="commitTime"></a-table-column>
@@ -138,10 +137,6 @@ export default {
   },
   setup() {
     const columns = [
-      {
-        title: '测评结果',
-        dataIndex: 'result',
-      },
       {
         title: 'commitID&Link',
         dataIndex: 'link',

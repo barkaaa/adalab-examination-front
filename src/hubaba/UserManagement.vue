@@ -66,7 +66,7 @@ export default {
     }
     const handleClick =(name) => {
       visible.value = true;
-      axios.post("api/student/getDetail", {name}).then((res)=> {
+      axios.post("api/studentInfo/getDetail", {name}).then((res)=> {
         tData.value = res.data;
         list.map((item) => {
           item.value = tData.value[item.label];
@@ -157,7 +157,7 @@ export default {
     IconFont,
   },
   created() {
-    fetch("/api/student/getRanking")
+    fetch("/api/studentInfo/getRanking")
         .then((res) => res.json())
         .then((response) => {
           this.tableData = response;
