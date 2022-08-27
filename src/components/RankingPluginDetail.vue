@@ -22,6 +22,7 @@
     <div>
       <a href="#" title="Close" class="modal-close">Close</a>
       <div>
+        <VueTable></VueTable>
        <!--  -->
         <a-trigger trigger="click">
     <a-button>Click Me</a-button>
@@ -54,6 +55,7 @@
     </template>
   </a-trigger>
       <!--  -->
+      {{arr1}}
       {{arr2}}
       </div>
     </div>
@@ -76,45 +78,67 @@
           :class="[count <= item.ranking ? 'statusGreen' : 'statusNormal']"
           @click="getPersonelInfo('DingZHneg',count)"
         >
-          <p>{{ count }}</p>
+          <p class="number">{{ count }}</p>
         </div>
       </div>
       <div class="btn">
-        <a href="#open-modal"><icon-history :style="[{ fontSize: '32px' }, { color: 'grey' }]" /></a>
-        <a href="#open-modal"><icon-user :style="[{ fontSize: '32px' }, { color: 'grey' }]" /></a>
-        <a href="#open-modal"><icon-desktop :style="[{ fontSize: '32px' }, { color: 'grey' }]" /></a>
+        <a href="#open-modal" @click="getPersonelInfo('DingZHneg',count)"><icon-history :style="[{ fontSize: '25px' }, { color: 'grey' }]" /></a>
+        <a href="#open-modal"><icon-user :style="[{ fontSize: '25px' }, { color: 'grey' }]" /></a>
+        <a href="#open-modal"><icon-desktop :style="[{ fontSize: '25px' }, { color: 'grey' }]" /></a>
       </div>
       <br />
     </div>
   </div>
+ 
+  <a-steps label-placement="vertical" :current="3" >
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+    <a-step></a-step>
+  </a-steps>
+
 </template>
 
 <script>
+import VueTable from "./VueTable.vue";
 export default {
-  name: "RankingPluginDetail",
-  props: {
-    users: Array,
-  },
-  methods: {
-    getData(user,level) {
-      this.axios.post("api/student/studentCode/FilesTree/DingZHneg",{step:1}).then((res) => {
-        console.log(res.data);
-        this.arr1 = res.data;
-      });
+    name: "RankingPluginDetail",
+    props: {
+        users: Array,
     },
-     getPersonelInfo(user,level) {
-      this.axios.post("api/student/studentCode/FilesTree/DingZHneg",{step:1}).then((res) => {
-        console.log(res.data);
-        this.arr2 = res.data;
-      });
+     data() {
+        return {
+            arr1: {},
+            arr2: {}
+        };
     },
-  },
-  data() {
-    return {
-      arr1:{},
-      arr2:{}
-    };
-  },
+    methods: {
+        getData() {
+            this.axios.post("api/student/studentCode/FilesTree/DingZHneg", { step: 1 }).then((res) => {
+                console.log(res.data);
+                this.arr1 = res.data;
+            });
+        },
+        getPersonelInfo(user, level) {
+            this.axios.post("api/student/studentCode/FilesTree/DingZHneg", { step: 1 }).then((res) => {
+                console.log(res.data);
+                this.arr2 = res.data;
+            });
+        },
+    },
+   
+    components: { VueTable }
 };
 </script>
 
@@ -220,16 +244,14 @@ a-steps {
 .dot {
   width: 30px;
   height: 30px;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(144, 144, 144, 0.1);
   top: 0;
   border-radius: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.dot:hover {
-  background-color: aqua;
-}
+
 icon-history {
   size: 30px;
 }
@@ -245,13 +267,16 @@ icon-history {
   display: flex;
 }
 .dots{
-  flex: 10;
+  flex: 2;
+  border-style: solid;
+  border: #aaa;
 }
 .studentName{
-  flex:3;
+  flex:1;
+  
 }
 .btn{
-  flex:4;
+  flex:1;
 }
 /*  */
 .trigger-demo-nest {
@@ -265,5 +290,11 @@ icon-history {
 .trigger-demo-nest-popup-content {
   text-align: right;
 }
-
+.number{
+  color:rgba(0, 0, 0, 0.5);
+}
+a-steps{
+  width: 30px;
+}
 </style>
+

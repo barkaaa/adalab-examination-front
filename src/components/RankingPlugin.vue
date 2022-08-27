@@ -6,17 +6,17 @@
       <div class="container">
         <div
           class="progress"
-          v-bind:style="{ width: (item.ranking / 13) * 100 + '%' }"
+          v-bind:style="{ width: (item.episode / 13) * 100 + '%' }"
           :class="[
-            item.ranking / 13 < 0.3
+            item.episode / 13 < 0.3
               ? 'status1'
-              : item.ranking / 13 < 0.4
+              : item.episode / 13 < 0.4
               ? 'status2'
               : 'status3',
           ]"
         >
            <p class="proportion">
-          {{ item.ranking + "/13" }}
+          {{ item.episode + "/13" }}
         </p>
         </div>
       </div>
@@ -43,16 +43,16 @@ export default {
       students: {},
     };
   },
-  mounted() {
-    fetch("/api/student/getRanking", {
-      method: "get",
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((response) => response.json())
-      .then((res) => {
-        this.message = res.name;
-      });
-  },
+  // mounted() {
+  //   fetch("/api/student/getRanking", {
+  //     method: "get",
+  //     headers: { "Content-Type": "application/json" },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((res) => {
+  //       this.message = res.name;
+  //     });
+  // },
 };
 </script>
 

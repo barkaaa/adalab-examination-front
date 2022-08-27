@@ -55,19 +55,19 @@ export default {
     }
   },
   mounted() {
-    this.axios.get('/api/student/getRanking')
+    this.axios.get('/api/studentInfo/getRanking')
         .then(res => {
           this.users = res.data;
           //console.log(res.data[0].id);
         });
   },
   methods: {
-    getData() {
-      this.axios.get('/student/getRanking')
-          .then(res => {
-            console.log(res.data);
-          });
-    },
+    // getData() {
+    //   this.axios.get('/student/getRanking')
+    //       .then(res => {
+    //         console.log(res.data);
+    //       });
+    // },
 
   },
   components: {

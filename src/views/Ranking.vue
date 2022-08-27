@@ -12,12 +12,14 @@
     <a >Basic CSS-Only Modal</a>
   </div>
 </div> -->
-<RankingPluginDetail v-bind:users="users"></RankingPluginDetail>
+<!-- <RankingPluginDetail v-bind:users="users"></RankingPluginDetail> -->
+<ImgSet></ImgSet>
 
 </template>
 
 <script>
 import RankingPluginDetail from "@/components/RankingPluginDetail.vue";
+import ImgSet from "@/components/ImgSet.vue";
 
 export default {
   name: "Ranking",
@@ -44,7 +46,7 @@ export default {
   //     username:String,
   //     rank:String
   //   }
-  components: { RankingPluginDetail },
+  components: { RankingPluginDetail, ImgSet },
 };
 </script>
 
