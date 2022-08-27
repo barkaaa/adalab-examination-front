@@ -2,11 +2,9 @@
   <a-layout class="layout-demo">
     <a-layout-sider theme="dark" breakpoint="lg" :width="300">
       <div class="logo"/>
-      <a-menu
-          :default-selected-keys="['userManagement']"
-          :style="{ width: '100%' }"
-          @menu-item-click="onClickMenuItem"
-      >
+      <a-menu :default-selected-keys="['userManagement']"
+              :style="{ width: '100%' }"
+              @menu-item-click="onClickMenuItem">
         <a-menu-item key="rankingkai">
           <IconBarChart></IconBarChart>
           排行榜单
@@ -23,11 +21,9 @@
     </a-layout-sider>
     <a-layout>
       <a-layout-content class="content">
-        <a-table :columns="columns" :data="tableData" :column-resizable="true"
-                 :pagination="pagination" class="table">
+        <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table">
           <template #header="{record}">
-            <a-switch checked-color="#41AD59" unchecked-color="#E3E3EC"
-                      :default-checked="record.ranking>=5"/>
+            <a-switch checked-color="#41AD59" unchecked-color="#E3E3EC" :default-checked="record.ranking>=5"/>
           </template>
           <template #option="{ record }">
             <a-button @click="handleClick(record.name)">
@@ -35,22 +31,18 @@
             </a-button>
           </template>
         </a-table>
-        <a-modal v-model:visible="visible" @ok="handleOk" :hide-cancel="true"
-                 :closable="false">
-          <template #title>asdasd</template>
-          <a-descriptions style="margin-top: 20px" :data="list" :column="1"
-                          :align="align" :size="size">
-            <a-descriptions-item v-for="item of list"
-                                 :label="item.label">
+        <a-modal v-model:visible="visible" @ok="handleOk" :hide-cancel="true" :closable="false">
+          <template #title>{{ tData.name + "的详细信息" }}</template>
+          <a-descriptions style="margin-top: 20px" :data="list" :column="1" :align="align" :size="size">
+            <a-descriptions-item v-for="item of list" :label="item.label">
               <template #label>
-                <icon-font :type="item.cName" :size="20"
-                           style="vertical-align: middle"></icon-font>
+                <icon-font :type="item.cName" :size="20" style="vertical-align: middle">
+                </icon-font>
                 {{ item.label }}
               </template>
               <a-tag>{{ item.value }}</a-tag>
             </a-descriptions-item>
           </a-descriptions>
-          <button @click="dasda">aadasdasdasd</button>
         </a-modal>
       </a-layout-content>
     </a-layout>
@@ -64,7 +56,7 @@ import {Icon} from '@arco-design/web-vue';
 const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3611034_pmqkuts7v7b.js'});
 export default {
   setup() {
-    let data = ref([]);
+    let tData = ref({});
     const visible = ref(false);
     const size = ref('large');
     let currentInstance = getCurrentInstance();
@@ -72,49 +64,52 @@ export default {
     const align = {
       value: 'right'
     }
-    const handleClick = async (name) => {
+    const handleClick =(name) => {
       visible.value = true;
-      data = await axios.post("api/student/getDetail", {name});
-      console.log(data);
-      console.log(data.data.name)
+      axios.post("api/student/getDetail", {name}).then((res)=> {
+        tData.value = res.data;
+        list.map((item) => {
+          item.value = tData.value[item.label];
+        })
+      });
     }
     const handleOk = () => {
       visible.value = false;
     }
     const list = [{
-      label: 'Status',
-      value: 'status',
+      label: 'name',
+      value: "",
       cName: "icon-sort",
     }, {
       label: 'Days needed',
-      value: '123-1234-1234',
+      value: '',
       cName: "icon-arrows-alt",
     }, {
       label: 'Actual Days',
-      value: 'Beijing',
+      value: '',
       cName: "icon-arrows-alt",
     }, {
       label: 'Date Created',
-      value: 'Beijing',
+      value: '',
       cName: "icon-shijian",
     }, {
       label: 'Last Edited',
-      value: 'Yingdu Building, Zhichun Road, Beijing',
+      value: '',
       cName: "icon-shijian",
     }, {
       label: 'Current Week',
-      value: 'Yingdu Building, Zhichun Road, Beijing',
+      value: '',
       cName: "icon-accesskeys",
     }, {
       label: 'Type',
-      value: 'Yingdu Building, Zhichun Road, Beijing',
+      value: '',
       cName: "icon-sort",
     }];
     return {
       visible,
       handleClick,
       handleOk,
-      data,
+      tData,
       list,
       size,
       align
@@ -140,7 +135,7 @@ export default {
           dataIndex: 'tel',
         }, {
           title: '当前进度',
-          dataIndex: 'ranking',
+          dataIndex: 'schedule',
         }, {
           title: '链接-详情、网页',
           dataIndex: 'webPage',
@@ -159,23 +154,18 @@ export default {
     IconPen,
     IconUser,
     IconRobot,
-    IconFont
+    IconFont,
   },
   created() {
     fetch("/api/student/getRanking")
         .then((res) => res.json())
         .then((response) => {
-          console.log(23423423423423);
-          console.log(response);
           this.tableData = response;
         });
   },
   methods: {
     onClickMenuItem(key) {
       this.$router.push(key);
-    },
-    dasda(){
-      console.log(this.data.data.name)
     }
   },
 };
