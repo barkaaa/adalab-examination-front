@@ -42,7 +42,7 @@ export default defineComponent({
     };
   },mounted() {
     console.log('123');
-    this.axios.get('/api/student/getRanking')
+    this.axios.get('/api/studentInfo/getRanking')
       .then(res=>{
         this.users = res.data;
         //console.log(res.data[0].id);
