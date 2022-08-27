@@ -75,7 +75,7 @@
         <div
           v-for="count in 13"
           class="dot"
-          :class="[count <= item.ranking ? 'statusGreen' : 'statusNormal']"
+          :class="[count <= item.episode ? 'statusGreen' : 'statusNormal']"
           @click="getPersonelInfo('DingZHneg',count)"
         >
           <p class="number">{{ count }}</p>
