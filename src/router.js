@@ -56,29 +56,30 @@ const routes = [
         }, {
             name: "mdedit",
             path: "mdedit", component: MarkdownEdit
-        }]
+        }, {
+            path: "test",
+            name: "test",
+            component: Test,
+        },
+            {
+                path: "userManagement",
+                name: "userManagement",
+                component: UserManagement,
+            },
+            {
+                path: "rankingkai",
+                name: "rankingkai",
+                component: RankingKai,
+            }]
     }
     ,
-    {
-        path: "/userManagement",
-        name: "userManagement",
-        component: UserManagement,
-    },
     {
         path: "/mission",
         name: "mission",
         component: Test1,
     },
-    {
-        path: "/rankingkai",
-        name: "rankingkai",
-        component: RankingKai,
-    },
-    {
-        path: "/test",
-        name:"test",
-        component: Test,
-    }
+    ,
+
 ];
 const router = createRouter({
     routes,

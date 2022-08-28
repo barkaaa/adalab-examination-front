@@ -7,18 +7,31 @@
           :style="{ width: '100%' }"
           @menu-item-click="onClickMenuItem"
       >
-        <a-menu-item key="0_1">
-          <IconBarChart></IconBarChart>
-          排行榜单
-        </a-menu-item>
-        <a-menu-item key="0_2">
-          <IconUser></IconUser>
-          用户管理
-        </a-menu-item>
-        <a-menu-item key="0_3">
-          <IconPen></IconPen>
-          关卡设置
-        </a-menu-item>
+
+        <router-link to="rankingkai">
+          <a-menu-item key="0_1">
+            <IconBarChart></IconBarChart>
+            排行榜单
+          </a-menu-item>
+        </router-link>
+        <router-link to="userManagement">
+          <a-menu-item key="0_2">
+            <IconUser></IconUser>
+            用户管理
+          </a-menu-item>
+        </router-link>
+        <router-link to="two">
+          <a-menu-item key="0_3">
+            <IconPen></IconPen>
+            关卡设置
+          </a-menu-item>
+        </router-link>
+        <router-link to="test">
+          <a-menu-item key="0_4">
+            <icon-font type="icon-docker" :size="24"/>
+            环境设置
+          </a-menu-item>
+        </router-link>
       </a-menu>
     </a-layout-sider>
     <a-layout style="padding: 0 24px;">
@@ -27,20 +40,22 @@
   </a-layout>
 </template>
 <script>
-import {defineComponent} from "vue";
 import {IconBarChart, IconPen, IconUser} from "@arco-design/web-vue/es/icon";
+import {Icon} from '@arco-design/web-vue';
 
-export default defineComponent({
+const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3614862_l6nys7e6w5c.js'});
+export default {
   components: {
     IconBarChart,
     IconPen,
     IconUser,
+    IconFont
   },
   methods: {
     onClickMenuItem() {
     },
   },
-});
+};
 </script>
 <style scoped>
 ::v-deep .arco-layout-sider-children {
