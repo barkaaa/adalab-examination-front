@@ -24,7 +24,7 @@
       <div>
         <VueTable></VueTable>
         <!--  -->
-        <a-table :data="data" style="margin-top: 30px">
+        <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table">
           <template #columns>
             <a-table-column title="测评结果">
               <template #cell="{ record }">
@@ -115,6 +115,24 @@ export default {
     return {
       arr1: {},
       arr2: {},
+      columns:[
+        {
+        title: 'commitID&Link',
+        dataIndex: 'link',
+      },
+      {
+        title: '关卡',
+        dataIndex: 'episode',
+      },
+      {
+        title: '提交时间',
+        dataIndex: 'commitTime',
+      }
+      ],
+      pagination: {
+        pageSize: 10,
+      },
+      tableData: [{link:213,episode:123}],
     };
   },
   methods: {
@@ -135,52 +153,59 @@ export default {
         });
     },
   },
-  setup() {
-    const columns = [
-      {
-        title: 'commitID&Link',
-        dataIndex: 'link',
-      },
-      {
-        title: '关卡',
-        dataIndex: 'episode',
-      },
-      {
-        title: '提交时间',
-        dataIndex: 'commitTime',
-      }
-    ];
-    const data = reactive([{
-      key: '1',
-      result: 11,
-      link:12,
-      episode:12,
-      commitTime:12
-    }, {
-      key: '2',
-      result: 11,
-      link:12,
-      episode:12,
-      commitTime:12
-
-    }, {
-      key: '3',
-      result: 11,
-      link:12,
-      episode:12,
-      commitTime:12
-    }, {
-      key: '4',
-      result: 11,
-      link:12,
-      episode:12,
-      commitTime:12
-    }]);
-    return {
-      columns,
-      data,
-    }
+  created() {
+    fetch("/api/studentInfo/getRanking")
+        .then((res) => res.json())
+        .then((response) => {
+          this.tableData.link = response.name;
+        });
   },
+  // setup() {
+  //   const columns = [
+  //     {
+  //       title: 'commitID&Link',
+  //       dataIndex: 'link',
+  //     },
+  //     {
+  //       title: '关卡',
+  //       dataIndex: 'episode',
+  //     },
+  //     {
+  //       title: '提交时间',
+  //       dataIndex: 'commitTime',
+  //     }
+  //   ];
+  //   const data = reactive([{
+  //     key: '1',
+  //     result: 11,
+  //     link:12,
+  //     episode:12,
+  //     commitTime:12
+  //   }, {
+  //     key: '2',
+  //     result: 11,
+  //     link:12,
+  //     episode:12,
+  //     commitTime:12
+
+  //   }, {
+  //     key: '3',
+  //     result: 11,
+  //     link:12,
+  //     episode:12,
+  //     commitTime:12
+  //   }, {
+  //     key: '4',
+  //     result: 11,
+  //     link:12,
+  //     episode:12,
+  //     commitTime:12
+  //   }]);
+  //   return {
+  //     columns,
+  //     data,
+  //   }
+  // },
   
 
   components: { VueTable },

@@ -4,14 +4,14 @@
       <div class="timer">
         <timer/>
       </div>
-      <RankingPlugin v-bind:users="users"></RankingPlugin>
+      <RankingPlugin v-bind:rankings="rankings"></RankingPlugin>
       <div class="leaderboard">
       </div>
       <div class="footer"></div>
     </aside>
     <main>
       <a-steps :current="cur" small>
-        <a-step v-for="i in 12" @click="gotoChallenge(i)"></a-step>
+        <a-step v-for="i in totalChallenge" @click="gotoChallenge(i)"></a-step>
       </a-steps>
       <router-view v-if="fresh"/>
       <div class="submit_box">
@@ -42,7 +42,10 @@ export default {
     const challenge = useChallengeStore();
     let {cur} = storeToRefs(challenge);
     let fresh = ref(true);
+    let totalChallenge = ref(12);
     const nextChallenge = async () => {
+
+      if(challenge.cur<=totalChallenge.value)
       challenge.cur++;
       fresh.value = false;
       await nextTick();
@@ -56,20 +59,27 @@ export default {
     }
 
     return {
-      challenge, cur, nextChallenge, fresh, gotoChallenge
+      challenge, cur, nextChallenge, fresh, gotoChallenge,totalChallenge
     }
   },
   mounted() {
-    this.getData();
+    this.getData(),
+    this.getRanking()
   },
   methods: {
     getData() {
-      this.axios.get('api/examination/student-info')
+      this.axios.get('/api/examination/student-info')
           .then(res => {
             this.users = res.data;
           });
     },
-
+    getRanking(){
+      this.axios.get('/api/studentInfo/getRanking')
+      .then(res=>{
+        this.rankings = res.data;
+      });
+    }
+    
   },
   components: {
     Timer,
@@ -78,28 +88,8 @@ export default {
   },
   data() {
     return {
-      users: [
-        {name: "王狗剩", clear: 7},
-        {name: "李根宝", clear: 9},
-        {name: "David", clear: 1},
-        {name: "Dick", clear: 12},
-        {name: "Link", clear: 1},
-        {name: "王狗剩", clear: 7},
-        {name: "李根宝", clear: 9},
-        {name: "David", clear: 1},
-        {name: "Dick", clear: 12},
-        {name: "Link", clear: 1},
-        {name: "王狗剩", clear: 7},
-        {name: "李根宝", clear: 9},
-        {name: "David", clear: 1},
-        {name: "Dick", clear: 12},
-        {name: "Link", clear: 1},
-        {name: "王狗剩", clear: 7},
-        {name: "李根宝", clear: 9},
-        {name: "David", clear: 1},
-        {name: "Dick", clear: 12},
-        {name: "Link", clear: 1},
-      ],
+      users: [],
+      rankings:[]
     };
   },
 }

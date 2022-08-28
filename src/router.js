@@ -11,6 +11,7 @@ import Test1 from "@/hubaba/TestOne";
 import BackTemplate from "@/hubaba/BackTemplate";
 import TestTwo from "@/hubaba/TestTwo";
 import MarkdownEdit from "@/hubaba/MarkdownEdit";
+import Test from "@/components/episodeMaker"
 
 const routes = [
     {
@@ -55,24 +56,30 @@ const routes = [
         }, {
             name: "mdedit",
             path: "mdedit", component: MarkdownEdit
-        }]
+        }, {
+            path: "test",
+            name: "test",
+            component: Test,
+        },
+            {
+                path: "userManagement",
+                name: "userManagement",
+                component: UserManagement,
+            },
+            {
+                path: "rankingkai",
+                name: "rankingkai",
+                component: RankingKai,
+            }]
     }
     ,
-    {
-        path: "/userManagement",
-        name: "userManagement",
-        component: UserManagement,
-    },
     {
         path: "/mission",
         name: "mission",
         component: Test1,
     },
-    {
-        path: "/rankingkai",
-        name: "rankingkai",
-        component: RankingKai,
-    },
+    ,
+
 ];
 const router = createRouter({
     routes,

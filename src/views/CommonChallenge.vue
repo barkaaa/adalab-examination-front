@@ -11,35 +11,19 @@
           }}
         </a-radio>
       </a-radio-group>
-      <a-checkbox value="1" v-for="option in item.options.split('?').slice(0,-1)" v-if="item.isMultiple==='true'&&item.questionType===2">{{
+      <a-checkbox :value="1" v-for="option in item.options.split('?').slice(0,-1)" v-if="item.isMultiple==='true'&&item.questionType===2">{{
           option
         }}
       </a-checkbox>
     </div>
-
-    <!--    <div class="problem_box">-->
-    <!--      <h3>请选择一个答案</h3>-->
-    <!--      <a-radio-group>-->
-    <!--        <a-radio value="A"> Radio</a-radio>-->
-    <!--        <a-radio value="B"> Radio</a-radio>-->
-    <!--        <a-radio value="C"> Radio</a-radio>-->
-    <!--        <a-radio value="D"> Radio</a-radio>-->
-    <!--      </a-radio-group>-->
-    <!--    </div>-->
-
-    <!--    <div class="problem_box">-->
-    <!--      <h3>请选择一个或多个答案</h3>-->
-    <!--      <a-checkbox value="1">Option 1</a-checkbox>-->
-    <!--      <a-checkbox value="1">Option 1</a-checkbox>-->
-    <!--      <a-checkbox value="1">Option 1</a-checkbox>-->
-    <!--      <a-checkbox value="1">Option 1</a-checkbox>-->
-    <!--    </div>-->
 
   </div>
 </template>
 
 <script>
 import {ref, onBeforeMount, getCurrentInstance} from "vue";
+import {useChallengeStore} from "@/store/challenge";
+import {storeToRefs} from "pinia";
 
 export default {
   name: "CommonChallenge",
@@ -49,20 +33,22 @@ export default {
   setup() {
 
     const {axios} = getCurrentInstance().appContext.config.globalProperties
-    const active = ref(0)
     const bLoading = ref(false);
+
+    const challenge = useChallengeStore();
+    let {cur} = storeToRefs(challenge);
     let res = ref([]);
     const nextChallenge = () => {
       bLoading.value = !bLoading.value
     }
     onBeforeMount(async () => {
       let r = await axios.get("/api/questionnaire/getone", {
-        params: {missionNum: 1}
+        params: {missionNum: cur.value}
       })
       res.value = r.data
     })
     return {
-      bLoading, nextChallenge, res
+      bLoading, nextChallenge, res,cur
     }
 
   },
