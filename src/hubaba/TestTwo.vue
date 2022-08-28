@@ -18,7 +18,7 @@
         </a-button>
       </a-space>
       <a-divider/>
-      <a-table row-key="name" :columns="columns" :data="tData" :row-selection="rowSelection"
+      <a-table row-key="id" :columns="columns" :data="tData" :row-selection="rowSelection"
                v-model:selectedKeys="selectedKeys" :pagination="pagination">
 
         <template #edit="{record}">
@@ -46,12 +46,13 @@
 <script>
 import {IconDelete, IconEdit, IconPlus} from "@arco-design/web-vue/es/icon";
 import {reactive, ref} from "vue";
+import qs from 'qs'
 
 export default {
   name: "TestTwo",
   components: {IconDelete, IconEdit, IconPlus},
   setup() {
-    const selectedKeys = ref(['1', '2']);
+    const selectedKeys = ref([]);
     const visible = ref(false);
     const handleAdd = () => {
       visible.value = true;
@@ -165,12 +166,12 @@ export default {
       }
     }
     ,
-    handleDelete(id) {
-      let ids = id ? [id] : this.selectedKeys.map((item) => {
-        return item.id;
+    async handleDelete() {
+
+      await this.axios.delete("/api/levels/batchdel", {
+        data: {ids: this.selectedKeys},
       })
-      console.log(ids)
-      // 删除
+      await this.getData()
     }
     ,
   }

@@ -50,7 +50,15 @@
                     @click="moreDetails(index, question)"
                     >修改</a-link
                   >
+
+                  <a-popconfirm
+                    content="确定删除该题目吗?"
+                    @ok="confirmDelete(index)"
+                  >
+                    <a-link props key="index">删除</a-link>
+                  </a-popconfirm>
                 </template>
+
                 <a-modal
                   width="60vw"
                   v-model:visible="visible3[index]"
@@ -175,6 +183,7 @@
                   </div>
                 </div>
               </a-modal>
+
               <a-button @click="saveMission">保存当前关卡</a-button>
             </div>
           </div>
@@ -248,7 +257,7 @@ export default defineComponent({
   setup() {
     const visible1 = ref(false);
     const visible2 = ref(false);
-    const visible3 = ref([]);
+    var visible3 = ref([false]);
 
     var missions = reactive(
       {
@@ -348,6 +357,7 @@ export default defineComponent({
         question.options = [];
       }
     };
+
     const OkNewquestion = (done) => {
       if (isChoose.value == "选择") {
         missions.textContents.push({
@@ -385,6 +395,10 @@ export default defineComponent({
       visible2.value = false;
       isChoose.value = null;
       newDescription.value = null;
+    };
+
+    const confirmDelete = (index) => {
+      missions.textContents.splice(index, 1);
     };
 
     const addChoice = () => {
@@ -428,6 +442,7 @@ export default defineComponent({
       changeDescription,
       arrayDeepCopy,
       minusOptionsMark,
+      confirmDelete,
     };
   },
 });

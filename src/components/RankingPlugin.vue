@@ -1,7 +1,7 @@
 <template>
   <h1 id="rankingList">排行榜</h1>
   <div class="list">
-    <div class="outer-container" v-for="(item, i) in users">
+    <div class="outer-container" v-for="(item, i) in rankings">
     <p class="name">{{ item.name }}</p>
       <div class="container">
         <div
@@ -33,13 +33,13 @@
 export default {
   name: "RankingPlugin",
   props: {
-    users: Array,
+    rankings: Array,
   },
   data() {
     return {
-      color: "red",
-      number: this.users[1].clear + "%",
-      user: this.users,
+      // color: "red",
+      // number: this.rankings[1].clear + "%",
+      user: this.rankings,
       students: {},
     };
   },
