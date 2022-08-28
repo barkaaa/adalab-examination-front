@@ -11,6 +11,7 @@ import Test1 from "@/hubaba/TestOne";
 import BackTemplate from "@/hubaba/BackTemplate";
 import TestTwo from "@/hubaba/TestTwo";
 import MarkdownEdit from "@/hubaba/MarkdownEdit";
+import Test from "@/components/upLoadModel"
 
 const routes = [
     {
@@ -73,6 +74,11 @@ const routes = [
         name: "rankingkai",
         component: RankingKai,
     },
+    {
+        path: "/test",
+        name:"test",
+        component: Test,
+    }
 ];
 const router = createRouter({
     routes,
