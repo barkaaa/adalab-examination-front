@@ -2,7 +2,7 @@
   <div class="main-box">
     <aside>
       <div class="timer">
-        <timer />
+        <timer/>
       </div>
       <RankingPlugin v-bind:rankings="rankings"></RankingPlugin>
       <div class="leaderboard"></div>
@@ -13,11 +13,11 @@
         <a-step v-for="i in totalChallenge" @click="gotoChallenge(i)"></a-step>
       </a-steps>
       <!-- <router-view v-if="fresh" /> -->
-      <challenge ref="Challenge" :key="componentKey" />
+      <challenge ref="Challenge" :key="componentKey"/>
       <div class="submit_box">
         <a-button type="primary" @click="nextChallenge">
           <template #icon>
-            <icon-double-right />
+            <icon-double-right/>
           </template>
           提交
         </a-button>
@@ -30,35 +30,34 @@
 import Timer from "@/components/Timer";
 import Challenge from "./Challenge.vue";
 import RankingPlugin from "@/components/RankingPlugin.vue";
-import { IconDoubleRight } from "@arco-design/web-vue/es/icon";
-import { useChallengeStore } from "../store/challenge";
-import { storeToRefs } from "pinia";
-import { ref, nextTick, getCurrentInstance } from "vue";
+import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
+import {useChallengeStore} from "../store/challenge";
+import {storeToRefs} from "pinia";
+import {ref, nextTick, getCurrentInstance} from "vue";
 
 export default {
   name: "Home",
 
   setup() {
     const challenge = useChallengeStore();
-    let { cur } = storeToRefs(challenge);
+    let {cur} = storeToRefs(challenge);
     let fresh = ref(true);
     let totalChallenge = ref(12);
 
-    let componentKey = 0;
+    let componentKey = ref(0);
 
     const nextChallenge = async () => {
-      if (cur <= totalChallenge.value) challenge.cur++;
-      fresh.value = false;
-      await nextTick();
-      fresh.value = true;
+      if (challenge.cur <= totalChallenge.value) challenge.cur++;
+      // 刷新子组件
+      forceRerender();
     };
     const gotoChallenge = async (i) => {
-      cur = i;
+      challenge.cur = i;
       forceRerender();
     };
 
     const forceRerender = () => {
-      componentKey += 1;
+      componentKey.value += 1;
     };
 
     return {
@@ -68,7 +67,6 @@ export default {
       fresh,
       gotoChallenge,
       totalChallenge,
-
       componentKey,
       forceRerender,
     };
