@@ -1,7 +1,6 @@
-import Challenge from "@/views/Challenge";
+import Home from "@/views/Home";
 import Login from "@/views/Login";
-import CommonChallengem from "@/views/CommonChallenge";
-import MarkdownChallenge from "@/views/MarkdownChallenge";
+
 import Ranking from "@/views/Ranking";
 import Student from "@/views/StudentLogin";
 import {createRouter, createWebHistory} from "vue-router";
@@ -12,6 +11,7 @@ import BackTemplate from "@/hubaba/BackTemplate";
 import TestTwo from "@/hubaba/TestTwo";
 import MarkdownEdit from "@/hubaba/MarkdownEdit";
 import Test from "@/components/episodeMaker"
+import Challenge from "@/views/Challenge";
 
 const routes = [
     {
@@ -34,18 +34,14 @@ const routes = [
         component: Ranking,
     },
     {
-        path: "/challenge",
-        name: "Challenge",
-        component: Challenge,
-        redirect: "/challenge/common",
+        path: "/home",
+        name: "Home",
+        component: Home,
+        redirect: "/Home/challenge",
         children: [
             {
-                path: "common",
-                component: CommonChallengem,
-            },
-            {
-                path: "markdown",
-                component: MarkdownChallenge,
+                path: "challenge",
+                component: Challenge,
             },
         ],
     }, {
