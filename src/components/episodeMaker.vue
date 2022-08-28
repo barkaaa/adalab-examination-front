@@ -1,20 +1,39 @@
 <template>
-  <div>
-    <input type="text" v-model="id">
+  <div class="divider-demo">
+    <a-divider orientation="center">请输入关卡号</a-divider>
+    <a-input :style="{width:'320px'}" v-model="id"/>
+    <br/>
+    <a-divider orientation="center"></a-divider>
     <select v-model="testRequired">
       <option value="true">需要测试</option>
-      <option value="false">不需要测试</option>
+      <option value='false'>不需要测试</option>
     </select>
-    <input v-if="testRequired" type="text" v-model="timeOut">
-    <select v-if="testRequired" v-model="img">
+    <br/><br/>
+    <div v-if="testRequired">
+     <a-divider orientation="center" >设置超时时间</a-divider>
+      <a-input :style="{width:'320px'}" v-if="testRequired" type="text" v-model="timeOut" />
+
+    <a-divider orientation="center" >选择镜像</a-divider>
+      <select v-if="testRequired" v-model="img">
       <option v-for="image in images" :key="image.Id" :value="image.Id">
         {{ image.RepoTags }}}
       </option>
-    </select>
-    <input v-if="testRequired" type="text" v-model="cmd">
-    <input v-if="testRequired" type="file" @change="getFile($event)" multiple="multiple">
-    <button @click="submit($event)">提交</button>
+      </select>
+      <br/>
+      <a-divider orientation="center" >输入cmd命令</a-divider>
+      <a-input :style="{width:'320px'}"  v-if="testRequired" type="text" v-model="cmd" />
+      <br/>
+      <a-divider orientation="center" >选择文件</a-divider>
+      <a-input  :style="{width:'320px'}" v-if="testRequired" type="file" @change="getFile($event)" multiple="multiple" />
+      <p></p>
   </div>
+    <a-divider :margin="10" ><icon-star /></a-divider>
+    <p></p>
+    <br/>
+    <a-button type="primary" size="large" @click="submit($event)">提交</a-button>
+  </div>
+
+
 </template>
 
 <script>
@@ -64,7 +83,7 @@ export default {
 
     },
     getImg() {
-      this.axios.get("api/episode/images")
+      this.axios.get("/api/episode/images")
           .then(res => {
             console.log(res.data);
             this.images = res.data;
@@ -81,4 +100,11 @@ export default {
 
 <style scoped>
 
+.divider-demo {
+  Text-align:center;
+  background-color: white;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 30px solid rgb(var(--gray-2));
+}
 </style>
