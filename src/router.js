@@ -12,11 +12,16 @@ import TestTwo from "@/hubaba/TestTwo";
 import MarkdownEdit from "@/hubaba/MarkdownEdit";
 import Test from "@/components/episodeMaker"
 import Challenge from "@/views/Challenge";
+import Success from "@/components/Success";
 
 const routes = [
     {
         path: "/",
         redirect: "/login",
+    },
+    {
+        path: "/success",
+        component: Success
     },
     {
         path: "/login",

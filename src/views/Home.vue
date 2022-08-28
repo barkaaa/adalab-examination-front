@@ -34,11 +34,13 @@ import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
 import {useChallengeStore} from "../store/challenge";
 import {storeToRefs} from "pinia";
 import {ref, nextTick, getCurrentInstance, reactive} from "vue";
+import {useRouter} from 'vue-router'
 
 export default {
   name: "Home",
 
   setup() {
+    let router = useRouter();
     let bVal = ref("提交");
     // 控制第二次点击 1成功，2失败
     let status = ref(0);
@@ -66,6 +68,7 @@ export default {
         if (challenge.cur < totalChallenge.value) challenge.cur++;
         if (challenge.cur === totalChallenge.value) {
           // 已通关，跳到通关页面
+         await router.push("/success");
         }
         forceRerender();
         //  按键恢复
