@@ -2,101 +2,113 @@
   <div class="main-box">
     <aside>
       <div class="timer">
-        <timer/>
+        <timer />
       </div>
       <RankingPlugin v-bind:rankings="rankings"></RankingPlugin>
-      <div class="leaderboard">
-      </div>
+      <div class="leaderboard"></div>
       <div class="footer"></div>
     </aside>
     <main>
       <a-steps :current="cur" small>
         <a-step v-for="i in totalChallenge" @click="gotoChallenge(i)"></a-step>
       </a-steps>
-      <router-view v-if="fresh"/>
+      <!-- <router-view v-if="fresh" /> -->
+      <challenge ref="Challenge" :key="componentKey" />
       <div class="submit_box">
         <a-button type="primary" @click="nextChallenge">
           <template #icon>
-            <icon-double-right/>
+            <icon-double-right />
           </template>
           提交
         </a-button>
       </div>
     </main>
   </div>
-
 </template>
 
 <script>
 import Timer from "@/components/Timer";
+import Challenge from "./Challenge.vue";
 import RankingPlugin from "@/components/RankingPlugin.vue";
-import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
-import {useChallengeStore} from "../store/challenge"
-import {storeToRefs} from 'pinia';
-import {ref, nextTick} from "vue";
+import { IconDoubleRight } from "@arco-design/web-vue/es/icon";
+import { useChallengeStore } from "../store/challenge";
+import { storeToRefs } from "pinia";
+import { ref, nextTick, getCurrentInstance } from "vue";
 
 export default {
-  name: "Challenge",
+  name: "Home",
 
   setup() {
     const challenge = useChallengeStore();
-    let {cur} = storeToRefs(challenge);
+    let { cur } = storeToRefs(challenge);
     let fresh = ref(true);
     let totalChallenge = ref(12);
-    const nextChallenge = async () => {
 
-      if(challenge.cur<=totalChallenge.value)
-      challenge.cur++;
+    let componentKey = 0;
+
+    const nextChallenge = async () => {
+      if (cur <= totalChallenge.value) challenge.cur++;
       fresh.value = false;
       await nextTick();
       fresh.value = true;
-    }
+    };
     const gotoChallenge = async (i) => {
-      challenge.cur = i;
-      fresh.value = false;
-      await nextTick();
-      fresh.value = true;
-    }
+      cur = i;
+      forceRerender();
+    };
+
+    const forceRerender = () => {
+      componentKey += 1;
+    };
 
     return {
-      challenge, cur, nextChallenge, fresh, gotoChallenge,totalChallenge
-    }
+      challenge,
+      cur,
+      nextChallenge,
+      fresh,
+      gotoChallenge,
+      totalChallenge,
+
+      componentKey,
+      forceRerender,
+    };
   },
   async mounted() {
-    await this.getData()
-    await this.getRanking()
+    await this.getData();
+    await this.getRanking();
   },
   methods: {
     getData() {
-      this.axios.get('/api/examination/student-info')
-          .then(res => {
-            this.users = res.data;
-          });
+      this.axios.get("/api/examination/student-info").then((res) => {
+        this.users = res.data;
+      });
     },
-    getRanking(){
-      this.axios.get('/api/studentInfo/getRanking')
-      .then(res=>{
+    getRanking() {
+      this.axios.get("/api/studentInfo/getRanking").then((res) => {
         this.rankings = res.data;
       });
-    }
-    
+    },
+
+    handle() {
+      this.$refs.Challenge.test();
+    },
   },
   components: {
     Timer,
     RankingPlugin,
-    IconDoubleRight
+    IconDoubleRight,
+    Challenge,
   },
   data() {
     return {
       users: [],
-      rankings:[]
+      rankings: [],
     };
   },
-}
+};
 </script>
 
 <style scoped lang="less">
-
 .main-box {
   display: flex;
   width: 100%;
@@ -112,13 +124,10 @@ export default {
     }
 
     .leaderboard {
-
     }
 
     .footer {
-
     }
-
   }
 
   main {
@@ -132,5 +141,4 @@ export default {
     }
   }
 }
-
 </style>
