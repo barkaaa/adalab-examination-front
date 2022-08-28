@@ -11,7 +11,7 @@ import Test1 from "@/hubaba/TestOne";
 import BackTemplate from "@/hubaba/BackTemplate";
 import TestTwo from "@/hubaba/TestTwo";
 import MarkdownEdit from "@/hubaba/MarkdownEdit";
-import Test from "@/components/upLoadModel"
+import Test from "@/components/upLoadDockerModel"
 
 const routes = [
     {
