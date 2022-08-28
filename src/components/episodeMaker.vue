@@ -5,29 +5,31 @@
     <br/>
     <a-divider orientation="center"></a-divider>
     <select v-model="testRequired">
-      <option value="true">需要测试</option>
-      <option value='false'>不需要测试</option>
+      <option value='1'>需要测试</option>
+      <option value=''>不需要测试</option>
     </select>
     <br/><br/>
     <div v-if="testRequired">
-     <a-divider orientation="center" >设置超时时间</a-divider>
-      <a-input :style="{width:'320px'}" v-if="testRequired" type="text" v-model="timeOut" />
+      <a-divider orientation="center">设置超时时间</a-divider>
+      <a-input :style="{width:'320px'}" v-if="testRequired" type="text" v-model="timeOut"/>
 
-    <a-divider orientation="center" >选择镜像</a-divider>
+      <a-divider orientation="center">选择镜像</a-divider>
       <select v-if="testRequired" v-model="img">
-      <option v-for="image in images" :key="image.Id" :value="image.Id">
-        {{ image.RepoTags }}}
-      </option>
+        <option v-for="image in images" :key="image.Id" :value="image.Id">
+          {{ image.RepoTags }}}
+        </option>
       </select>
       <br/>
-      <a-divider orientation="center" >输入cmd命令</a-divider>
-      <a-input :style="{width:'320px'}"  v-if="testRequired" type="text" v-model="cmd" />
+      <a-divider orientation="center">输入cmd命令</a-divider>
+      <a-input :style="{width:'320px'}" v-if="testRequired" type="text" v-model="cmd"/>
       <br/>
-      <a-divider orientation="center" >选择文件</a-divider>
-      <a-input  :style="{width:'320px'}" v-if="testRequired" type="file" @change="getFile($event)" multiple="multiple" />
+      <a-divider orientation="center">选择文件</a-divider>
+      <a-input :style="{width:'320px'}" v-if="testRequired" type="file" @change="getFile($event)" multiple="multiple"/>
       <p></p>
-  </div>
-    <a-divider :margin="10" ><icon-star /></a-divider>
+    </div>
+    <a-divider :margin="10">
+      <icon-star/>
+    </a-divider>
     <p></p>
     <br/>
     <a-button type="primary" size="large" @click="submit($event)">提交</a-button>
@@ -45,14 +47,14 @@ export default {
       files: {},
       timeOut: '',
       cmd: '',
-      testRequired: false,
+      testRequired: '',
       img: '',
       images: {}
     }
   },
   methods: {
     getFile(event) {
-      this.files = event.target.files;
+      this.files = event.currentTarget.files;
     },
 
     submit(event) {
@@ -63,7 +65,7 @@ export default {
         cmd: this.cmd,
         timeOut: this.timeOut,
         imgId: this.img,
-        testRequired: this.testRequired
+        testRequired: this.setBoolean(this.testRequired),
       };
       let config = {
         headers: {
@@ -89,6 +91,10 @@ export default {
             this.images = res.data;
             console.log(this.images);
           });
+    },
+
+    setBoolean(b) {
+      return !!b;
     }
   },
 
@@ -101,7 +107,7 @@ export default {
 <style scoped>
 
 .divider-demo {
-  Text-align:center;
+  Text-align: center;
   background-color: white;
   box-sizing: border-box;
   padding: 12px;
