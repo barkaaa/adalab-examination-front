@@ -15,11 +15,11 @@
       <!-- <router-view v-if="fresh" /> -->
       <challenge ref="Challenge" :key="componentKey"/>
       <div class="submit_box">
-        <a-button type="primary" @click="nextChallenge">
+        <a-button type="primary" @click="nextChallenge" :loading="loading" :style="bStyle">
           <template #icon>
             <icon-double-right/>
           </template>
-          提交
+          {{ bVal }}
         </a-button>
       </div>
     </main>
@@ -33,23 +33,72 @@ import RankingPlugin from "@/components/RankingPlugin.vue";
 import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
 import {useChallengeStore} from "../store/challenge";
 import {storeToRefs} from "pinia";
-import {ref, nextTick, getCurrentInstance} from "vue";
+import {ref, nextTick, getCurrentInstance, reactive} from "vue";
 
 export default {
   name: "Home",
 
   setup() {
+    let bVal = ref("提交");
+    // 控制第二次点击 1成功，2失败
+    let status = ref(0);
+    let loading = ref(false)
     const challenge = useChallengeStore();
     let {cur} = storeToRefs(challenge);
     let fresh = ref(true);
     let totalChallenge = ref(12);
-
+    let bStyle = reactive({
+      "background-color": "#1a8fdd"
+    });
     let componentKey = ref(0);
 
     const nextChallenge = async () => {
-      if (challenge.cur <= totalChallenge.value) challenge.cur++;
-      // 刷新子组件
-      forceRerender();
+
+      // 修改按钮状态
+      bVal.value = "测评中";
+      loading.value = true;
+      bStyle["background-color"] = "#c3c3c3";
+
+
+      // 成功
+      if (status.value === 1) {
+        //  刷新子组件
+        if (challenge.cur < totalChallenge.value) challenge.cur++;
+        if (challenge.cur === totalChallenge.value) {
+          // 已通关，跳到通关页面
+        }
+        forceRerender();
+        //  按键恢复
+        bVal.value = "提交";
+        loading.value = false;
+        bStyle["background-color"] = "#1a8fdd";
+        return;
+      } else if (status.value === 2) {
+        // 失败
+        status.value = 0;
+        await nextChallenge();
+        return;
+      }
+
+      // 获取题目类型
+      // 问卷调查：调用子组件方法，
+      // 直接调用成功方法
+      // markdown闯关：发起请求验证代码是否有误
+      // 根据返回结果，分别调用
+      //
+
+      // 成功
+      // bVal.value = "下一关"
+      // bStyle["background-color"] = "#006a4e";
+      // loading.value = false;
+      // status.value = 1;
+      // 失败
+      // bVal.value = "闯关失败"
+      // bStyle["background-color"] = "#cc0000";
+      // loading.value = false;
+      // status.value = 2;
+
+
     };
     const gotoChallenge = async (i) => {
       challenge.cur = i;
@@ -61,6 +110,7 @@ export default {
     };
 
     return {
+      loading,
       challenge,
       cur,
       nextChallenge,
@@ -69,6 +119,9 @@ export default {
       totalChallenge,
       componentKey,
       forceRerender,
+      bVal,
+      bStyle,
+      status
     };
   },
   async mounted() {
