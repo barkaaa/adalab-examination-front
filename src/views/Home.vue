@@ -53,7 +53,7 @@ export default {
     let loading = ref(false);
     const challenge = useChallengeStore();
     let { cur } = storeToRefs(challenge);
-    let totalChallenge = ref(12);
+    let totalChallenge = ref();
     let bStyle = reactive({
       "background-color": "#1a8fdd",
     });
@@ -83,6 +83,8 @@ export default {
         await nextChallenge();
         return;
       }
+
+
 
       // 获取题目类型
 
@@ -126,6 +128,8 @@ export default {
       forceRerender();
     };
 
+   
+
     const btnSuccess = () => {
       bVal.value = "下一关";
       bStyle["background-color"] = "#006a4e";
@@ -168,6 +172,7 @@ export default {
   async mounted() {
     await this.getData();
     await this.getRanking();
+    await this.getChallengeNum();
   },
   methods: {
     getData() {
@@ -179,6 +184,12 @@ export default {
       this.axios.get("/api/studentInfo/getRanking").then((res) => {
         this.rankings = res.data;
       });
+    },
+    
+    getChallengeNum(){
+      this.axios.get("/api/episode/get").then((res)=>{
+        this.totalChallenge = res.data.length;
+      })
     },
 
     handle() {
