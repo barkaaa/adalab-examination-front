@@ -47,7 +47,6 @@ export default {
     let loading = ref(false)
     const challenge = useChallengeStore();
     let {cur} = storeToRefs(challenge);
-    let fresh = ref(true);
     let totalChallenge = ref(12);
     let bStyle = reactive({
       "background-color": "#1a8fdd"
@@ -117,7 +116,6 @@ export default {
       challenge,
       cur,
       nextChallenge,
-      fresh,
       gotoChallenge,
       totalChallenge,
       componentKey,

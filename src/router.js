@@ -42,7 +42,7 @@ const routes = [
         path: "/home",
         name: "Home",
         component: Home,
-        redirect: "/Home/challenge",
+        redirect: "/home/challenge",
         children: [
             {
                 path: "challenge",
@@ -54,14 +54,19 @@ const routes = [
         component: BackTemplate,
         children: [{
             path: "two", component: TestTwo
-        }, {
-            name: "mdedit",
-            path: "mdedit", component: MarkdownEdit
-        }, {
-            path: "test",
-            name: "test",
-            component: Test,
         },
+            {
+                path: "mission",
+                name: "mission",
+                component: Test1,
+            }, {
+                name: "mdedit",
+                path: "mdedit", component: MarkdownEdit
+            }, {
+                path: "test",
+                name: "test",
+                component: Test,
+            },
             {
                 path: "userManagement",
                 name: "userManagement",
@@ -73,12 +78,6 @@ const routes = [
                 component: RankingKai,
             }]
     }
-    ,
-    {
-        path: "/mission",
-        name: "mission",
-        component: Test1,
-    },
     ,
 
 ];

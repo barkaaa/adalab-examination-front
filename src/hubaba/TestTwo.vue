@@ -11,6 +11,12 @@
             <icon-plus/>
           </template>
         </a-button>
+
+        <a-button type="primary" @click="handleUpload">
+          <template #icon>
+            <icon-upload/>
+          </template>
+        </a-button>
         <a-button status="danger" type="primary" @click="handleDelete">
           <template #icon>
             <icon-delete/>
@@ -22,7 +28,7 @@
                v-model:selectedKeys="selectedKeys" :pagination="pagination">
 
         <template #edit="{record}">
-          <a-button @click="edit(record.stage,record.id)" status="success">
+          <a-button @click="edit(record.stage,record.id,record.type)" status="success">
             <template #icon>
               <icon-edit/>
             </template>
@@ -44,19 +50,24 @@
 </template>
 
 <script>
-import {IconDelete, IconEdit, IconPlus} from "@arco-design/web-vue/es/icon";
+import {IconDelete, IconEdit, IconPlus, IconUpload} from "@arco-design/web-vue/es/icon";
 import {reactive, ref} from "vue";
-import qs from 'qs'
+import {useRouter} from "vue-router";
 
 export default {
   name: "TestTwo",
-  components: {IconDelete, IconEdit, IconPlus},
+  components: {IconDelete, IconEdit, IconPlus, IconUpload},
   setup() {
     const selectedKeys = ref([]);
     const visible = ref(false);
-    const handleAdd = () => {
+
+    var router = useRouter();
+    const handleUpload = () => {
       visible.value = true;
     };
+    const handleAdd = () => {
+      router.push("/backpanel/mission")
+    }
     const handleCancel = () => {
       visible.value = false;
     }
@@ -77,12 +88,8 @@ export default {
         dataIndex: 'stage',
       },
       {
-        title: 'URL',
-        dataIndex: 'url',
-      },
-      {
-        title: "Type",
-        dataIndex: "type"
+        title: 'Type',
+        dataIndex: 'type',
       }
       ,
       {
@@ -99,7 +106,8 @@ export default {
       pagination,
       visible,
       handleAdd,
-      handleCancel
+      handleCancel,
+      handleUpload
     }
   }
   ,
@@ -111,12 +119,19 @@ export default {
     }
   },
   methods: {
-    edit(stage, id) {
-      this.$router.push(
-          {name: 'mdedit', params: {stage, id}})
+    edit(stage, id, type) {
+      // 问卷
+      if (type === 1) {
+        this.$router.push(
+            {name: 'mission', params: {stage, id}})
+      } else if (type === 2) {
+        this.$router.push(
+            {name: 'mdedit', params: {stage, id}})
+      }
+
     },
     async handleOk() {
-      await this.axios.post("/api/levels/add", {
+      await this.axios.post("/api/challenge/add", {
         stage: this.stage,
         url: this.url
       })
@@ -125,7 +140,7 @@ export default {
 
     },
     async getData() {
-      const res = await this.axios.get("/api/levels/all");
+      const res = await this.axios.get("/api/challenge-type/all");
       this.tData = res.data;
     },
     customRequest(option) {
@@ -168,7 +183,7 @@ export default {
     ,
     async handleDelete() {
 
-      await this.axios.delete("/api/levels/batchdel", {
+      await this.axios.delete("/api/challenge-type/batchdel", {
         data: {ids: this.selectedKeys},
       })
       await this.getData()
