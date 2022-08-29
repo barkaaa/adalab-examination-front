@@ -173,7 +173,7 @@
 </template>
 
 <script>
-import { ref, reactive } from "vue";
+import { ref, reactive, getCurrentInstance, onBeforeMount } from "vue";
 import { defineComponent } from "vue";
 import { IconBarChart, IconPen, IconUser } from "@arco-design/web-vue/es/icon";
 
@@ -208,6 +208,7 @@ export default defineComponent({
         "Y",
         "Z",
       ],
+      missionNum: this.$route.params.stageNum,
     };
   },
   components: {
@@ -238,53 +239,12 @@ export default defineComponent({
     const visible2 = ref(false);
     var visible3 = ref([false]);
 
+    let currentInstance = getCurrentInstance();
+    const { axios } = getCurrentInstance().appContext.config.globalProperties;
     var missions = reactive(
       {
-        missionNumber: 1,
-        type: "common",
-        textContents: [
-          {
-            questionType: "填空",
-            description:
-              "1 test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test",
-            options: [],
-            isMultiple: "false",
-            isAdditional: "false",
-          },
-          {
-            questionType: "选择",
-            description:
-              "2 test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test",
-            options: ["选a", "选b", "选c"],
-            isMultiple: "false",
-            isAdditional: "false",
-          },
-          {
-            questionType: "填空",
-            description:
-              "3 test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test " +
-              "test test test test test test test test test test test test test",
-            options: [],
-            isMultiple: "false",
-            isAdditional: "false",
-          },
-        ],
+        missionNumber: 0,
+        textContents: [],
       },
       { type: "file" }
     );
@@ -297,6 +257,36 @@ export default defineComponent({
     var changeOptionsMark = ref();
     var changeChoices = ref([]);
     var changeDescription = ref();
+
+    onBeforeMount(async () => {
+      const selectMission = parseInt(currentInstance.data.missionNum);
+      let r = await axios.get("/api/questionnaire/getone", {
+        params: { missionNum: selectMission},
+      });
+      missions.missionNumber = selectMission;
+
+      for (let i = 0; i < r.data.length; i++) {
+        missions.textContents.push({
+          questionType: "",
+          description: "",
+          isAdditional: "",
+          isMultiple: "",
+          options: [],
+        });
+        missions.textContents[i].description = r.data[i].theme;
+        missions.textContents[i].isAdditional = r.data[i].isAddtional;
+        missions.textContents[i].isMultiple = r.data[i].isMultiple;
+        missions.textContents[i].options = r.data[i].options
+          .split("?")
+          .slice(0, -1);
+        const type = r.data[i].questionType;
+        if (type == 2) {
+          missions.textContents[i].questionType = "选择";
+        } else {
+          missions.textContents[i].questionType = "填空";
+        }
+      }
+    });
 
     const deepCopy = (obj) => {
       if (typeof obj != "object") {

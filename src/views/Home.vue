@@ -84,7 +84,7 @@ export default {
       // 获取题目类型
       const res = await axios.get("/api/challenge-type/getone", {
         params: {
-          stage: challenge.cur + 1;
+          stage: challenge.cur + 1,
         }
       })
       let type = res.data.type;

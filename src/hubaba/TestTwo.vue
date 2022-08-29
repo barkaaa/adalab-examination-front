@@ -1,48 +1,73 @@
 <template>
   <div>
-    <a-layout style="padding: 30px 24px;">
+    <a-layout style="padding: 30px 24px">
       <a-breadcrumb style="padding-bottom: 20px">
         <a-breadcrumb-item>关卡设置</a-breadcrumb-item>
         <a-breadcrumb-item>编辑关卡</a-breadcrumb-item>
       </a-breadcrumb>
       <a-space class="option">
-        <a-button type="primary" @click="handleAdd">
+        <a-button type="primary" @click="handleSelect">
           <template #icon>
-            <icon-plus/>
+            <icon-plus />
           </template>
         </a-button>
 
         <a-button type="primary" @click="handleUpload">
           <template #icon>
-            <icon-upload/>
+            <icon-upload />
           </template>
         </a-button>
         <a-button status="danger" type="primary" @click="handleDelete">
           <template #icon>
-            <icon-delete/>
+            <icon-delete />
           </template>
         </a-button>
       </a-space>
-      <a-divider/>
-      <a-table row-key="id" :columns="columns" :data="tData" :row-selection="rowSelection"
-               v-model:selectedKeys="selectedKeys" :pagination="pagination">
-
-        <template #edit="{record}">
-          <a-button @click="edit(record.stage,record.id,record.type)" status="success">
+      <a-divider />
+      <a-table
+        row-key="id"
+        :columns="columns"
+        :data="tData"
+        :row-selection="rowSelection"
+        v-model:selectedKeys="selectedKeys"
+        :pagination="pagination"
+      >
+        <template #edit="{ record }">
+          <a-button
+            @click="edit(record.stage, record.id, record.type)"
+            status="success"
+          >
             <template #icon>
-              <icon-edit/>
+              <icon-edit />
             </template>
           </a-button>
         </template>
       </a-table>
     </a-layout>
-    <a-modal v-model:visible="visible" title="添加关卡" @cancel="handleCancel" @ok="handleOk">
+    <a-modal
+      v-model:visible="visible"
+      title="添加关卡"
+      @cancel="handleCancel"
+      @ok="handleOk"
+    >
       <a-form>
         <a-form-item field="name" label="题号">
-          <a-input-number v-model="stage"/>
+          <a-input-number v-model="stage" />
         </a-form-item>
         <a-form-item field="file" label="文件">
-          <a-upload :custom-request="customRequest"/>
+          <a-upload :custom-request="customRequest" />
+        </a-form-item>
+      </a-form>
+    </a-modal>
+    <a-modal
+      v-model:visible="visible1"
+      title="添加关卡"
+      @cancel="handleCancel"
+      @ok="handleAdd"
+    >
+      <a-form>
+        <a-form-item field="name" label="题号">
+          <a-input-number v-model="commonStage" />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -50,54 +75,70 @@
 </template>
 
 <script>
-import {IconDelete, IconEdit, IconPlus, IconUpload} from "@arco-design/web-vue/es/icon";
-import {reactive, ref} from "vue";
-import {useRouter} from "vue-router";
+import {
+  IconDelete,
+  IconEdit,
+  IconPlus,
+  IconUpload,
+} from "@arco-design/web-vue/es/icon";
+import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
   name: "TestTwo",
-  components: {IconDelete, IconEdit, IconPlus, IconUpload},
+  components: { IconDelete, IconEdit, IconPlus, IconUpload },
   setup() {
     const selectedKeys = ref([]);
     const visible = ref(false);
+    const visible1 = ref(false);
+    var commonStage = ref();
 
     var router = useRouter();
+
+    const handleAdd = () => {
+        router.push({
+        name: "mission",
+        params: { stageNum: commonStage.value },
+      });
+    };
+
     const handleUpload = () => {
       visible.value = true;
     };
-    const handleAdd = () => {
-      router.push("/backpanel/mission")
-    }
+
+    const handleSelect = () => {
+      visible1.value = true;
+    };
+
     const handleCancel = () => {
       visible.value = false;
-    }
+      visible1.value = false;
+    };
     const rowSelection = reactive({
-      type: 'checkbox',
+      type: "checkbox",
       showCheckedAll: true,
       onlyCurrent: false,
     });
-    const pagination = {pageSize: 5}
+    const pagination = { pageSize: 5 };
 
     const columns = [
       {
-        title: 'Id',
-        dataIndex: 'id',
+        title: "Id",
+        dataIndex: "id",
       },
       {
-        title: 'Stage',
-        dataIndex: 'stage',
+        title: "Stage",
+        dataIndex: "stage",
       },
       {
-        title: 'Type',
-        dataIndex: 'type',
-      }
-      ,
-      {
-        title: 'Edit',
-        slotName: 'edit',
+        title: "Type",
+        dataIndex: "type",
       },
-    ]
-
+      {
+        title: "Edit",
+        slotName: "edit",
+      },
+    ];
 
     return {
       rowSelection,
@@ -107,44 +148,45 @@ export default {
       visible,
       handleAdd,
       handleCancel,
-      handleUpload
-    }
-  }
-  ,
+      handleUpload,
+      visible1,
+      handleSelect,
+      commonStage,
+    };
+  },
   data() {
     return {
       tData: [],
       fileName: "111",
-      stage: ""
-    }
+      stage: "",
+    };
   },
   methods: {
+
+    
+
     edit(stage, id, type) {
       // 问卷
       if (type === 1) {
-        this.$router.push(
-            {name: 'mission', params: {stage, id}})
+        this.$router.push({ name: "mission", params: { stage, id } });
       } else if (type === 2) {
-        this.$router.push(
-            {name: 'mdedit', params: {stage, id}})
+        this.$router.push({ name: "mdedit", params: { stage, id } });
       }
-
     },
     async handleOk() {
       await this.axios.post("/api/challenge/add", {
         stage: this.stage,
-        url: this.url
-      })
+        url: this.url,
+      });
       this.visible = false;
       await this.getData();
-
     },
     async getData() {
       const res = await this.axios.get("/api/challenge-type/all");
       this.tData = res.data;
     },
     customRequest(option) {
-      const {onProgress, onError, onSuccess, fileItem, name} = option
+      const { onProgress, onError, onSuccess, fileItem, name } = option;
       const xhr = new XMLHttpRequest();
       if (xhr.upload) {
         xhr.upload.onprogress = function (event) {
@@ -159,44 +201,36 @@ export default {
       xhr.onerror = function error(e) {
         onError(e);
       };
-      xhr.onload = (() => {
-            if (xhr.status < 200 || xhr.status >= 300) {
-              return onError(xhr.responseText);
-            }
-            onSuccess(xhr.response);
-            let parse = JSON.parse(xhr.responseText);
-            this.url = parse.url;
-          }
-      )
+      xhr.onload = () => {
+        if (xhr.status < 200 || xhr.status >= 300) {
+          return onError(xhr.responseText);
+        }
+        onSuccess(xhr.response);
+        let parse = JSON.parse(xhr.responseText);
+        this.url = parse.url;
+      };
 
       const formData = new FormData();
-      formData.append('file', fileItem.file);
-      xhr.open('post', '/api/oss/uploadFiles', true);
+      formData.append("file", fileItem.file);
+      xhr.open("post", "/api/oss/uploadFiles", true);
       xhr.send(formData);
       return {
         abort() {
-          xhr.abort()
-        }
-
-      }
-    }
-    ,
+          xhr.abort();
+        },
+      };
+    },
     async handleDelete() {
-
       await this.axios.delete("/api/challenge-type/batchdel", {
-        data: {ids: this.selectedKeys},
-      })
-      await this.getData()
-    }
-    ,
-  }
-  ,
-
+        data: { ids: this.selectedKeys },
+      });
+      await this.getData();
+    },
+  },
   mounted() {
     this.getData();
-  }
-
-}
+  },
+};
 </script>
 
 <style scoped>
