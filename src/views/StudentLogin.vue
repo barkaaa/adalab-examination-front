@@ -7,7 +7,7 @@
   <div class="main">
     <span class="title">Wellcome to Adalab！</span>
     <br/>
-    <span class="text">{{ obj.output }}</span>
+    <span class="text" id="output">{{ obj.output }}</span>
     <br/>
     <br/>
     <a href="https://github.com/login/oauth/authorize?client_id=d9f9e0e5413419ab273e&redirect_uri=http://localhost:8080/callback&scope=user&state=1">
@@ -19,8 +19,47 @@
 
 import {reactive, onMounted  } from 'vue'
 import VideoBackground  from 'vue-responsive-video-background-player'
-// 引入
 import EasyTyper from 'easy-typer-js'
+let text = ['Adalab入学筛选','第一步，使用github以开始']
+function setCookie(name, value, day) {
+  let date = new Date()
+  date.setDate(date.getDate() + day)
+  document.cookie = name + '=' + value + ';expires=' + date
+}
+function changeStyle() {
+
+  var obj = document.getElementById("output");
+
+  obj.style.color= "red";
+
+
+
+}
+// 函数中的参数为 要获取的cookie键的名称。
+function getCookie(c_name){
+  if (document.cookie.length>0){
+    let c_start=document.cookie.indexOf(c_name + "=");
+    if (c_start!=-1){
+      c_start=c_start + c_name.length+1;
+      let c_end=document.cookie.indexOf(";",c_start);
+      if (c_end==-1){
+        c_end=document.cookie.length;
+      }
+
+      return unescape(document.cookie.substring(c_start,c_end));
+    }
+  }
+
+  return "";
+}
+function checkCookie(c_name) {
+  let username = getCookie(c_name);
+  if (username!=null && username!=""){
+    // 如果cookie值存在，执行下面的操作。
+    return 'error'
+  }
+}
+
 export default {
   components:{
     VideoBackground
@@ -40,8 +79,12 @@ export default {
 
     )
 
+    if(checkCookie('NETERROR')==='error'){
+      text=['网络错误请重试','也许你需要..']}
+
+
 // 实例化
-    const text = ['Adalab入学筛选','第一步，使用github以开始']
+
     onMounted(() => {
 
           const typed = new EasyTyper(obj, text)
@@ -51,8 +94,14 @@ export default {
     return{
       obj
     }
+  },
+  mounted() {
+    if(checkCookie('NETERROR')==='error'){
+      changeStyle();
+      setCookie('NETERROR',null,-1)
   }
 
+}
 }
 
 
