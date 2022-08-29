@@ -17,7 +17,7 @@
 
 <!-- <ImgSet>1</ImgSet> -->
 <RankingPluginDetail v-bind:users="users"></RankingPluginDetail>
-
+<FilePlugin></FilePlugin>
 
 
 </template>
@@ -25,6 +25,7 @@
 <script >
 import RankingPluginDetail from "@/components/RankingPluginDetail.vue";
 import ImgSet from "@/components/ImgSet.vue";
+import FilePlugin from '@/components/FilePlugin.vue';
 
 export default {
   name: "Ranking",
@@ -49,11 +50,12 @@ export default {
     //     this.users = res.data;
     //     //console.log(res.data[0].id);
     //   });
-    this.axios.get('/api/studentInfo/getPagingRanking/1')
-      .then(res=>{
-        this.users = res.data;
-        //console.log(res.data[0].id);
-      });
+    
+    // this.axios.get('/api/studentInfo/getPagingRanking/1')
+    //   .then(res=>{
+    //     this.users = res.data;
+    //     //console.log(res.data[0].id);
+    //   });
       
     
   },
@@ -66,7 +68,7 @@ export default {
   //     username:String,
   //     rank:String
   //   }
-  components: { RankingPluginDetail, ImgSet },
+  components: { RankingPluginDetail, ImgSet,FilePlugin },
 };
 </script>
 
