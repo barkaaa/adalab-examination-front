@@ -39,11 +39,13 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       }
+
       this.axios.post('/api/episode/docker', formData, config).then(function (res) {
         console.log(res.data);
       })
 
     }
+
   },
 }
 </script>
