@@ -9,9 +9,12 @@
       <div class="footer"></div>
     </aside>
     <main>
-      <a-steps :current="cur" small>
+      <!-- {{ userDoneNum }} -->
+     {{cur}}
+      <a-steps :current="cur"  small>
         <a-step v-for="i in totalChallenge" @click="gotoChallenge(i)"></a-step>
       </a-steps>
+
       <!-- <router-view v-if="fresh" /> -->
       <challenge ref="Challenge" :key="componentKey" />
       <div class="submit_box">
@@ -38,12 +41,14 @@ import RankingPlugin from "@/components/RankingPlugin.vue";
 import { IconDoubleRight } from "@arco-design/web-vue/es/icon";
 import { useChallengeStore } from "../store/challenge";
 import { storeToRefs } from "pinia";
-import { ref, nextTick, getCurrentInstance, reactive } from "vue";
+import { ref, nextTick, getCurrentInstance, reactive, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 
 export default {
   name: "Home",
   setup() {
+    const userId = ref();
+    let userDoneNum = ref();
     var currentInstance = getCurrentInstance();
     let { axios } = currentInstance.appContext.config.globalProperties;
     let router = useRouter();
@@ -84,11 +89,9 @@ export default {
         return;
       }
 
-
-
       // 获取题目类型
 
-      // const res = await axios.get("/api/challenge-type/getone", {
+      // const res = await axios.get("/api/episode/getone", {
       //   params: {
       //     stage: challenge.cur + 1,
       //   },
@@ -118,17 +121,23 @@ export default {
         // markdown闯关：发起请求验证代码是否有误
         // 根据返回结果，分别调用
         // 成功
-        btnSuccess();
+        // btnSuccess();
         // 失败
         // btnFail();
       }
     };
     const gotoChallenge = async (i) => {
-      challenge.cur = i;
-      forceRerender();
+      if (i <= userDoneNum.value) {
+        challenge.cur = i;
+        forceRerender();
+      }else if(i == userDoneNum.value+1){
+        challenge.cur = i;
+        btnReset();
+      }
     };
 
-   
+
+  
 
     const btnSuccess = () => {
       bVal.value = "下一关";
@@ -149,6 +158,9 @@ export default {
       bStyle["background-color"] = "#1a8fdd";
     };
     const forceRerender = () => {
+      if (cur.value <= userDoneNum.value) {
+        btnSuccess();
+      }
       componentKey.value += 1;
     };
 
@@ -167,14 +179,32 @@ export default {
       bVal,
       bStyle,
       status,
+      userId,
+      userDoneNum,
     };
   },
   async mounted() {
     await this.getData();
     await this.getRanking();
     await this.getChallengeNum();
+    await this.getUserId();
+    await this.getUserDone();
+   
   },
   methods: {
+    getUserDone() {
+      this.axios
+        .get(`/api/studentInfo/getStudent/${this.userId}`)
+        .then((res) => {
+          this.userDoneNum = res.data.episode;
+          this.cur = this.userDoneNum+1;
+        });
+    },
+
+    getUserId() {
+      this.userId = getCookie("id");
+    },
+
     getData() {
       this.axios.get("/api/studentInfo/getStudent/1").then((res) => {
         this.users = res.data;
@@ -185,11 +215,11 @@ export default {
         this.rankings = res.data;
       });
     },
-    
-    getChallengeNum(){
-      this.axios.get("/api/episode/get").then((res)=>{
+
+    getChallengeNum() {
+      this.axios.get("/api/episode/get").then((res) => {
         this.totalChallenge = res.data.length;
-      })
+      });
     },
 
     handle() {
@@ -209,6 +239,22 @@ export default {
     };
   },
 };
+
+//获取 cookie 指定 值
+function getCookie(c_name) {
+  if (document.cookie.length > 0) {
+    let c_start = document.cookie.indexOf(c_name + "=");
+    if (c_start != -1) {
+      c_start = c_start + c_name.length + 1;
+      let c_end = document.cookie.indexOf(";", c_start);
+      if (c_end == -1) {
+        c_end = document.cookie.length;
+      }
+      return unescape(document.cookie.substring(c_start, c_end));
+    }
+  }
+  return "";
+}
 </script>
 
 <style scoped lang="less">
