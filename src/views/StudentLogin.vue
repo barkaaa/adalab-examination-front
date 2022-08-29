@@ -122,7 +122,7 @@ export default {
   font-family: "Poppins", sans-serif;
 }
 span {
-  color: #19c745;
+  color: #18d047;
   font-size: 3em;
   display: inline-block;
   line-height: 2em;

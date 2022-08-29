@@ -8,6 +8,7 @@ import RankingKai from "./hubaba/RankingKai.vue";
 import UserManagement from "@/hubaba/UserManagement";
 import Test1 from "@/hubaba/TestOne";
 import BackTemplate from "@/hubaba/BackTemplate";
+import image from "@/hubaba/imageManager";
 import TestTwo from "@/hubaba/TestTwo";
 import MarkdownEdit from "@/hubaba/MarkdownEdit";
 import Test from "@/components/episodeMaker"
@@ -76,6 +77,10 @@ const routes = [
                 path: "rankingkai",
                 name: "rankingkai",
                 component: RankingKai,
+            },{
+                path: "image",
+                name: "image",
+                component: image,
             }]
     }
     ,

@@ -3,67 +3,52 @@
     <a-layout-sider theme="dark" breakpoint="lg" :width="300">
       <div class="logo"/>
       <a-menu
-          :default-selected-keys="['0_1']"
+          :default-selected-keys="defaultSelectedKey"
           :style="{ width: '100%' }"
           @menu-item-click="onClickMenuItem"
       >
 
         <router-link to="rankingkai">
-          <a-menu-item key="0_1">
+          <a-menu-item key="1">
             <IconBarChart></IconBarChart>
             排行榜单
           </a-menu-item>
         </router-link>
         <router-link to="userManagement">
-          <a-menu-item key="0_2">
+          <a-menu-item key="2">
             <IconUser></IconUser>
             用户管理
           </a-menu-item>
         </router-link>
         <router-link to="two">
-          <a-menu-item key="0_3">
+          <a-menu-item key="3">
             <IconPen></IconPen>
             关卡设置
           </a-menu-item>
         </router-link>
         <router-link to="test">
-          <a-menu-item key="0_4">
+          <a-menu-item key="4">
             <icon-font type="icon-docker" :size="24"/>
             环境设置
           </a-menu-item>
         </router-link>
-        <a-menu-item key="0_5" @click="handleClick">
-<!--          <icon-font type="icon-docker" :size="24"/>-->
-          <icon-desktop />
-          环境设置
+        <router-link to="image">
+        <a-menu-item key="5" @click="handleClick">
+          <!--          <icon-font type="icon-docker" :size="24"/>-->
+          <icon-desktop/>
+          镜像设置
         </a-menu-item>
+        </router-link>
       </a-menu>
     </a-layout-sider>
     <a-layout style="padding: 0 24px;">
       <router-view/>
     </a-layout>
   </a-layout>
-  <a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleCancel" :hide-cancel="true" :closable="false">
-    <template #title>镜像列表</template>
-    <a-space direction="vertical" size="large">
-      <a-list>
-        <div class="image-container">
-          <div class="image" v-for="image in images" :key="image.Id">
-            <div class="tag" v-for="tag in image.RepoTags" :key="tag">
-              <a-list-item>
-                {{ tag }}
-                <button v-on:click="delImg(tag)">删除镜像</button>
-              </a-list-item>
-            </div>
-          </div>
-        </div>
-      </a-list>
-    </a-space>
-    <up-load-docker-model></up-load-docker-model>
-  </a-modal>
+
 </template>
 <script>
-import {IconBarChart, IconPen, IconUser ,IconDesktop} from "@arco-design/web-vue/es/icon";
+import {IconBarChart, IconPen, IconUser, IconDesktop} from "@arco-design/web-vue/es/icon";
 import {Icon} from '@arco-design/web-vue';
 import upLoadDockerModel from "@/components/upLoadDockerModel";
 import {ref} from "vue";
@@ -80,7 +65,7 @@ export default {
   },
   setup() {
     const visible = ref(false);
-
+    const defaultSelectedKey = ref([]);
     const handleClick = () => {
       visible.value = true;
     };
@@ -93,6 +78,7 @@ export default {
 
     return {
       visible,
+      defaultSelectedKey,
       handleClick,
       handleOk,
       handleCancel
@@ -106,13 +92,7 @@ export default {
   methods: {
     onClickMenuItem() {
     },
-    delImg(id) {
-      this.axios.delete("api/episode/images", {
-        params: {
-          id: id
-        }
-      }).then(() => this.getImg());
-    },
+
     getImg() {
       this.axios.get("api/episode/images")
           .then(res => {
@@ -142,9 +122,9 @@ export default {
 
 ::v-deep .arco-menu-dark .arco-menu-item.arco-menu-selected,
 .arco-menu-dark .arco-menu-item.arco-menu-selected .arco-icon {
-  color: green !important;
+  color: #046511 !important;
   font-size: 28px !important;
-  background-color: rgb(227, 227, 227);
+  background-color: rgb(232, 229, 229);
 }
 
 ::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon) {
