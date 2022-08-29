@@ -29,7 +29,8 @@
           <template #columns>
             <a-table-column title="测评结果">
               <template #cell="{ record }">
-                <a-button href="#open-modal">删除</a-button>
+                <a-result status="success" style="width:1vw; " ></a-result>
+                <!-- <a-button href="#open-modal">删除</a-button> -->
               </template>
             </a-table-column>
             <a-table-column title="commitID&Link" data-index="link"></a-table-column>
@@ -39,8 +40,8 @@
         </a-table>
        
         <!--  -->
-        {{ arr1 }}
-        {{ arr2 }}
+        <!-- {{ arr1 }}
+        {{ arr2 }} -->
       </div>
     </div>
   </div>
@@ -104,7 +105,7 @@
         class="btn"
         style="align-items: center; display: flex; justify-content: center"
       >
-        <a href="#open-modal" @click="getPersonelInfo('DingZHneg', count)"
+        <a href="#open-modal" @click="getTableData(item)"
           ><icon-history :style="[{ fontSize: '25px' }, { color: 'grey' }]"
         /></a>
         
@@ -151,7 +152,7 @@
 
 <script>
 import VueTable from "./VueTable.vue";
-import { reactive } from 'vue'
+
 
 import {IconBarChart, IconPen, IconRobot, IconUser} from "@arco-design/web-vue/es/icon";
 import {getCurrentInstance, ref} from "vue";
@@ -162,12 +163,13 @@ export default {
   props: {
     users: Array,
     pageNum: Number,
+    step:Number
 
   },
   data() {
     return {
-      arr1: {},
-      arr2: {},
+      // arr1: {},
+      // arr2: {},
       columns:[
         {
         title: 'commitID&Link',
@@ -183,9 +185,10 @@ export default {
       }
       ],
       pagination: {
-        pageSize: 10,
+        pageSize: 4,
       },
-      tableData: [{link:213,episode:123}],
+      tableData: [12,123123,1231231],
+      mydata:[]
     };
   },
   methods: {
@@ -207,14 +210,27 @@ export default {
     },
     onClickMenuItem(key) {
       this.$router.push(key);
-    }
+    },
+    getTableData(item){
+      const url =`/api/studentInfo/getSubmission/${item.name}`
+      this.axios
+      .get(url)
+      .then((res) => {
+        this.tableData = res.data;
+        console.log(res.data);
+      });
+    },
+    
   },
-  created() {
-    fetch("/api/studentInfo/getRanking")
-        .then((res) => res.json())
-        .then((response) => {
-          this.tableData.link = response.name;
-        });
+  // created() {
+  //   fetch("/api/studentInfo/getRanking")
+  //       .then((res) => res.json())
+  //       .then((response) => {
+  //         this.tableData.link = response.name;
+  //       });
+  // },
+  mounted(){
+    
   },
   // setup() {
   //   const columns = [
@@ -321,13 +337,14 @@ export default {
       size,
       align
     }
-  },created() {
-    fetch("/api/studentInfo/getRanking")
-        .then((res) => res.json())
-        .then((response) => {
-          this.tableData = response;
-        });
   },
+  // created() {
+  //   fetch("/api/studentInfo/getRanking")
+  //       .then((res) => res.json())
+  //       .then((response) => {
+  //         this.tableData = response;
+  //       });
+  // },
 
 
   components: { 
@@ -521,4 +538,7 @@ ul.pagination li a.active {
 
 ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 /* 页码 */
+a-result{
+  width:5px;
+}
 </style>
