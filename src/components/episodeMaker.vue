@@ -1,30 +1,20 @@
 <template>
   <div class="divider-demo">
-    <a-divider orientation="center">请输入关卡号</a-divider>
-    <a-input :style="{width:'320px'}" v-model="id"/>
-    <br/>
-    <a-divider orientation="center"></a-divider>
-    <select v-model="testRequired">
-      <option value='1'>需要测试</option>
-      <option value=''>不需要测试</option>
-    </select>
-    <br/><br/>
-    <div v-if="testRequired">
+    <div>
       <a-divider orientation="center">设置超时时间</a-divider>
-      <a-input :style="{width:'320px'}" v-if="testRequired" type="text" v-model="timeOut"/>
-
+      <a-input :style="{width:'320px'}"  type="text" v-model="timeOut"/>
       <a-divider orientation="center">选择镜像</a-divider>
-      <select v-if="testRequired" v-model="img">
+      <select  v-model="img">
         <option v-for="image in images" :key="image.Id" :value="image.Id">
           {{ image.RepoTags }}}
         </option>
       </select>
       <br/>
       <a-divider orientation="center">输入cmd命令</a-divider>
-      <a-input :style="{width:'320px'}" v-if="testRequired" type="text" v-model="cmd"/>
+      <a-input :style="{width:'320px'}"  type="text" v-model="cmd"/>
       <br/>
       <a-divider orientation="center">选择文件</a-divider>
-      <a-input :style="{width:'320px'}" v-if="testRequired" type="file" @change="getFile($event)" multiple="multiple"/>
+      <a-input :style="{width:'320px'}"  type="file" @change="getFile($event)" multiple="multiple"/>
       <p></p>
     </div>
     <a-divider :margin="10">
@@ -43,14 +33,13 @@ export default {
   name: "upLoadDokcerModel",
   data() {
     return {
-      id: '',
       files: {},
       timeOut: '',
       cmd: '',
-      testRequired: '',
       img: '',
       images: {}
     }
+
   },
   methods: {
     getFile(event) {
@@ -79,7 +68,7 @@ export default {
       });
 
 
-      this.axios.post('/api/episode/episode', formData, config).then(function (res) {
+      this.axios.post('/api/episode/update', formData, config).then(function (res) {
         console.log(res.data);
       })
 

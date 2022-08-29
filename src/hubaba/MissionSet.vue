@@ -14,7 +14,7 @@
                     border: 1px dashed var(--color-fill-4);
                     height: 158px;
                     width: 380px;
-                    border-radius: 2;
+                    border-radius: 2px;
                     line-height: 158px;
                     text-align: center;
                   "
