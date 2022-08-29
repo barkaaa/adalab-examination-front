@@ -13,7 +13,9 @@
           </template>
         </a-table>
         <a-modal v-model:visible="visible" @ok="handleOk" :hide-cancel="true" :closable="false">
-          <template #title>{{ tData.name + "的详细信息" }}</template>
+          <template #title>
+            {{ tData.name + "的详细信息" }}
+            </template>
           <a-descriptions style="margin-top: 20px" :data="list" :column="1" :align="align" :size="size">
             <a-descriptions-item v-for="item of list" :label="item.label">
               <template #label>
@@ -24,7 +26,7 @@
               <a-tag>{{ item.value }}</a-tag>
             </a-descriptions-item>
           </a-descriptions>
-        </a-modal>
+          </a-modal>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -47,7 +49,7 @@ export default {
     }
     const handleClick =(name) => {
       visible.value = true;
-      axios.post("api/studentInfo/getDetail", {name}).then((res)=> {
+      axios.post("/api/examination/student-info/getDetail", {name}).then((res)=> {
         tData.value = res.data;
         list.map((item) => {
           item.value = tData.value[item.label];
@@ -152,7 +154,9 @@ export default {
 };
 </script>
 <style scoped>
-
+::v-deep .arco-modal .arco-modal-header .arco-modal-title .arco-modal-title-align-center {
+  font-size: 22px !important;
+}
 ::v-deep .arco-descriptions-item-label-block {
   font-size: 16px !important;
 }
@@ -180,6 +184,7 @@ export default {
 .arco-menu-dark .arco-menu-item.arco-menu-selected .arco-icon {
   color: green !important;
   font-size: 28px !important;
+  background-color: rgb(227, 227, 227);
 }
 
 ::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon) {

@@ -32,7 +32,7 @@ export default {
 
       let id = this.$route.params.id;
       // 修改数据库记录
-      await this.axios.put("/api/levels/update", {
+      await this.axios.put("/api/challenge/update", {
         id, url
       })
 
@@ -48,7 +48,7 @@ export default {
   },
   async mounted() {
     // 根据文件名获取url
-    const res = await this.axios.get("/api/levels/getone", {
+    const res = await this.axios.get("/api/challenge/getone", {
       params: {
         stage: this.$route.params.stage,
       }

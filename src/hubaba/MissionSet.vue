@@ -1,26 +1,5 @@
 <template>
   <a-layout class="layout-demo">
-    <a-layout-sider theme="dark" breakpoint="lg" :width="300">
-      <div class="logo" />
-      <a-menu
-        :default-selected-keys="['mission']"
-        :style="{ width: '100%' }"
-        @menu-item-click="onClickMenuItem"
-      >
-        <a-menu-item key="0_1">
-          <IconBarChart></IconBarChart>
-          排行榜单
-        </a-menu-item>
-        <a-menu-item key="userManagement">
-          <IconUser></IconUser>
-          用户管理
-        </a-menu-item>
-        <a-menu-item key="mission">
-          <IconPen></IconPen>
-          关卡设置
-        </a-menu-item>
-      </a-menu>
-    </a-layout-sider>
     <a-layout>
       <a-layout>
         <a-layout-content>

@@ -22,6 +22,7 @@
     <div>
       <a href="#" title="Close" class="modal-close">Close</a>
       <div>
+        
         <VueTable></VueTable>
         <!--  -->
         <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table">
@@ -43,6 +44,39 @@
       </div>
     </div>
   </div>
+
+<!-- 模态框组件 -->
+<a-modal v-model:visible="visible" @ok="handleOk" :hide-cancel="true" :closable="false">
+          <template #title>{{ tData.name + "的详细信息" }}</template>
+          <a-descriptions style="margin-top: 20px" :data="list" :column="1" :align="align" :size="size">
+            <a-descriptions-item v-for="item of list" :label="item.label">
+              <template #label>
+                <icon-font :type="item.cName" :size="20" style="vertical-align: middle">
+                </icon-font>
+                {{ item.label }}
+              </template>
+              <a-tag>{{ item.value }}</a-tag>
+            </a-descriptions-item>
+          </a-descriptions>
+        </a-modal>
+<!-- 模态框组件 -->
+  
+
+
+
+
+
+
+
+
+
+
+<a-select :style="{width:'520px'}" placeholder="Please select ..." allow-search>
+      <a-option>待开发</a-option>
+      <a-option>待开发</a-option>
+      <a-option>待开发</a-option>
+    </a-select>
+
 
   <div class="list">
     <div id="bigContainer" v-for="(item, i) in users">
@@ -73,9 +107,9 @@
         <a href="#open-modal" @click="getPersonelInfo('DingZHneg', count)"
           ><icon-history :style="[{ fontSize: '25px' }, { color: 'grey' }]"
         /></a>
-        <a href="#open-modal"
-          ><icon-user :style="[{ fontSize: '25px' }, { color: 'grey' }]"
-        /></a>
+        
+          <icon-user @click="handleClick(item.name)" :style="[{ fontSize: '25px' }, { color: 'grey' }]"
+        />
         <a :href="'https://' + item.name + '.github.io'"
           ><icon-desktop :style="[{ fontSize: '25px' }, { color: 'grey' }]"
         /></a>
@@ -101,15 +135,34 @@
     <a-step></a-step>
     <a-step></a-step>
   </a-steps> -->
+  <ul class="pagination" >
+  <li><a href="#">«</a></li>
+  <li><a  href="#">1</a></li>
+  <li><a class="active" href="#">2</a></li>
+  <li><a  href="#">3</a></li>
+  <li><a  href="#">4</a></li>
+  <li><a href="#">5</a></li>
+  <li><a  href="#">6</a></li>
+  <!-- <li :v-for="count in 'pageNum'"><a class="active" href="#">2</a></li> -->
+
+  <li><a href="#">»</a></li>
+</ul>
 </template>
 
 <script>
 import VueTable from "./VueTable.vue";
 import { reactive } from 'vue'
+
+import {IconBarChart, IconPen, IconRobot, IconUser} from "@arco-design/web-vue/es/icon";
+import {getCurrentInstance, ref} from "vue";
+import {Icon} from '@arco-design/web-vue';
+const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3611034_pmqkuts7v7b.js'});
 export default {
   name: "RankingPluginDetail",
   props: {
     users: Array,
+    pageNum: Number,
+
   },
   data() {
     return {
@@ -152,6 +205,9 @@ export default {
           this.arr2 = res.data;
         });
     },
+    onClickMenuItem(key) {
+      this.$router.push(key);
+    }
   },
   created() {
     fetch("/api/studentInfo/getRanking")
@@ -206,9 +262,82 @@ export default {
   //     data,
   //   }
   // },
-  
+  setup() {
+    let tData = ref({});
+    const visible = ref(false);
+    const size = ref('large');
+    let currentInstance = getCurrentInstance();
+    const {axios} = currentInstance.appContext.config.globalProperties
+    const align = {
+      value: 'right'
+    }
+    const handleClick =(name) => {
+      visible.value = true;
+      axios.post("api/studentInfo/getDetail", {name}).then((res)=> {
+        tData.value = res.data;
+        list.map((item) => {
+          item.value = tData.value[item.label];
+        })
+      });
+    }
+    const handleOk = () => {
+      visible.value = false;
+    }
+    const list = [{
+      label: 'name',
+      value: "",
+      cName: "icon-sort",
+    }, {
+      label: 'Days needed',
+      value: '',
+      cName: "icon-arrows-alt",
+    }, {
+      label: 'Actual Days',
+      value: '',
+      cName: "icon-arrows-alt",
+    }, {
+      label: 'Date Created',
+      value: '',
+      cName: "icon-shijian",
+    }, {
+      label: 'Last Edited',
+      value: '',
+      cName: "icon-shijian",
+    }, {
+      label: 'Current Week',
+      value: '',
+      cName: "icon-accesskeys",
+    }, {
+      label: 'Type',
+      value: '',
+      cName: "icon-sort",
+    }];
+    return {
+      visible,
+      handleClick,
+      handleOk,
+      tData,
+      list,
+      size,
+      align
+    }
+  },created() {
+    fetch("/api/studentInfo/getRanking")
+        .then((res) => res.json())
+        .then((response) => {
+          this.tableData = response;
+        });
+  },
 
-  components: { VueTable },
+
+  components: { 
+    VueTable,
+    IconBarChart,
+    IconPen,
+    IconUser,
+    IconRobot,
+    IconFont
+   },
 };
 </script>
 
@@ -365,4 +494,31 @@ icon-history {
 a-steps {
   width: 30px;
 }
+/* 页码 */
+ul.pagination {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+ul.pagination li {display: inline;}
+
+ul.pagination li a {
+    color: black;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    margin: 0 4px;
+}
+
+ul.pagination li a.active {
+    background-color: #4CAF50;
+    color: white;
+    border: 1px solid #4CAF50;
+}
+
+ul.pagination li a:hover:not(.active) {background-color: #ddd;}
+/* 页码 */
 </style>

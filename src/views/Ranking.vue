@@ -13,11 +13,16 @@
   </div>
 </div> -->
 <!-- <RankingPluginDetail v-bind:users="users"></RankingPluginDetail> -->
-<ImgSet></ImgSet>
+
+
+<!-- <ImgSet></ImgSet> -->
+
+
+
 
 </template>
 
-<script>
+<script >
 import RankingPluginDetail from "@/components/RankingPluginDetail.vue";
 import ImgSet from "@/components/ImgSet.vue";
 
@@ -40,7 +45,10 @@ export default {
         //console.log(res.data[0].id);
       });
   },
+  methods:{
+   
 
+  },
   //   props: {
   //     img: String,
   //     username:String,

@@ -1,19 +1,56 @@
 <template>
-  <div class="image-container">
-    <h1>镜像列表</h1>
-    <div class="image" v-for="image in images" :key="image.Id">
-      <div class="tag" v-for="tag in image.RepoTags" :key="tag">
-        {{ tag }} <button v-on:click="delImg(tag)">删除镜像</button>
-      </div>
-    </div>
-    <button>添加镜像</button>
-  </div>
+  <a-button @click="handleClick">Open Modal</a-button>
+  <a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleCancel" :hide-cancel="true" :closable="false">
+    <template #title>镜像列表</template>
+    <a-space direction="vertical" size="large">
+      <a-list>
+        <div class="image-container">
+          <div class="image" v-for="image in images" :key="image.Id">
+            <div class="tag" v-for="tag in image.RepoTags" :key="tag">
+              <a-list-item>
+                {{ tag }}
+                <button v-on:click="delImg(tag)">删除镜像</button>
+              </a-list-item>
+            </div>
+          </div>
+        </div>
+      </a-list>
+    </a-space>
+    <up-load-docker-model></up-load-docker-model>
+  </a-modal>
 </template>
 
 <script>
+import upLoadDockerModel from "@/components/upLoadDockerModel";
+import {ref} from "vue";
 
 export default {
   name: "imageManager",
+  components: {
+    upLoadDockerModel
+  },
+
+
+  setup() {
+    const visible = ref(false);
+
+    const handleClick = () => {
+      visible.value = true;
+    };
+    const handleOk = () => {
+      visible.value = false;
+    };
+    const handleCancel = () => {
+      visible.value = false;
+    }
+
+    return {
+      visible,
+      handleClick,
+      handleOk,
+      handleCancel
+    }
+  },
   data() {
     return {
       images: {}

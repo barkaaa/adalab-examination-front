@@ -53,20 +53,17 @@
 </template>
 
 <script>
-import { useChallengeStore } from "../store/challenge";
+import { useChallengeStore } from "@/store/challenge";
 import { storeToRefs } from "pinia";
 import { ref, onBeforeMount, getCurrentInstance, reactive } from "vue";
 
 export default {
   setup() {
-    var answer = reactive([]);
-
+    let answer = reactive([]);
     const challenge = useChallengeStore();
     let { cur } = storeToRefs(challenge);
-
     const { axios } = getCurrentInstance().appContext.config.globalProperties;
     const bLoading = ref(false);
-
     let res = ref([]);
     const nextChallenge = () => {
       bLoading.value = !bLoading.value;
@@ -107,7 +104,7 @@ export default {
     },
   },
   async mounted() {
-    let res = await this.axios.get("/api/levels/getone", {
+    let res = await this.axios.get("/api/challenge/getone", {
       params: { stage: this.cur },
     });
     let url = res.data.url;
