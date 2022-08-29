@@ -149,7 +149,8 @@
   <ul class="pagination" >
   <li><a href="#" @click="getPreviousPage">«上一页</a></li>
   <li><a href="#" @click="getNextPage">下一页»</a></li>
-</ul>
+  </ul>
+
 </template>
 
 <script>
@@ -408,6 +409,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+ 
 html {
   scrollbar-width: none;
 }
@@ -561,8 +563,9 @@ a-steps {
 }
 /* 页码 */
 ul.pagination {
-    display: inline-block;
-    padding: 0;
+  display: inline-block;
+    padding-left: 430px;
+    /* padding: 0px; */
     margin: 0;
 }
 
@@ -583,6 +586,7 @@ ul.pagination li a.active {
     color: white;
     border: 1px solid #4CAF50;
 }
+
 
 ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 /* 页码 */
