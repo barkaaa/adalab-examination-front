@@ -26,11 +26,19 @@
       <a-divider/>
       <a-table row-key="id" :columns="columns" :data="tData" :row-selection="rowSelection"
                v-model:selectedKeys="selectedKeys" :pagination="pagination">
-
+        <!--        编辑-->
         <template #edit="{record}">
           <a-button @click="edit(record.stage,record.id,record.type)" status="success">
             <template #icon>
               <icon-edit/>
+            </template>
+          </a-button>
+        </template>
+
+        <template #env="{record}">
+          <a-button @click="envSet(record.stage)" status="normal">
+            <template #icon>
+              <icon-settings/>
             </template>
           </a-button>
         </template>
@@ -50,17 +58,18 @@
 </template>
 
 <script>
-import {IconDelete, IconEdit, IconPlus, IconUpload} from "@arco-design/web-vue/es/icon";
+import {IconDelete, IconEdit, IconPlus, IconUpload, IconSettings} from "@arco-design/web-vue/es/icon";
 import {reactive, ref} from "vue";
 import {useRouter} from "vue-router";
 
 export default {
   name: "TestTwo",
-  components: {IconDelete, IconEdit, IconPlus, IconUpload},
+  components: {IconDelete, IconEdit, IconPlus, IconUpload, IconSettings},
   setup() {
+
     const selectedKeys = ref([]);
     const visible = ref(false);
-
+    let url = ref("");
     var router = useRouter();
     const handleUpload = () => {
       visible.value = true;
@@ -71,13 +80,23 @@ export default {
     const handleCancel = () => {
       visible.value = false;
     }
+
+
+    const envSet = (stage) => {
+      console.log(stage)
+      router.push({
+        name: "test",
+        params: {
+          stage
+        }
+      })
+    }
     const rowSelection = reactive({
       type: 'checkbox',
       showCheckedAll: true,
       onlyCurrent: false,
     });
     const pagination = {pageSize: 5}
-
     const columns = [
       {
         title: 'Id',
@@ -95,7 +114,10 @@ export default {
       {
         title: 'Edit',
         slotName: 'edit',
-      },
+      }, {
+        title: "Env",
+        slotName: 'env',
+      }
     ]
 
 
@@ -107,15 +129,16 @@ export default {
       visible,
       handleAdd,
       handleCancel,
-      handleUpload
+      handleUpload,
+      url,
+      envSet
     }
   }
   ,
   data() {
     return {
       tData: [],
-      fileName: "111",
-      stage: ""
+      stage: 0
     }
   },
   methods: {
@@ -131,9 +154,16 @@ export default {
 
     },
     async handleOk() {
-      await this.axios.post("/api/challenge/add", {
+      // 添加关系表数据
+      await this.axios.post("/api/challenge-type/add", {
         stage: this.stage,
-        url: this.url
+        type: 2
+      })
+      // 创建关卡
+      await this.axios.post("/api/episode/createEp", {
+        id: this.stage,
+        markdownUrl: this.url,
+        type: 2
       })
       this.visible = false;
       await this.getData();
@@ -194,8 +224,7 @@ export default {
 
   mounted() {
     this.getData();
-  }
-
+  },
 }
 </script>
 

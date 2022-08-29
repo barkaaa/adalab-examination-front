@@ -51,6 +51,7 @@ export default {
       img: '',
       images: {}
     }
+
   },
   methods: {
     getFile(event) {
@@ -100,6 +101,8 @@ export default {
 
   mounted() {
     this.getImg();
+    // 传过来的id
+    console.log(this.$route.params.stage)
   }
 }
 </script>

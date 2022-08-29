@@ -28,12 +28,12 @@ export default {
       let res = await this.axios.put("/api/oss/saveMarkdown", {
         content
       })
-      let url = res.data.url;
+      let markdown_url = res.data.url;
 
-      let id = this.$route.params.id;
+      let id = this.$route.params.stage;
       // 修改数据库记录
-      await this.axios.put("/api/challenge/update", {
-        id, url
+      await this.axios.put("/api/episode/update", {
+        id, markdown_url
       })
 
       this.$router.push("/backpanel/two")
@@ -47,13 +47,13 @@ export default {
 
   },
   async mounted() {
-    // 根据文件名获取url
-    const res = await this.axios.get("/api/challenge/getone", {
+    // 根据题号获取url
+    const res = await this.axios.get("/api/episode/getOne", {
       params: {
-        stage: this.$route.params.stage,
+        id: this.$route.params.stage,
       }
     })
-    let url = res.data.url;
+    let url = res.data.markdownUrl;
     console.log(url)
 
     this.initialValue = (await this.axios.get(url)).data;
