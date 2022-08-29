@@ -59,14 +59,14 @@ export default {
 
   methods: {
     delImg(id) {
-      this.axios.delete("api/episode/images", {
+      this.axios.delete("/api/episode/images", {
         params: {
           id: id
         }
       }).then(() => this.getImg());
     },
     getImg() {
-      this.axios.get("api/episode/images")
+      this.axios.get("/api/episode/images")
           .then(res => {
             console.log(res.data);
             this.images = res.data;
