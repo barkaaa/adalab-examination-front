@@ -1,10 +1,10 @@
 <template>
   <a-layout class="layout-demo">
     <a-layout>
-      <a-layout-content class="content">
+      <a-layout-content class="content" >
         <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table">
           <template #header="{record}">
-            <a-switch checked-color="#41AD59" unchecked-color="#E3E3EC" :default-checked="record.ranking>=5"/>
+            <a-switch checked-color="#046511" unchecked-color="#E3E3EC" :default-checked="record.ranking>=5"/>
           </template>
           <template #option="{ record }">
             <a-button @click="handleClick(record.name)">
@@ -12,7 +12,7 @@
             </a-button>
           </template>
         </a-table>
-        <a-modal v-model:visible="visible" @ok="handleOk" :hide-cancel="true" :closable="false">
+        <a-modal v-model:visible="visible" @ok="handleOk" :footer="false" :hide-cancel="true" :closable="false">
           <template #title>
             {{ tData.name + "的详细信息" }}
             </template>
@@ -49,7 +49,7 @@ export default {
     }
     const handleClick =(name) => {
       visible.value = true;
-      axios.post("/api/examination/student-info/getDetail", {name}).then((res)=> {
+      axios.post("/api/studentInfo/getDetail", {name}).then((res)=> {
         tData.value = res.data;
         list.map((item) => {
           item.value = tData.value[item.label];
@@ -238,11 +238,14 @@ export default {
 ::v-deep .arco-table .arco-table-th {
   font-size: 14px;
   font-weight: bolder !important;
+  color: #046511;
 }
-
+::v-deep  .arco-btn .arco-btn-primary .arco-btn-shape-square .arco-btn-size-medium .arco-btn-status-normal{
+  background: #046511 !important;
+}
 .table {
-  height: 100%;
   width: 80%;
   margin: 5vh auto 5vh;
+
 }
 </style>
