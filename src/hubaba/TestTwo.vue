@@ -17,31 +17,32 @@
             <icon-upload/>
           </template>
         </a-button>
-        <a-button status="danger" type="primary" @click="handleDelete">
-          <template #icon>
-            <icon-delete/>
-          </template>
-        </a-button>
       </a-space>
       <a-divider/>
       <a-table row-key="id" :columns="columns" :data="tData" :row-selection="rowSelection"
                v-model:selectedKeys="selectedKeys" :pagination="pagination">
         <!--        编辑-->
-        <template #edit="{record}">
-          <a-button @click="edit(record.stage,record.id,record.type)" status="success">
+        <template #setting="{record}">
+          <a-button @click="edit(record.id,record.type)" status="success">
             <template #icon>
               <icon-edit/>
             </template>
           </a-button>
-        </template>
-
-        <template #env="{record}">
-          <a-button @click="envSet(record.stage)" status="normal">
+          <a-button @click="envSet(record.id)" status="normal">
             <template #icon>
               <icon-settings/>
             </template>
           </a-button>
+
+          <a-popconfirm content="您确定要删除这个关卡吗?" @ok="handleDelete(record.id)" @cancel="cancelDelete">
+            <a-button status="danger">
+              <template #icon>
+                <icon-delete/>
+              </template>
+            </a-button>
+          </a-popconfirm>
         </template>
+
       </a-table>
     </a-layout>
     <a-modal v-model:visible="visible" title="添加关卡" @cancel="handleCancel" @ok="handleOk">
@@ -99,12 +100,8 @@ export default {
     const pagination = {pageSize: 5}
     const columns = [
       {
-        title: 'Id',
-        dataIndex: 'id',
-      },
-      {
         title: 'Stage',
-        dataIndex: 'stage',
+        dataIndex: 'id',
       },
       {
         title: 'Type',
@@ -112,11 +109,8 @@ export default {
       }
       ,
       {
-        title: 'Edit',
-        slotName: 'edit',
-      }, {
-        title: "Env",
-        slotName: 'env',
+        title: 'Setting',
+        slotName: 'setting',
       }
     ]
 
@@ -142,23 +136,21 @@ export default {
     }
   },
   methods: {
-    edit(stage, id, type) {
+    cancelDelete() {
+      this.$message.info("您取消了删除");
+    },
+    edit(stage, type) {
       // 问卷
       if (type === 1) {
         this.$router.push(
-            {name: 'mission', params: {stage, id}})
+            {name: 'mission', params: {stage}})
       } else if (type === 2) {
         this.$router.push(
-            {name: 'mdedit', params: {stage, id}})
+            {name: 'mdedit', params: {stage}})
       }
 
     },
     async handleOk() {
-      // 添加关系表数据
-      await this.axios.post("/api/challenge-type/add", {
-        stage: this.stage,
-        type: 2
-      })
       // 创建关卡
       await this.axios.post("/api/episode/createEp", {
         id: this.stage,
@@ -170,7 +162,7 @@ export default {
 
     },
     async getData() {
-      const res = await this.axios.get("/api/challenge-type/all");
+      const res = await this.axios.get("/api/episode/get");
       this.tData = res.data;
     },
     customRequest(option) {
@@ -211,11 +203,8 @@ export default {
       }
     }
     ,
-    async handleDelete() {
-
-      await this.axios.delete("/api/challenge-type/batchdel", {
-        data: {ids: this.selectedKeys},
-      })
+    async handleDelete(id) {
+      await this.axios.delete("/api/episode/delete/" + id)
       await this.getData()
     }
     ,

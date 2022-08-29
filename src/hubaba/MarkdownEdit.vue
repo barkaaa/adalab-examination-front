@@ -32,7 +32,7 @@ export default {
 
       let id = this.$route.params.stage;
       // 修改数据库记录
-      await this.axios.put("/api/episode/update", {
+      await this.axios.patch("/api/episode/update", {
         id, markdown_url
       })
 
