@@ -21,7 +21,9 @@
           >
             {{ option }}
           </a-radio>
-          <a-radio value="自己填选项">自己填选项</a-radio>
+          <a-radio value="自己填选项" v-if="item.isAddtional === 'true'"
+            >自己填选项</a-radio
+          >
         </a-radio-group>
         <a-divider />
       </div>
@@ -33,7 +35,9 @@
             v-for="(option, x) in item.options.split('?').slice(0, -1)"
             >{{ option }}
           </a-checkbox>
-          <a-checkbox value="自己填选项">自己填选项 </a-checkbox>
+          <a-checkbox value="自己填选项" v-if="item.isAddtional === 'true'"
+            >自己填选项
+          </a-checkbox>
         </a-checkbox-group>
         <a-divider />
       </div>
@@ -43,7 +47,7 @@
         placeholder="自己填选项"
         allow-clear
         auto-size
-        v-if="item.questionType == 2 && item.isAddtional === 'false'"
+        v-if="item.questionType == 2 && item.isAddtional === 'true'"
       />
     </div>
   </div>
@@ -78,7 +82,7 @@ export default {
     });
 
     const initAnswer = () => {
-      for (const key in res) {
+      for (let i = 0; i < res.value.length; i++) {
         answer.push({ fill: "", selectOptions: [] });
       }
     };
@@ -99,8 +103,16 @@ export default {
     };
   },
   methods: {
-    test() {
-      console.log(this.answer);
+    uploadStudentAnswer() {
+      let id = parseInt(getCookie('id'));
+      this.axios
+        .put("", this.answer, this.cur, id)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     },
   },
   async mounted() {
@@ -112,7 +124,26 @@ export default {
     this.content = this.markded.parse(md);
   },
 };
+
+
+//获取 cookie 指定 值
+function getCookie(c_name) {
+  if (document.cookie.length > 0) {
+    let c_start = document.cookie.indexOf(c_name + "=");
+    if (c_start != -1) {
+      c_start = c_start + c_name.length + 1;
+      let c_end = document.cookie.indexOf(";", c_start);
+      if (c_end == -1) {
+        c_end = document.cookie.length;
+      }
+      return unescape(document.cookie.substring(c_start, c_end));
+    }
+  }
+  return "";
+}
 </script>
 
 <style scoped lang="less">
 </style>
+
+

@@ -2,7 +2,7 @@
   <div class="main-box">
     <aside>
       <div class="timer">
-        <timer/>
+        <timer />
       </div>
       <RankingPlugin v-bind:rankings="rankings"></RankingPlugin>
       <div class="leaderboard"></div>
@@ -13,11 +13,16 @@
         <a-step v-for="i in totalChallenge" @click="gotoChallenge(i)"></a-step>
       </a-steps>
       <!-- <router-view v-if="fresh" /> -->
-      <challenge ref="Challenge" :key="componentKey"/>
+      <challenge ref="Challenge" :key="componentKey" />
       <div class="submit_box">
-        <a-button type="primary" @click="nextChallenge" :loading="loading" :style="bStyle">
+        <a-button
+          type="primary"
+          @click="nextChallenge"
+          :loading="loading"
+          :style="bStyle"
+        >
           <template #icon>
-            <icon-double-right/>
+            <icon-double-right />
           </template>
           {{ bVal }}
         </a-button>
@@ -30,37 +35,35 @@
 import Timer from "@/components/Timer";
 import Challenge from "./Challenge.vue";
 import RankingPlugin from "@/components/RankingPlugin.vue";
-import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
-import {useChallengeStore} from "../store/challenge";
-import {storeToRefs} from "pinia";
-import {ref, nextTick, getCurrentInstance, reactive} from "vue";
-import {useRouter} from 'vue-router'
+import { IconDoubleRight } from "@arco-design/web-vue/es/icon";
+import { useChallengeStore } from "../store/challenge";
+import { storeToRefs } from "pinia";
+import { ref, nextTick, getCurrentInstance, reactive } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
   name: "Home",
   setup() {
     var currentInstance = getCurrentInstance();
-    let {axios} = currentInstance.appContext.config.globalProperties;
+    let { axios } = currentInstance.appContext.config.globalProperties;
     let router = useRouter();
     let bVal = ref("提交");
     // 控制第二次点击 1成功，2失败
     let status = ref(0);
-    let loading = ref(false)
+    let loading = ref(false);
     const challenge = useChallengeStore();
-    let {cur} = storeToRefs(challenge);
+    let { cur } = storeToRefs(challenge);
     let totalChallenge = ref(12);
     let bStyle = reactive({
-      "background-color": "#1a8fdd"
+      "background-color": "#1a8fdd",
     });
     let componentKey = ref(0);
 
     const nextChallenge = async () => {
-
       // 修改按钮状态
       bVal.value = "测评中";
       loading.value = true;
       bStyle["background-color"] = "#c3c3c3";
-
 
       // 成功
       if (status.value === 1) {
@@ -82,18 +85,34 @@ export default {
       }
 
       // 获取题目类型
-      const res = await axios.get("/api/challenge-type/getone", {
-        params: {
-          stage: challenge.cur + 1,
-        }
-      })
-      let type = res.data.type;
+
+      // const res = await axios.get("/api/challenge-type/getone", {
+      //   params: {
+      //     stage: challenge.cur + 1,
+      //   },
+      // });
+      // let type = res.data.type;
+
+      let type = 2;
       // 问卷调查：
       if (type === 1) {
         //调用子组件方法，收集信息
         // 直接调用成功方法
+        currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
         btnSuccess();
       } else if (type === 2) {
+        axios
+          .get(`/api/episode/test/${cur.value}`)
+          .then((res) => {
+            if (res.data.passed == true) {
+              btnSuccess();
+            } else {
+              btnFail();
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
         // markdown闯关：发起请求验证代码是否有误
         // 根据返回结果，分别调用
         // 成功
@@ -105,27 +124,26 @@ export default {
     const gotoChallenge = async (i) => {
       challenge.cur = i;
       forceRerender();
-    }
+    };
 
     const btnSuccess = () => {
-      bVal.value = "下一关"
+      bVal.value = "下一关";
       bStyle["background-color"] = "#006a4e";
       loading.value = false;
       status.value = 1;
-
     };
     const btnFail = () => {
-      bVal.value = "闯关失败"
+      bVal.value = "闯关失败";
       bStyle["background-color"] = "#cc0000";
       loading.value = false;
       status.value = 2;
-    }
+    };
 
     const btnReset = () => {
       bVal.value = "提交";
       loading.value = false;
       bStyle["background-color"] = "#1a8fdd";
-    }
+    };
     const forceRerender = () => {
       componentKey.value += 1;
     };
@@ -144,7 +162,7 @@ export default {
       btnReset,
       bVal,
       bStyle,
-      status
+      status,
     };
   },
   async mounted() {
@@ -153,7 +171,7 @@ export default {
   },
   methods: {
     getData() {
-      this.axios.get("/api/examination/student-info").then((res) => {
+      this.axios.get("/api/studentInfo/getStudent/1").then((res) => {
         this.users = res.data;
       });
     },
