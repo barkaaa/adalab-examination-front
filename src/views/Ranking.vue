@@ -15,7 +15,7 @@
 <!-- <RankingPluginDetail v-bind:users="users"></RankingPluginDetail> -->
 
 
-<!-- <ImgSet></ImgSet> -->
+<!-- <ImgSet>1</ImgSet> -->
 <RankingPluginDetail v-bind:users="users"></RankingPluginDetail>
 
 
