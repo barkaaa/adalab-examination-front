@@ -104,7 +104,7 @@ export default {
     },
   },
   async mounted() {
-    let res = await this.axios.get("/api/levels/getone", {
+    let res = await this.axios.get("/api/challenge/getone", {
       params: { stage: this.cur },
     });
     let url = res.data.url;
