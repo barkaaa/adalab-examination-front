@@ -8,7 +8,7 @@
           </template>
           <template #option="{ record }">
             <a-button @click="handleClick(record.name)">
-              <icon-robot type="icon-person" :size="20"/>
+              <icon-list type="icon-person" :size="20"/>
             </a-button>
           </template>
         </a-table>
@@ -191,6 +191,21 @@ export default {
   font-size: 20px;
   color: black;
 }
+::v-deep .arco-table-pagination.arco-table-pagination-right {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  flex-wrap: nowrap;
+  align-content: center;
+  flex-direction: column;
+}
+::v-deep  .arco-pagination-item-active:hover {
+  color: #046511;
+  background-color: #0465114f;
+  border-color: transparent;
+  transition: color 0.2s cubic-bezier(0, 0, 1, 1), background-color 0.2s cubic-bezier(0, 0, 1, 1);
+}
 
 .layout-demo {
   height: 100vh;
@@ -243,6 +258,18 @@ export default {
 ::v-deep  .arco-btn .arco-btn-primary .arco-btn-shape-square .arco-btn-size-medium .arco-btn-status-normal{
   background: #046511 !important;
 }
+::v-deep .arco-pagination-item-active, .arco-pagination-item-active:hover {
+  color: #046511;
+  background-color: #cee5cf;
+  border-color: transparent;
+  transition: color 0.2s cubic-bezier(0, 0, 1, 1), background-color 0.2s cubic-bezier(0, 0, 1, 1);
+}
+::v-deep .arco-pagination-item-previous, .arco-pagination-item-next {
+  color: #046511;
+  font-size: 12px;
+  background-color: transparent;
+}
+
 .table {
   width: 80%;
   margin: 5vh auto 5vh;
