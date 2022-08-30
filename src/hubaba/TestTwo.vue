@@ -208,6 +208,7 @@ export default {
     ,
     async handleDelete(id) {
       await this.axios.delete("/api/episode/delete/" + id)
+      await this.axios.delete(`/api/questionnaire/DeleteQuestionnaire/${id}`)
       await this.getData()
     }
     ,
