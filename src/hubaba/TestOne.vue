@@ -240,7 +240,7 @@ export default defineComponent({
         .catch(function (error) {
           console.log(error);
         });
-        this.$router.push("two");
+        this.$router.replace("two");
     },
   },
   setup() {

@@ -9,7 +9,7 @@
       <div class="footer"></div>
     </aside>
     <main>
-      
+   
       <a-steps :current="cur"  small>
         <a-step v-for="i in totalChallenge" @click="gotoChallenge(i)"></a-step>
       </a-steps>
@@ -72,8 +72,8 @@ export default {
       // 成功
       if (status.value === 1) {
         //  刷新子组件
-        if (challenge.cur < totalChallenge.value) challenge.cur++;
-        if (challenge.cur === totalChallenge.value) {
+        if (challenge.cur <= totalChallenge.value) challenge.cur++;
+        if (challenge.cur === totalChallenge.value+1) {
           // 已通关，跳到通关页面
           await router.push("/success");
         }
@@ -90,14 +90,14 @@ export default {
 
       // 获取题目类型
 
-      // const res = await axios.get("/api/episode/getone", {
-      //   params: {
-      //     stage: challenge.cur + 1,
-      //   },
-      // });
-      // let type = res.data.type;
+      const res = await axios.get("/api/episode/getOne", {
+        params: {
+          id: challenge.cur,
+        },
+      });
+      let type = res.data.type;
 
-      let type = 2;
+      // let type = 2;
       // 问卷调查：
       if (type === 1) {
         //调用子组件方法，收集信息
@@ -152,6 +152,7 @@ export default {
       bVal.value = "提交";
       loading.value = false;
       bStyle["background-color"] = "#1a8fdd";
+      forceRerender();
     };
     const forceRerender = () => {
       if (cur.value <= userDoneNum.value) {
