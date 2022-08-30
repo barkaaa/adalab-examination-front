@@ -9,8 +9,7 @@
       <div class="footer"></div>
     </aside>
     <main>
-      <!-- {{ userDoneNum }} -->
-     {{cur}}
+      
       <a-steps :current="cur"  small>
         <a-step v-for="i in totalChallenge" @click="gotoChallenge(i)"></a-step>
       </a-steps>
@@ -135,9 +134,6 @@ export default {
         btnReset();
       }
     };
-
-
-  
 
     const btnSuccess = () => {
       bVal.value = "下一关";

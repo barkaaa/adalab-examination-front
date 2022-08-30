@@ -72,11 +72,12 @@ export default {
     const visible = ref(false);
     let url = ref("");
     var router = useRouter();
+    var tDataLength = ref(0);
     const handleUpload = () => {
       visible.value = true;
     };
     const handleAdd = () => {
-      router.push("/backpanel/mission")
+      router.push({name: "mission", params:{stage: tDataLength.value+1}})
     }
     const handleCancel = () => {
       visible.value = false;
@@ -125,7 +126,8 @@ export default {
       handleCancel,
       handleUpload,
       url,
-      envSet
+      envSet,
+      tDataLength,
     }
   }
   ,
@@ -164,6 +166,7 @@ export default {
     async getData() {
       const res = await this.axios.get("/api/episode/get");
       this.tData = res.data;
+      this.tDataLength = this.tData.length;
     },
     customRequest(option) {
       const {onProgress, onError, onSuccess, fileItem, name} = option

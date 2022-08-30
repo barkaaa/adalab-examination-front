@@ -163,7 +163,7 @@
                 </div>
               </a-modal>
 
-              <a-button @click="saveMission">保存当前关卡</a-button>
+              <a-button @click="saveMission">保存当前关卡并返回</a-button>
             </div>
           </div>
         </a-layout-content>
@@ -208,7 +208,7 @@ export default defineComponent({
         "Y",
         "Z",
       ],
-      missionNum: this.$route.params.stageNum,
+      missionNum: this.$route.params.stage,
     };
   },
   components: {
@@ -240,6 +240,7 @@ export default defineComponent({
         .catch(function (error) {
           console.log(error);
         });
+        this.$router.push("two");
     },
   },
   setup() {
@@ -251,7 +252,7 @@ export default defineComponent({
     let currentInstance = getCurrentInstance();
     const { axios } = getCurrentInstance().appContext.config.globalProperties;
     var missions = reactive({
-      missionNumber: 0,
+      missionNumber: currentInstance.data.missionNum,
       textContents: [],
     });
 
