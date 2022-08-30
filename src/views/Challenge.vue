@@ -116,10 +116,10 @@ export default {
     },
   },
   async mounted() {
-    let res = await this.axios.get("/api/challenge/getone", {
-      params: { stage: this.cur },
+    let res = await this.axios.get("/api/episode/getOne", {
+      params: { id: this.cur },
     });
-    let url = res.data.url;
+    let url = res.data.markdownUrl;
     let md = (await this.axios.get(url)).data;
     this.content = this.markded.parse(md);
   },

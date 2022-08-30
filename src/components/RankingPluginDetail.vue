@@ -105,7 +105,7 @@
         <div
           v-for="count in 13"
           class="dot"
-          :class="[count < item.episode ? 'statusGreen' : 'statusNormal']"
+          :class="[count <= item.episode ? 'statusGreen' : 'statusNormal']"
           @click="getPersonelInfo(item, count)"
         >
           <p class="number">{{ count }}</p>
@@ -265,6 +265,13 @@ export default {
         this.users = res.data;
         //console.log(res.data[0].id);
       });
+    },
+    getAll(){
+      this.axios.get(`/api/studentInfo/studentCode/FilesTree`)
+      .then(res=>{
+        console.log(res.data);
+        //console.log(res.data[0].id);
+      });
     }
   },
   // created() {
@@ -274,10 +281,10 @@ export default {
   //         this.tableData.link = response.name;
   //       });
   // },
-  mounted(){
+  created(){
     this.getTotalPage();
     this.getPage();
-    
+    // this.getAll();
 
   },
   // setup() {
@@ -527,7 +534,7 @@ icon-history {
 } */
 /* 状态 */
 .statusGreen {
-  background-color: pink;
+  background-color: rgba(4, 101, 17, 0.51);
 }
 #bigContainer {
   display: flex;
@@ -564,7 +571,7 @@ a-steps {
 /* 页码 */
 ul.pagination {
   display: inline-block;
-    padding-left: 430px;
+    padding-left: 590px;
     /* padding: 0px; */
     margin: 0;
 }

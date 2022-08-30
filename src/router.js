@@ -53,6 +53,7 @@ const routes = [
     }, {
         path: "/backpanel",
         component: BackTemplate,
+        redirect: "/backpanel/rankingkai",
         children: [{
             path: "two", component: TestTwo
         },
