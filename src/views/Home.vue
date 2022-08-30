@@ -10,7 +10,11 @@
     </aside>
     <main>
       <a-steps :current="cur" small>
-        <a-step v-for="i in totalChallenge" @click="gotoChallenge(i)"></a-step>
+        <a-step v-for="i in totalChallenge" @click="gotoChallenge(i)">
+          <template #icon v-if="i <= userDoneNum">
+            <icon-check />
+          </template>
+        </a-step>
       </a-steps>
 
       <!-- <router-view v-if="fresh" /> -->
