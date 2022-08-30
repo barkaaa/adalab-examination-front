@@ -102,7 +102,7 @@ export default {
       if (type === 1) {
         //调用子组件方法，收集信息
         // 直接调用成功方法
-        currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
+        await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
         challengeNumAdd();
         btnSuccess();
       } else if (type === 2) {
@@ -161,6 +161,7 @@ export default {
       bVal.value = "提交";
       loading.value = false;
       bStyle["background-color"] = "#1a8fdd";
+      status.value = 0;
       forceRerender();
     };
     const forceRerender = () => {
