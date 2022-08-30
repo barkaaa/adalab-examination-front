@@ -9,8 +9,7 @@
       <div class="footer"></div>
     </aside>
     <main>
-   
-      <a-steps :current="cur"  small>
+      <a-steps :current="cur" small>
         <a-step v-for="i in totalChallenge" @click="gotoChallenge(i)"></a-step>
       </a-steps>
 
@@ -40,7 +39,13 @@ import RankingPlugin from "@/components/RankingPlugin.vue";
 import { IconDoubleRight } from "@arco-design/web-vue/es/icon";
 import { useChallengeStore } from "../store/challenge";
 import { storeToRefs } from "pinia";
-import { ref, nextTick, getCurrentInstance, reactive, onBeforeMount } from "vue";
+import {
+  ref,
+  nextTick,
+  getCurrentInstance,
+  reactive,
+  onBeforeMount,
+} from "vue";
 import { useRouter } from "vue-router";
 
 export default {
@@ -64,12 +69,11 @@ export default {
     let componentKey = ref(0);
 
     const nextChallenge = async () => {
-   
       // 成功
       if (status.value === 1) {
         //  刷新子组件
         if (challenge.cur <= totalChallenge.value) challenge.cur++;
-        if (challenge.cur === totalChallenge.value+1) {
+        if (challenge.cur === totalChallenge.value + 1) {
           // 已通关，跳到通关页面
           await router.push("/success");
         }
@@ -99,6 +103,7 @@ export default {
         //调用子组件方法，收集信息
         // 直接调用成功方法
         currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
+        challengeNumAdd();
         btnSuccess();
       } else if (type === 2) {
         testing();
@@ -114,6 +119,7 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
+        challengeNumAdd();
         // markdown闯关：发起请求验证代码是否有误
         // 根据返回结果，分别调用
         // 成功
@@ -126,19 +132,18 @@ export default {
       if (i <= userDoneNum.value) {
         challenge.cur = i;
         forceRerender();
-      }else if(i == userDoneNum.value+1){
+      } else if (i == userDoneNum.value + 1) {
         challenge.cur = i;
         btnReset();
       }
     };
 
-    const testing = () =>{
-         // 修改按钮状态
+    const testing = () => {
+      // 修改按钮状态
       bVal.value = "测评中";
       loading.value = true;
       bStyle["background-color"] = "#c3c3c3";
-
-    }
+    };
     const btnSuccess = () => {
       bVal.value = "下一关";
       bStyle["background-color"] = "#006a4e";
@@ -165,6 +170,14 @@ export default {
       componentKey.value += 1;
     };
 
+    const challengeNumAdd = () => {
+      axios
+        .get(`/api/studentInfo/setDoneMission/${userId.value}`)
+        .then((res) => {
+          console.log(res);
+        });
+    };
+
     return {
       loading,
       challenge,
@@ -183,6 +196,7 @@ export default {
       userId,
       userDoneNum,
       testing,
+      challengeNumAdd,
     };
   },
   async mounted() {
@@ -191,7 +205,6 @@ export default {
     await this.getChallengeNum();
     await this.getUserId();
     await this.getUserDone();
-   
   },
   methods: {
     getUserDone() {
@@ -199,7 +212,7 @@ export default {
         .get(`/api/studentInfo/getStudent/${this.userId}`)
         .then((res) => {
           this.userDoneNum = res.data.episode;
-          this.cur = this.userDoneNum+1;
+          this.cur = this.userDoneNum + 1;
         });
     },
 
