@@ -2,7 +2,7 @@
   <a-form :model="form" :style="{width:'300px'}" auto-label-width
           @submit="submit($event)">
     <a-form-item>
-      <a-input v-model="tag" type="text" placeholder="please enter your username..."/>
+      <a-input v-model="tag" type="text" placeholder="请输入镜像名称"/>
     </a-form-item>
     <a-form-item>
       <a-input type="file" @change="getFile($event)" placeholder="点击上传"/>
@@ -15,8 +15,18 @@
 
 <script>
 
+import {ref} from "vue";
+
 export default {
   name: "upLoadDokcerModel",
+  setup() {
+    const defaultSelectedKey = ref([]);
+
+
+    return {
+      defaultSelectedKey,
+    }
+  },
   data() {
     return {
       form: {
