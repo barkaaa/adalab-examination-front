@@ -1,21 +1,25 @@
 <template>
   <a-layout class="layout-demo">
     <a-layout>
-      <a-layout-content class="content" >
+      <a-layout-content class="content">
         <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table">
           <template #header="{record}">
-            <a-switch checked-color="#046511" unchecked-color="#E3E3EC" :default-checked="record.episode>=10"/>
+            <!--            <a-switch checked-color="#046511" unchecked-color="#E3E3EC" :disabled="true"-->
+            <!--                      :default-checked="record.episode>=10"/>-->
+            <icon-check-circle-fill :style="{fontSize:'32px', color:'green'}" :stroke-width="2"
+                                    v-if="record.episode>=10"/>
+            <icon-exclamation-circle-fill :style="{fontSize:'32px',color:'red'}" :stroke-width="2" v-else/>
           </template>
           <template #option="{ record }">
             <a-button @click="handleClick(record.name)">
-              <icon-list type="icon-person" :size="20"/>
+              <icon-list :size="20"/>
             </a-button>
           </template>
         </a-table>
         <a-modal v-model:visible="visible" @ok="handleOk" :footer="false" :hide-cancel="true" :closable="false">
           <template #title>
             {{ tData.name + "的详细信息" }}
-            </template>
+          </template>
           <a-descriptions style="margin-top: 20px" :data="list" :column="1" :align="align" :size="size">
             <a-descriptions-item v-for="item of list" :label="item.label">
               <template #label>
@@ -26,17 +30,17 @@
               <a-tag>{{ item.value }}</a-tag>
             </a-descriptions-item>
           </a-descriptions>
-          </a-modal>
+        </a-modal>
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 <script>
-import {IconBarChart, IconPen, IconRobot, IconUser} from "@arco-design/web-vue/es/icon";
 import {getCurrentInstance, ref} from "vue";
 import {Icon} from '@arco-design/web-vue';
+import {IconCheckCircleFill, IconExclamationCircleFill, IconList} from '@arco-design/web-vue/es/icon';
 
-const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3611034_pmqkuts7v7b.js'});
+const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3611034_28a0sn0mma2.js'});
 export default {
   setup() {
     let tData = ref({});
@@ -47,9 +51,9 @@ export default {
     const align = {
       value: 'right'
     }
-    const handleClick =(name) => {
+    const handleClick = (name) => {
       visible.value = true;
-      axios.post("/api/studentInfo/getDetail", {name}).then((res)=> {
+      axios.post("/api/studentInfo/getDetail", {name}).then((res) => {
         tData.value = res.data;
         list.map((item) => {
           item.value = tData.value[item.label];
@@ -60,7 +64,7 @@ export default {
       visible.value = false;
     }
     const list = [{
-      label: 'name',
+      label: 'status',
       value: "",
       cName: "icon-sort",
     }, {
@@ -133,11 +137,9 @@ export default {
     }
   },
   components: {
-    IconBarChart,
-    IconPen,
-    IconUser,
-    IconRobot,
     IconFont,
+    IconList, IconCheckCircleFill,
+    IconExclamationCircleFill
   },
   created() {
     fetch("/api/studentInfo/getRanking")
@@ -146,17 +148,13 @@ export default {
           this.tableData = response;
         });
   },
-  methods: {
-    onClickMenuItem(key) {
-      this.$router.push(key);
-    }
-  },
 };
 </script>
 <style scoped>
 ::v-deep .arco-modal .arco-modal-header .arco-modal-title .arco-modal-title-align-center {
   font-size: 22px !important;
 }
+
 ::v-deep .arco-descriptions-item-label-block {
   font-size: 16px !important;
 }
@@ -191,6 +189,7 @@ export default {
   font-size: 20px;
   color: black;
 }
+
 ::v-deep .arco-table-pagination.arco-table-pagination-right {
   display: flex;
   align-items: center;
@@ -200,7 +199,8 @@ export default {
   align-content: center;
   flex-direction: column;
 }
-::v-deep  .arco-pagination-item-active:hover {
+
+::v-deep .arco-pagination-item-active:hover {
   color: #046511;
   background-color: #0465114f;
   border-color: transparent;
@@ -255,15 +255,18 @@ export default {
   font-weight: bolder !important;
   color: #046511;
 }
-::v-deep  .arco-btn .arco-btn-primary .arco-btn-shape-square .arco-btn-size-medium .arco-btn-status-normal{
+
+::v-deep .arco-btn .arco-btn-primary .arco-btn-shape-square .arco-btn-size-medium .arco-btn-status-normal {
   background: #046511 !important;
 }
+
 ::v-deep .arco-pagination-item-active, .arco-pagination-item-active:hover {
   color: #046511;
   background-color: #cee5cf;
   border-color: transparent;
   transition: color 0.2s cubic-bezier(0, 0, 1, 1), background-color 0.2s cubic-bezier(0, 0, 1, 1);
 }
+
 ::v-deep .arco-pagination-item-previous, .arco-pagination-item-next {
   color: #046511;
   font-size: 12px;
