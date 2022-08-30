@@ -28,7 +28,11 @@
 <!--        </div>-->
       </a-table>
     </a-space>
-  <a-modal title="上传文档">
+  <a-button  @click="handleClick"> <icon-font type="icon-shangchuan" :size="16"/> 上传镜像</a-button>
+  <a-modal  v-model:visible="visible" @ok="handleOk" :footer="false" :hide-cancel="true" :closable="false">
+    <template #title>
+      {{ '上传文档' }}
+    </template>
     <up-load-docker-model></up-load-docker-model>
   </a-modal>
 </template>
@@ -37,12 +41,15 @@
 import upLoadDockerModel from "@/components/upLoadDockerModel";
 import {ref} from "vue";
 import {IconDelete} from "@arco-design/web-vue/es/icon";
+import {Icon} from "@arco-design/web-vue";
+const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3618179_rwptmmu55y9.js'});
 
 export default {
   name: "imageManager",
   components: {
     upLoadDockerModel,
-    IconDelete
+    IconDelete,
+    IconFont
   },
 
 
@@ -73,7 +80,7 @@ export default {
       handleClick,
       handleOk,
       handleCancel,
-      columns
+      columns,IconFont
     }
   },
   data() {
@@ -109,21 +116,6 @@ export default {
 
 <style scoped>
 
-.image-container {
 
-}
-.table{
-  margin-top: 3%;
-}
-.image {
 
-}
-
-.image button {
-  right: 0;
-}
-
-.tag {
-
-}
 </style>
