@@ -177,6 +177,7 @@ export default {
         .then((res) => {
           console.log(res);
         });
+      userDoneNum.value += 1;
     };
 
     return {
