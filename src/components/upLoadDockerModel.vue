@@ -1,11 +1,11 @@
 <template>
   <a-form :model="form" :style="{width:'300px'}" auto-label-width
-          @submit="submit($event)">
+          @submit="submit()">
     <a-form-item>
-      <a-input v-model="tag" type="text" placeholder="请输入镜像名称"/>
+      <a-input v-model="form.tag" type="text" placeholder="请输入镜像名称"/>
     </a-form-item>
     <a-form-item>
-      <a-input type="file" @change="getFile($event)" placeholder="点击上传"/>
+      <input type="file" @change="getFile($event)" placeholder="点击上传"/>
     </a-form-item>
     <a-form-item>
       <a-button html-type="submit">提交</a-button>
@@ -22,7 +22,6 @@ export default {
   setup() {
     const defaultSelectedKey = ref([]);
 
-
     return {
       defaultSelectedKey,
     }
@@ -37,13 +36,12 @@ export default {
   },
   methods: {
     getFile(event) {
-      this.file = event.target.files[0];
+      this.form.file = event.target.files[0];
     },
-    submit(event) {
-      event.preventDefault();
+    submit() {
       let formData = new FormData();
-      formData.append('tag', this.tag);
-      formData.append('docker', this.file);
+      formData.append('tag', this.form.tag);
+      formData.append('docker', this.form.file);
       let config = {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -59,5 +57,7 @@ export default {
 </script>
 
 <style scoped>
-
+input {
+  width: 200px;
+}
 </style>

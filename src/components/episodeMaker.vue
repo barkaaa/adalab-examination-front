@@ -2,19 +2,19 @@
   <div class="divider-demo">
     <div>
       <a-divider orientation="center">设置超时时间</a-divider>
-      <a-input :style="{width:'320px'}"  type="text" v-model="timeOut"/>
+      <a-input :style="{width:'320px'}" type="text" v-model="timeOut"/>
       <a-divider orientation="center">选择镜像</a-divider>
-      <select  v-model="img">
+      <select v-model="img">
         <option v-for="image in images" :key="image.Id" :value="image.Id">
           {{ image.RepoTags }}}
         </option>
       </select>
       <br/>
       <a-divider orientation="center">输入cmd命令</a-divider>
-      <a-input :style="{width:'320px'}"  type="text" v-model="cmd"/>
+      <a-input :style="{width:'320px'}" type="text" v-model="cmd"/>
       <br/>
       <a-divider orientation="center">选择文件</a-divider>
-      <a-input :style="{width:'320px'}"  type="file" @change="getFile($event)" multiple="multiple"/>
+      <input :style="{width:'320px'}" type="file" @change="getFile($event)" multiple="multiple"/>
       <p></p>
     </div>
     <a-divider :margin="10">
@@ -34,9 +34,9 @@ export default {
   data() {
     return {
       files: {},
-      timeOut: '',
-      cmd: '',
-      img: '',
+      timeOut: null,
+      cmd: null,
+      img: null,
       images: {}
     }
 
@@ -50,11 +50,10 @@ export default {
       event.preventDefault();
       let formData = new FormData();
       let ep = {
-        id: this.id,
+        id: this.$route.params.stage,
         cmd: this.cmd,
         timeOut: this.timeOut,
         imgId: this.img,
-        testRequired: this.setBoolean(this.testRequired),
       };
       let config = {
         headers: {
@@ -68,27 +67,33 @@ export default {
       });
 
 
-      this.axios.post('/api/episode/update', formData, config).then(function (res) {
-        console.log(res.data);
-      })
+      this.axios.patch('/api/episode/update', formData, config)
+      //todo
 
     },
     getImg() {
       this.axios.get("/api/episode/images")
           .then(res => {
-            console.log(res.data);
             this.images = res.data;
-            console.log(this.images);
           });
     },
-
-    setBoolean(b) {
-      return !!b;
+    getConfig() {
+      this.axios.get("/api/episode/getOne", {
+        params: {id: this.$route.params.stage}
+      }).then(res => {
+        this.cmd = res.data.cmd;
+        this.timeOut = res.data.timeOut;
+        this.img = res.data.imgId;
+      });
     }
+
+
   },
 
   mounted() {
     this.getImg();
+    this.getConfig();
+
   }
 }
 </script>
