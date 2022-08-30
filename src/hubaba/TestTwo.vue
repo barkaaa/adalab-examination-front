@@ -77,7 +77,7 @@ export default {
       visible.value = true;
     };
     const handleAdd = () => {
-      router.push({name: "mission", params:{stage: tDataLength.value+1}})
+      router.push({name: "mission", params:{stage: tDataLength.value+1, type: "add"}})
     }
     const handleCancel = () => {
       visible.value = false;
@@ -145,7 +145,7 @@ export default {
       // 问卷
       if (type === 1) {
         this.$router.push(
-            {name: 'mission', params: {stage}})
+            {name: 'mission', params: {stage, type: "edit"}})
       } else if (type === 2) {
         this.$router.push(
             {name: 'mdedit', params: {stage}})

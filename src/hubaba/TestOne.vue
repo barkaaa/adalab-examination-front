@@ -209,6 +209,7 @@ export default defineComponent({
         "Z",
       ],
       missionNum: this.$route.params.stage,
+      routeType: this.$route.params.type,
     };
   },
   components: {
@@ -224,6 +225,20 @@ export default defineComponent({
       this.$router.push("test1");
     },
     saveMission() {
+      if (this.routeType == "add") {
+        this.axios
+          .post("/api/episode/createEp", this.episodeAdd)
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      } else {
+        this.axios.delete(
+          `/api/questionnaire/DeleteQuestionnaire/${this.missionNum}`
+        );
+      }
       this.axios
         .put("/api/questionnaire/addorupdate", this.missions)
         .then((res) => {
@@ -232,15 +247,7 @@ export default defineComponent({
         .catch(function (error) {
           console.log(error);
         });
-      this.axios
-        .post("/api/episode/createEp", this.episodeAdd)
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-        this.$router.replace("two");
+      this.$router.replace("two");
     },
   },
   setup() {
