@@ -27,8 +27,7 @@
           </a-menu-item>
         </router-link>
         <router-link to="image">
-        <a-menu-item key="5" @click="handleClick">
-          <!--          <icon-font type="icon-docker" :size="24"/>-->
+        <a-menu-item key="5">
           <icon-desktop/>
           镜像设置
         </a-menu-item>
@@ -44,8 +43,6 @@
 <script>
 import {IconBarChart, IconPen, IconUser, IconDesktop} from "@arco-design/web-vue/es/icon";
 import {Icon} from '@arco-design/web-vue';
-import upLoadDockerModel from "@/components/upLoadDockerModel";
-import {ref} from "vue";
 
 const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3614862_l6nys7e6w5c.js'});
 export default {
@@ -54,50 +51,11 @@ export default {
     IconPen,
     IconUser,
     IconFont,
-    upLoadDockerModel,
     IconDesktop
-  },
-  setup() {
-    const visible = ref(false);
-    const defaultSelectedKey = ref([]);
-    const handleClick = () => {
-      visible.value = true;
-    };
-    const handleOk = () => {
-      visible.value = false;
-    };
-    const handleCancel = () => {
-      visible.value = false;
-    }
-
-    return {
-      visible,
-      defaultSelectedKey,
-      handleClick,
-      handleOk,
-      handleCancel
-    }
-  },
-  data() {
-    return {
-      images: {}
-    }
   },
   methods: {
     onClickMenuItem() {
     },
-
-    getImg() {
-      this.axios.get("api/episode/images")
-          .then(res => {
-            console.log(res.data);
-            this.images = res.data;
-            console.log(this.images);
-          });
-    },
-    mounted() {
-      this.getImg();
-    }
   },
 };
 </script>
