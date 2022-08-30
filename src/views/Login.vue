@@ -56,7 +56,7 @@ export default {
       let res = await this.axios.post("/api/manage/login", {
         username: this.username, password: this.password
       }).then(() => {
-        this.$router.push({path: "/userManagement"})
+        this.$router.push({path: "/backpanel/rankingkai"})
       })
 
     }
@@ -76,8 +76,7 @@ export default {
 </script>
 
 <style>
-/* Import Poppins font: */
-@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
 
 .main {
   background: rgb(239, 237, 237);

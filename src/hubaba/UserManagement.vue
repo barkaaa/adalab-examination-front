@@ -4,7 +4,7 @@
       <a-layout-content class="content" >
         <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table">
           <template #header="{record}">
-            <a-switch checked-color="#046511" unchecked-color="#E3E3EC" :default-checked="record.ranking>=5"/>
+            <a-switch checked-color="#046511" unchecked-color="#E3E3EC" :default-checked="record.episode>=10"/>
           </template>
           <template #option="{ record }">
             <a-button @click="handleClick(record.name)">
@@ -118,7 +118,7 @@ export default {
           dataIndex: 'tel',
         }, {
           title: '当前进度',
-          dataIndex: 'schedule',
+          dataIndex: 'episode',
         }, {
           title: '链接-详情、网页',
           dataIndex: 'webPage',
