@@ -26,12 +26,6 @@
             关卡设置
           </a-menu-item>
         </router-link>
-        <router-link to="test">
-          <a-menu-item key="4">
-            <icon-font type="icon-docker" :size="24"/>
-            环境设置
-          </a-menu-item>
-        </router-link>
         <router-link to="image">
         <a-menu-item key="5" @click="handleClick">
           <!--          <icon-font type="icon-docker" :size="24"/>-->
