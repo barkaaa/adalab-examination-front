@@ -284,7 +284,7 @@ export default {
   created(){
     this.getTotalPage();
     this.getPage();
-    this.getAll();
+    // this.getAll();
 
   },
   // setup() {
