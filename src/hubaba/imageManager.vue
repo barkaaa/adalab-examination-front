@@ -1,6 +1,6 @@
 <template>
     <a-space direction="vertical" size="large">
-      <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table">
+      <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination=false class="table">
         <template #delete="{record}">
           <a-button type="primary" v-on:click="delImg(RepoTags)">
             <template #icon>
@@ -28,7 +28,9 @@
 <!--        </div>-->
       </a-table>
     </a-space>
+  <a-modal title="上传文档">
     <up-load-docker-model></up-load-docker-model>
+  </a-modal>
 </template>
 
 <script>
@@ -110,7 +112,9 @@ export default {
 .image-container {
 
 }
-
+.table{
+  margin-top: 3%;
+}
 .image {
 
 }
