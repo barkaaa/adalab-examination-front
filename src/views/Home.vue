@@ -64,11 +64,7 @@ export default {
     let componentKey = ref(0);
 
     const nextChallenge = async () => {
-      // 修改按钮状态
-      bVal.value = "测评中";
-      loading.value = true;
-      bStyle["background-color"] = "#c3c3c3";
-
+   
       // 成功
       if (status.value === 1) {
         //  刷新子组件
@@ -105,6 +101,7 @@ export default {
         currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
         btnSuccess();
       } else if (type === 2) {
+        testing();
         axios
           .get(`/api/episode/test/${cur.value}`)
           .then((res) => {
@@ -135,6 +132,13 @@ export default {
       }
     };
 
+    const testing = () =>{
+         // 修改按钮状态
+      bVal.value = "测评中";
+      loading.value = true;
+      bStyle["background-color"] = "#c3c3c3";
+
+    }
     const btnSuccess = () => {
       bVal.value = "下一关";
       bStyle["background-color"] = "#006a4e";
@@ -178,6 +182,7 @@ export default {
       status,
       userId,
       userDoneNum,
+      testing,
     };
   },
   async mounted() {
