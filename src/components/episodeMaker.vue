@@ -5,8 +5,8 @@
       <a-input :style="{width:'320px'}" type="text" v-model="timeOut"/>
       <a-divider orientation="center">选择镜像</a-divider>
       <select v-model="img">
-        <option v-for="image in images" :key="image.Id" :value="image.Id">
-          {{ image.RepoTags }}}
+        <option v-for="image in images" :key="image.imgName" :value="image.imgName">
+          {{ image.imgName + ":" + image.imgVersion }}
         </option>
       </select>
       <br/>
