@@ -225,7 +225,15 @@ export default defineComponent({
     },
     saveMission() {
       this.axios
-        .put("api/questionnaire/addorupdate", this.missions)
+        .put("/api/questionnaire/addorupdate", this.missions)
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      this.axios
+        .post("/api/episode/createEp", this.episodeAdd)
         .then((res) => {
           console.log(res.data);
         })
@@ -238,16 +246,14 @@ export default defineComponent({
     const visible1 = ref(false);
     const visible2 = ref(false);
     var visible3 = ref([false]);
+    var episodeAdd = { id: 0, type: 1 };
 
     let currentInstance = getCurrentInstance();
     const { axios } = getCurrentInstance().appContext.config.globalProperties;
-    var missions = reactive(
-      {
-        missionNumber: 0,
-        textContents: [],
-      },
-      { type: "file" }
-    );
+    var missions = reactive({
+      missionNumber: 0,
+      textContents: [],
+    });
 
     var isChoose = ref();
     var newDescription = ref();
@@ -260,8 +266,9 @@ export default defineComponent({
 
     onBeforeMount(async () => {
       const selectMission = parseInt(currentInstance.data.missionNum);
+      episodeAdd.id = selectMission;
       let r = await axios.get("/api/questionnaire/getone", {
-        params: { missionNum: selectMission},
+        params: { missionNum: selectMission },
       });
       missions.missionNumber = selectMission;
 
@@ -412,6 +419,7 @@ export default defineComponent({
       arrayDeepCopy,
       minusOptionsMark,
       confirmDelete,
+      episodeAdd,
     };
   },
 });

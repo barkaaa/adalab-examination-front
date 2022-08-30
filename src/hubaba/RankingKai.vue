@@ -3,7 +3,7 @@
     <a-layout>
       <a-layout>
         <a-layout-content>
-          <RankingPluginDetail v-bind:users="users"/>
+          <RankingPluginDetail/>
         </a-layout-content>
       </a-layout>
     </a-layout>
@@ -13,19 +13,19 @@
 import {defineComponent} from "vue";
 import {IconBarChart, IconPen, IconUser} from "@arco-design/web-vue/es/icon";
 import RankingPluginDetail from "@/components/RankingPluginDetail.vue";
-
+//v-bind:users="users" 
 export default defineComponent({
   data() {
     return {
-      users: [],
+      // users: [],
     };
   }, mounted() {
     console.log('123');
-    this.axios.get('/api/studentInfo/getRanking')
-        .then(res => {
-          this.users = res.data;
-          //console.log(res.data[0].id);
-        });
+    // this.axios.get('/api/studentInfo/getRanking')
+    //     .then(res => {
+    //       this.users = res.data;
+    //       //console.log(res.data[0].id);
+    //     });
   },
 
   components: {
