@@ -42,35 +42,40 @@
             <a-table-column title="当前关卡" data-index="curEpisode"></a-table-column>
           </template>
         </a-table>
-       
 
-        <!-- 提交表  -->
-      <!-- 文件表 -->
-      <p>{{this.file}}</p>
-      <!-- 文件包 -->
+        <!--  -->
+        <!-- {{ arr1 }}
+        {{ arr2 }} -->
       </div>
     </div>
   </div>
 
-<!-- 模态框组件 -->
-<a-modal v-model:visible="visible" @ok="handleOk" :hide-cancel="true" :closable="false">
-          <template #title>{{ tData.name + "的详细信息" }}</template>
-          <a-descriptions style="margin-top: 20px" :data="list" :column="1" :align="align" :size="size">
-            <a-descriptions-item v-for="item of list" :label="item.label">
-              <template #label>
-                <icon-font :type="item.cName" :size="20" style="vertical-align: middle">
-                </icon-font>
-                {{ item.label }}
-              </template>
-              <a-tag>{{ item.value }}</a-tag>
-            </a-descriptions-item>
-          </a-descriptions>
-          
-        </a-modal>
-<!-- 模态框组件 -->
-  
+  <!-- 模态框组件 -->
+  <a-modal v-model:visible="visible" @ok="handleOk" :hide-cancel="true" :closable="false">
+    <template #title>{{ tData.name + "的详细信息" }}</template>
+    <a-descriptions style="margin-top: 20px" :data="list" :column="1" :align="align" :size="size">
+      <a-descriptions-item v-for="item of list" :label="item.label">
+        <template #label>
+          <icon-font :type="item.cName" :size="20" style="vertical-align: middle">
+          </icon-font>
+          {{ item.label }}
+        </template>
+        <a-tag>{{ item.value }}</a-tag>
+      </a-descriptions-item>
+    </a-descriptions>
+  </a-modal>
 
+  <!-- 模态框组件 -->
+  <a-modal v-model:visible="vis" @ok="hOk" :hide-cancel="true" :closable="false">
+    <template #title>{{ dList.name + "的问卷结果" }}</template>
+    <a-list :size="sizes">
+      <a-list-item v-for="item of dList.list">
+        {{ item }}
+      </a-list-item>
+    </a-list>
+  </a-modal>
 
+  <!-- 模态框组件 -->
   <div id="open-modal2" class="modal-window">
     <div>
       <a href="#" title="Close" class="modal-close">Close</a>
@@ -81,17 +86,12 @@
   </div>
 
 
-
-
-
-
-
-<!-- <a-select :style="{width:'520px'}" placeholder="Please select ..." allow-search>
-      <a-option>待开发</a-option>
-      <a-option>待开发</a-option>
-      <a-option>待开发</a-option>
-      不开发了   开尼玛
-    </a-select> -->
+  <!-- <a-select :style="{width:'520px'}" placeholder="Please select ..." allow-search>
+        <a-option>待开发</a-option>
+        <a-option>待开发</a-option>
+        <a-option>待开发</a-option>
+        不开发了   开尼玛
+      </a-select> -->
 
 
   <div class="list">
@@ -107,7 +107,6 @@
           align-items: center;
         "
       >
-     
         <div
           v-for="count in this.trueEpisodeNum"
           class="dot"
@@ -116,71 +115,44 @@
         >
           <a href="#open-modal" ><p class="number">{{ count }}</p></a>
         </div>
-      
       </div>
-      <div
-        class="btn"
-        style="align-items: center; display: flex; justify-content: center"
-      >
-        <a href="#open-modal" @click="getTableData(item)"
-          ><icon-history :style="[{ fontSize: '25px' }, { color: 'grey' }]"
-        /></a>
-        
-          <icon-user @click="handleClick(item.name)" :style="[{ fontSize: '25px' }, { color: 'grey' }]"
-        />
-        <a :href="'https://' + item.name + '.github.io'"
-          ><icon-desktop :style="[{ fontSize: '25px' }, { color: 'grey' }]"
-        /></a>
+      <div class="btn"
+           style="align-items: center; display: flex; justify-content: center">
+        <a href="#open-modal" @click="getTableData(item)">
+          <icon-history :style="[{ fontSize: '25px' }, { color: 'grey' }]"/>
+        </a>
+        <icon-pen-fill @click="questionnaireDetails(item.id)" :style="[{ fontSize: '25px' }, { color: 'grey' }]"/>
+        <icon-user @click="handleClick(item.name)" :style="[{ fontSize: '25px' }, { color: 'grey' }]"/>
+        <a :href="'https://' + item.name + '.github.io'">
+          <icon-desktop :style="[{ fontSize: '25px' }, { color: 'grey' }]"/>
+        </a>
       </div>
-      <br />
+      <br/>
     </div>
   </div>
 
-  <!-- <a-steps label-placement="vertical" :current="3">
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-    <a-step></a-step>
-  </a-steps> -->
-  <ul class="pagination" >
-  <li><a href="#" @click="getPreviousPage">«上一页</a></li>
-  <li><a href="#" @click="getNextPage">下一页»</a></li>
+  <ul class="pagination">
+    <li><a href="#" @click="getPreviousPage">«上一页</a></li>
+    <li><a href="#" @click="getNextPage">下一页»</a></li>
   </ul>
 
-
-  
 
 </template>
 
 <script>
 import VueTable from "./VueTable.vue";
-
-
-import {IconBarChart, IconPen, IconRobot, IconUser} from "@arco-design/web-vue/es/icon";
+import {IconDesktop, IconHistory, IconPenFill, IconUser} from "@arco-design/web-vue/es/icon";
 import {getCurrentInstance, ref} from "vue";
 import {Icon} from '@arco-design/web-vue';
 import FilePlugin from "./FilePlugin.vue";
-import { useRoute } from "vue-router";
 const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3611034_pmqkuts7v7b.js'});
 export default {
   name: "RankingPluginDetail",
   props: {
     // users: Array,
     pageNum: Number,
-    step:Number,
-    fileSrc:Array,
-    
+    step: Number,
+    fileSrc: Array,
   },
   data() {
     return {
@@ -198,37 +170,37 @@ export default {
           slotName: 'cell'
         },
         {
-        title: 'commitID&Link',
-        dataIndex: 'link',
-      },
-      {
-        title: '关卡',
-        dataIndex: 'episode',
-      },
-      {
-        title: '提交时间',
-        dataIndex: 'commitTime',
-      },{
-        title: '当前关卡',
-        dataIndex: 'curEpisode',
-      }
+          title: 'commitID&Link',
+          dataIndex: 'link',
+        },
+        {
+          title: '关卡',
+          dataIndex: 'episode',
+        },
+        {
+          title: '提交时间',
+          dataIndex: 'commitTime',
+        }, {
+          title: '当前关卡',
+          dataIndex: 'curEpisode',
+        }
       ],
       pagination: {
         pageSize: 4,
       },
-      tableData: [12,123123,1231231],
-      mydata:[],
-      
+      tableData: [12, 123123, 1231231],
+      mydata: [],
+
     };
   },
   methods: {
     getData() {
       this.axios
-        .post("/api/studentInfo/studentCode/FilesTree/DingZHneg", { step: 1 })
-        .then((res) => {
-          console.log(res.data.data);
-          this.arr1 = res.data.data;
-        });
+          .post("/api/studentInfo/studentCode/FilesTree/DingZHneg", {step: 1})
+          .then((res) => {
+            console.log(res.data.data);
+            this.arr1 = res.data.data;
+          });
     },
     getPersonelInfo(user, level) {
       const url  = `/api/studentInfo/studentCode/FilesTree/${user.name}`
@@ -245,139 +217,107 @@ export default {
           this.file = this.allUsrFile[user.name]["step"+level];
         console.log("imanoName:"+user.name+"imanoName:"+"step"+level)
         }
-       
+
       }
-      
+
     },
     onClickMenuItem(key) {
       this.$router.push(key);
     },
-    getTableData(item){
-      const url =`/api/studentInfo/getSubmission/${item.name}`
+    getTableData(item) {
+      const url = `/api/studentInfo/getSubmission/${item.name}`
       this.axios
-      .get(url)
-      .then((res) => {
-        this.tableData = res.data.data;
-        console.log(res.data.data);
-      });
+          .get(url)
+          .then((res) => {
+            this.tableData = res.data.data;
+            console.log(res.data.data);
+          });
     },
-    getPreviousPage(){
-      if(this.page>1){
+    getPreviousPage() {
+      if (this.page > 1) {
         this.page--;
         this.getPage();
       }
     },
-    getNextPage(){
-      if(this.page<this.totalPage){
+    getNextPage() {
+      if (this.page < this.totalPage) {
         this.page++;
         this.getPage();
       }
     },
-    getTotalPage(){
-      const url =`/api/studentInfo/getTotalPages/14`
+    getTotalPage() {
+      const url = `/api/studentInfo/getTotalPages/14`
       this.axios
-      .get(url)
-      .then((res) => {
-        this.totalPage = res.data.data;
-        console.log(res.data.data);
-      });
+          .get(url)
+          .then((res) => {
+            this.totalPage = res.data.data;
+            console.log(res.data.data);
+          });
     },
-    getPage(){
+    getPage() {
       this.axios.get(`/api/studentInfo/getPagingRanking/${this.page}`)
-      .then(res=>{
-        this.users = res.data.data;
-        //console.log(res.data[0].id);
-      });
+          .then(res => {
+            this.users = res.data.data;
+            console.log(this.users);
+          });
     },
-    getAll(){
+    getAll() {
       this.axios.get(`/api/studentInfo/studentCode/FilesTree`)
-      .then(res=>{
-        console.log("获取到树状结构"+res.data.data);
-        this.allUsrFile=res.data.data;
-        console.log("所有提交的文件："+this.allUsrFile['佐々木玲奈']['step1']);
-      });
+          .then(res => {
+            console.log("获取到树状结构" + res.data.data);
+            this.allUsrFile = res.data.data;
+            console.log("所有提交的文件：" + this.allUsrFile['佐々木玲奈']['step1']);
+          });
     },
-    getCounts(){
+    getCounts() {
       this.axios.get('/api/episode/counts')
-      .then(res=>{
-          this.trueEpisodeNum= res.data.data;
-          console.log("实际关卡数："+this.trueEpisodeNum)
-      });
+          .then(res => {
+            this.trueEpisodeNum = res.data.data;
+            console.log("实际关卡数：" + this.trueEpisodeNum)
+          });
     },
-    
+
   },
-  // created() {
-  //   fetch("/api/studentInfo/getRanking")
-  //       .then((res) => res.json())
-  //       .then((response) => {
-  //         this.tableData.link = response.name;
-  //       });
-  // },
-  created(){
+  created() {
     this.getTotalPage();
     this.getPage();
     this.getAll();
     this.getCounts();
-    
   },
-  // setup() {
-  //   const columns = [
-  //     {
-  //       title: 'commitID&Link',
-  //       dataIndex: 'link',
-  //     },
-  //     {
-  //       title: '关卡',
-  //       dataIndex: 'episode',
-  //     },
-  //     {
-  //       title: '提交时间',
-  //       dataIndex: 'commitTime',
-  //     }
-  //   ];
-  //   const data = reactive([{
-  //     key: '1',
-  //     result: 11,
-  //     link:12,
-  //     episode:12,
-  //     commitTime:12
-  //   }, {
-  //     key: '2',
-  //     result: 11,
-  //     link:12,
-  //     episode:12,
-  //     commitTime:12
 
-  //   }, {
-  //     key: '3',
-  //     result: 11,
-  //     link:12,
-  //     episode:12,
-  //     commitTime:12
-  //   }, {
-  //     key: '4',
-  //     result: 11,
-  //     link:12,
-  //     episode:12,
-  //     commitTime:12
-  //   }]);
-  //   return {
-  //     columns,
-  //     data,
-  //   }
-  // },
   setup() {
+    let currentInstance = getCurrentInstance();
+    const {axios} = currentInstance.appContext.config.globalProperties;
+    let dList = ref([]);
+    const vis = ref(false);
+    const sizes = ref('large');
+    const hOk = () => {
+      vis.value = false;
+    }
+    const questionnaireDetails = (id) => {
+      vis.value = true;
+      console.log(id)
+      axios.get("/api/reply/getReply/" + id).then((res) => {
+        dList.value = res.data.data;
+        console.log("++++++++++++++++++++++++++++++")
+        console.log(dList);
+        console.log("++++++++++++++++++++++++++++++")
+        // list.map((item) => {
+        //   item.value = tData.value[item.label];
+        // })
+      });
+    }
+
     let tData = ref({});
     const visible = ref(false);
     const size = ref('large');
-    let currentInstance = getCurrentInstance();
-    const {axios} = currentInstance.appContext.config.globalProperties
+
     const align = {
       value: 'right'
     }
-    const handleClick =(name) => {
+    const handleClick = (name) => {
       visible.value = true;
-      axios.post("/api/studentInfo/getDetail", {name}).then((res)=> {
+      axios.post("/api/studentInfo/getDetail", {name}).then((res) => {
         tData.value = res.data.data;
         list.map((item) => {
           item.value = tData.value[item.label];
@@ -423,33 +363,42 @@ export default {
       tData,
       list,
       size,
-      align
+      align,
+      dList,
+      vis,
+      hOk,
+      sizes,
+      questionnaireDetails
     }
   },
-  // created() {
-  //   fetch("/api/studentInfo/getRanking")
-  //       .then((res) => res.json())
-  //       .then((response) => {
-  //         this.tableData = response;
-  //       });
-  // },
-
 
   components: {
     VueTable,
-    IconBarChart,
-    IconPen,
     IconUser,
-    IconRobot,
     IconFont,
-    FilePlugin
-},
+    FilePlugin,
+    IconPenFill,
+    IconHistory,
+    IconDesktop
+  },
 };
 </script>
 
+
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
- 
+::v-deep .arco-modal .arco-modal-header .arco-modal-title .arco-modal-title-align-center {
+  font-size: 22px !important;
+}
+
+::v-deep .arco-descriptions-item-label-block {
+  font-size: 16px !important;
+}
+
+::v-deep .arco-tag-size-medium {
+  font-size: 14px !important;
+}
+
 html {
   scrollbar-width: none;
 }
@@ -457,6 +406,7 @@ html {
 * {
   box-sizing: border-box;
 }
+
 /* template{
   text-align: center;
 } */
@@ -604,50 +554,58 @@ a-steps {
 /* 页码 */
 ul.pagination {
   display: inline-block;
-    padding-left: 590px;
-    /* padding: 0px; */
-    margin: 0;
+  padding-left: 590px;
+  /* padding: 0px; */
+  margin: 0;
 }
 
-ul.pagination li {display: inline;}
+ul.pagination li {
+  display: inline;
+}
 
 ul.pagination li a {
-    color: black;
-    float: left;
-    padding: 8px 16px;
-    text-decoration: none;
-    transition: background-color .3s;
-    border: 1px solid #ddd;
-    margin: 0 4px;
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+  margin: 0 4px;
 }
 
 ul.pagination li a.active {
-    background-color: #4CAF50;
-    color: white;
-    border: 1px solid #4CAF50;
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
 }
 
 
-ul.pagination li a:hover:not(.active) {background-color: #ddd;}
+ul.pagination li a:hover:not(.active) {
+  background-color: #ddd;
+}
+
 /* 页码 */
-a-result{
-  width:5px;
+a-result {
+  width: 5px;
 }
 /*  */
-.success{
+.success {
   background-color: #4CAF50;
   width: 10px;
   height: 10px;
 }
-.fail{
+
+.fail {
   background-color: red;
   width: 10px;
   height: 10px;
 }
-.success-text{
-  display:inline
+
+.success-text {
+  display: inline
 }
-.fail-text{
+
+.fail-text {
   display: none;
 }
 /*  */

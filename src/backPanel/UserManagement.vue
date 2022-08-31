@@ -7,7 +7,7 @@
             <!--            <a-switch checked-color="#046511" unchecked-color="#E3E3EC" :disabled="true"-->
             <!--                      :default-checked="record.episode>=10"/>-->
             <icon-check-circle-fill :style="{fontSize:'32px', color:'green'}" :stroke-width="2"
-                                    v-if="record.episode>=10"/>
+                                    v-if="record.episode>=totalNumberOfLevels"/>
             <icon-exclamation-circle-fill :style="{fontSize:'32px',color:'red'}" :stroke-width="2" v-else/>
           </template>
           <template #option="{ record }">
@@ -133,21 +133,34 @@ export default {
       tableData: [],
       pagination: {
         pageSize: 10,
-      }
+      },
+      totalNumberOfLevels: '',
     }
   },
   components: {
     IconFont,
-    IconList, IconCheckCircleFill,
+    IconList,
+    IconCheckCircleFill,
     IconExclamationCircleFill
   },
+  methods: {
+    getList() {
+      this.axios.get("/api/studentInfo/getList")
+          .then(res => {
+            this.tableData = res.data.data;
+          });
+    },
+    getCounts() {
+      this.axios.get("/api/episode/counts")
+          .then(res => {
+            console.log(res);
+            this.totalNumberOfLevels = res.data.data;
+          });
+    }
+  },
   created() {
-    fetch("/api/studentInfo/getRanking")
-        .then((res) => res.json())
-        .then((response) => {
-          console.log(response);
-          this.tableData = response.data;
-        });
+    this.getList();
+    this.getCounts();
   },
 };
 </script>
@@ -164,89 +177,6 @@ export default {
   font-size: 14px !important;
 }
 
-::v-deep .arco-layout-sider-children,
-.arco-menu-vertical .arco-menu-group-title:not(.arco-menu-has-icon),
-.arco-menu-vertical .arco-menu-pop-header:not(.arco-menu-has-icon),
-.arco-menu-vertical .arco-menu-inline-header:not(.arco-menu-has-icon) {
-  background-color: gainsboro;
-}
-
-::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon) {
-  background-color: gainsboro;
-}
-
-::v-deep .arco-menu-vertical .arco-menu-inner {
-  background-color: gainsboro;
-}
-
-::v-deep .arco-menu-dark .arco-menu-item.arco-menu-selected,
-.arco-menu-dark .arco-menu-item.arco-menu-selected .arco-icon {
-  color: green !important;
-  font-size: 28px !important;
-  background-color: rgb(227, 227, 227);
-}
-
-::v-deep .arco-menu-vertical .arco-menu-item:not(.arco-menu-has-icon) {
-  font-size: 20px;
-  color: black;
-}
-
-::v-deep .arco-table-pagination.arco-table-pagination-right {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 12px;
-  flex-wrap: nowrap;
-  align-content: center;
-  flex-direction: column;
-}
-
-::v-deep .arco-pagination-item-active:hover {
-  color: #046511;
-  background-color: #0465114f;
-  border-color: transparent;
-  transition: color 0.2s cubic-bezier(0, 0, 1, 1), background-color 0.2s cubic-bezier(0, 0, 1, 1);
-}
-
-.layout-demo {
-  height: 100vh;
-  background: var(--color-fill-2);
-  border: 1px solid var(--color-border);
-}
-
-.layout-demo :deep(.arco-layout-sider) .logo {
-  height: 32px;
-  margin: 12px 8px;
-  background: rgba(129, 127, 127, 0.2);
-}
-
-.layout-demo :deep(.arco-layout-sider-light) .logo {
-  background: var(--color-fill-2);
-}
-
-.layout-demo :deep(.arco-layout-header) {
-  height: 64px;
-  line-height: 64px;
-  background: var(--color-bg-3);
-}
-
-.layout-demo :deep(.arco-layout-content) {
-  color: var(--color-text-2);
-  font-weight: 400;
-  font-size: 14px;
-  background: var(--color-bg-3);
-}
-
-.layout-demo :deep(.arco-layout-content) {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  color: var(--color-balck);
-  font-size: 16px;
-  font-stretch: condensed;
-  text-align: center;
-}
-
 .content {
   height: 90%;
 }
@@ -261,18 +191,6 @@ export default {
   background: #046511 !important;
 }
 
-::v-deep .arco-pagination-item-active, .arco-pagination-item-active:hover {
-  color: #046511;
-  background-color: #cee5cf;
-  border-color: transparent;
-  transition: color 0.2s cubic-bezier(0, 0, 1, 1), background-color 0.2s cubic-bezier(0, 0, 1, 1);
-}
-
-::v-deep .arco-pagination-item-previous, .arco-pagination-item-next {
-  color: #046511;
-  font-size: 12px;
-  background-color: transparent;
-}
 
 .table {
   width: 80%;

@@ -69,7 +69,8 @@ const routes = [
                 component: CommonEdit,
             }, {
                 name: "mdedit",
-                path: "mdedit", component: MarkdownEdit
+                path: "mdedit",
+                component: MarkdownEdit
             }, {
                 path: "test",
                 name: "test",
