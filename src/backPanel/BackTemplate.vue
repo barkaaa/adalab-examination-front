@@ -5,9 +5,7 @@
       <a-menu
           :default-selected-keys="defaultSelectedKey"
           :style="{ width: '100%' }"
-          @menu-item-click="onClickMenuItem"
-      >
-
+          @menu-item-click="onClickMenuItem">
         <router-link to="RankingList">
           <a-menu-item key="1">
             <IconBarChart></IconBarChart>
@@ -35,7 +33,6 @@
       </a-menu>
     </a-layout-sider>
     <a-layout style="padding: 0 24px;">
-
       <router-view/>
     </a-layout>
   </a-layout>
@@ -43,15 +40,12 @@
 </template>
 <script>
 import {IconBarChart, IconPen, IconUser, IconDesktop} from "@arco-design/web-vue/es/icon";
-import {Icon} from '@arco-design/web-vue';
 
-const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3614862_l6nys7e6w5c.js'});
 export default {
   components: {
     IconBarChart,
     IconPen,
     IconUser,
-    IconFont,
     IconDesktop
   },
   methods: {
