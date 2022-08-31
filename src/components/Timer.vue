@@ -1,15 +1,15 @@
 <template>
   <div class="box">
     <div class="top">
-      <span class="username">username</span>
-      <img :src="require('../assets/img/avatar.png')" class="avatar" alt=""/>
+      <span class="username">{{ uName }}</span>
+      <img :src="avatar" class="avatar" alt=""/>
     </div>
     <div class="bottom">
       <div class="countdown">
         <a-col :flex="1">
           <a-countdown
-              :value="now + 1000 * 60 * 60 * 24 * 4"
-              :now="now"
+              :value="new Date(cDate).getTime()+1000 * 60 * 60 * 24 * 7"
+              :now="new Date(cDate).getTime()"
               format="D 天 H 时 m 分"
           />
         </a-col>
@@ -23,11 +23,13 @@
 import {ref} from "vue";
 
 export default {
+  props: [
+    'uName', 'avatar', 'cDate'
+  ],
   name: "CountDown",
   setup() {
     const now = Date.now();
     const start = ref(false);
-
     const handleFinish = () => {
       Message.info('Finish');
     };
@@ -38,6 +40,9 @@ export default {
       handleFinish,
     };
   },
+  mounted() {
+    console.log(this.cDate)
+  }
 }
 </script>
 
@@ -53,6 +58,7 @@ export default {
     justify-content: space-between;
     width: 100%;
     margin-bottom: 10%;
+
     .username {
       font-size: 120%;
     }
@@ -65,6 +71,7 @@ export default {
   .bottom {
     display: flex;
     justify-content: center;
+
     .countdown {
       font-size: 10%;
       margin-bottom: 3%;
