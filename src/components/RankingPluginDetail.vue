@@ -31,7 +31,8 @@
               <template #cell="{ record }">
                 <!-- :status="[record.curEpisode<9 ? 'success':'error']" -->
                 <!-- <a-result status="success" style="width:1vw; " ></a-result> -->
-                <div :class="[record.curEpisode>record.episode ? 'success':'fail']"></div>
+                <div :class="[Number(record.curEpisode)>Number(record.episode) ? 'success':'fail']"></div>
+                <!-- {{record.curEpisode+"/"+record.episode}} -->
                 <!-- <a-button href="#open-modal">删除</a-button> -->
               </template>
             </a-table-column>
@@ -219,8 +220,8 @@ export default {
       this.axios
         .post("/api/studentInfo/studentCode/FilesTree/DingZHneg", { step: 1 })
         .then((res) => {
-          console.log(res.data);
-          this.arr1 = res.data;
+          console.log(res.data.data);
+          this.arr1 = res.data.data;
         });
     },
     getPersonelInfo(user, level) {
@@ -228,8 +229,8 @@ export default {
       this.axios
         .post(url, { step: level })
         .then((res) => {
-          console.log(res.data);
-          this.arr2 = res.data;
+          console.log(res.data.data);
+          this.arr2 = res.data.data;
         });
     },
     onClickMenuItem(key) {
@@ -240,8 +241,8 @@ export default {
       this.axios
       .get(url)
       .then((res) => {
-        this.tableData = res.data;
-        console.log(res.data);
+        this.tableData = res.data.data;
+        console.log(res.data.data);
       });
     },
     getPreviousPage(){
@@ -261,8 +262,8 @@ export default {
       this.axios
       .get(url)
       .then((res) => {
-        this.totalPage = res.data;
-        console.log(res.data);
+        this.totalPage = res.data.data;
+        console.log(res.data.data);
       });
     },
     getPage(){
@@ -275,9 +276,9 @@ export default {
     getAll(){
       this.axios.get(`/api/studentInfo/studentCode/FilesTree`)
       .then(res=>{
-        console.log(res.data);
-        this.allUsrFile=res.data;
-        console.log("所有提交的文件："+this.allUsrFile['佐々木玲奈']);
+        console.log("获取到树状结构"+res.data.data);
+        this.allUsrFile=res.data.data;
+        console.log("所有提交的文件："+this.allUsrFile['佐々木玲奈']['step1']);
       });
     },
     getCounts(){
@@ -286,7 +287,8 @@ export default {
           this.trueEpisodeNum= res.data.data;
           console.log("实际关卡数："+this.trueEpisodeNum)
       });
-    }
+    },
+    
   },
   // created() {
   //   fetch("/api/studentInfo/getRanking")
@@ -300,6 +302,7 @@ export default {
     this.getPage();
     this.getAll();
     this.getCounts();
+    
   },
   // setup() {
   //   const columns = [
@@ -359,7 +362,7 @@ export default {
     const handleClick =(name) => {
       visible.value = true;
       axios.post("/api/studentInfo/getDetail", {name}).then((res)=> {
-        tData.value = res.data;
+        tData.value = res.data.data;
         list.map((item) => {
           item.value = tData.value[item.label];
         })

@@ -1,10 +1,7 @@
 <template>
 
   <a-layout style="padding: 30px 24px;">
-    <a-breadcrumb style="padding-bottom: 20px">
-      <a-breadcrumb-item @click="navToSetting">关卡设置</a-breadcrumb-item>
-      <a-breadcrumb-item @click="navToEdit">编辑关卡</a-breadcrumb-item>
-    </a-breadcrumb>
+
     <div id="vditor" ref="editorRef"/>
     <a-button @click="submit">提交</a-button>
   </a-layout>
@@ -28,22 +25,16 @@ export default {
       let res = await this.axios.put("/api/oss/saveMarkdown", {
         content
       })
-      let markdown_url = res.data.url;
+      let markdownUrl = res.data.url;
 
       let id = this.$route.params.stage;
       // 修改数据库记录
-      await this.axios.patch("/api/episode/update", {
-        id, markdown_url
+      let r = await this.axios.patch("/api/episode/updateChallengeInfo", {
+        id, markdownUrl
       })
-
+      this.$message.success(r.data.data.message);
       this.$router.push("/backpanel/missionManagement")
     },
-    navToSetting() {
-      this.$router.push("/backpanel/missionManagement")
-    },
-    navToEdit() {
-      this.$router.push("/backpanel/mdedit")
-    }
 
   },
   async mounted() {
@@ -53,8 +44,7 @@ export default {
         id: this.$route.params.stage,
       }
     })
-    let url = res.data.markdownUrl;
-    console.log(url)
+    let url = res.data.data.markdownUrl;
 
     this.initialValue = (await this.axios.get(url)).data;
     console.log(this.initialValue)

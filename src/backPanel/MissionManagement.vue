@@ -1,10 +1,7 @@
 <template>
   <div>
     <a-layout style="padding: 30px 24px;">
-      <a-breadcrumb style="padding-bottom: 20px">
-        <a-breadcrumb-item>关卡设置</a-breadcrumb-item>
-        <a-breadcrumb-item>编辑关卡</a-breadcrumb-item>
-      </a-breadcrumb>
+
       <a-space class="option">
         <a-button type="primary" @click="handleAdd">
           <template #icon>
@@ -19,8 +16,17 @@
         </a-button>
       </a-space>
       <a-divider/>
-      <a-table row-key="id" :columns="columns" :data="tData" :row-selection="rowSelection"
-               v-model:selectedKeys="selectedKeys" :pagination="pagination">
+      <a-table :columns="columns" :data="tData"
+               :pagination="pagination">
+
+        <template #type="{record}">
+          <a-tag v-if="record.type===0" color="green">引导
+          </a-tag>
+          <a-tag v-if="record.type===2" color="red">挑战
+          </a-tag>
+          <a-tag v-if="record.type===1" color="blue">问卷
+          </a-tag>
+        </template>
         <!--        编辑-->
         <template #setting="{record}">
           <a-button @click="edit(record.id,record.type)" status="success">
@@ -28,13 +34,13 @@
               <icon-edit/>
             </template>
           </a-button>
-          <a-button @click="envSet(record.id)" status="normal">
+          <a-button @click="envSet(record.id)" status="normal" :disabled="record.type===0||record.type===1">
             <template #icon>
               <icon-settings/>
             </template>
           </a-button>
 
-          <a-popconfirm content="您确定要删除这个关卡吗?" @ok="handleDelete(record.id)" @cancel="cancelDelete">
+          <a-popconfirm content="您确定要删除这个关卡吗?" @ok="handleDelete(record.id,record.type)" @cancel="cancelDelete">
             <a-button status="danger">
               <template #icon>
                 <icon-delete/>
@@ -48,7 +54,10 @@
     <a-modal v-model:visible="visible" title="添加关卡" @cancel="handleCancel" @ok="handleOk">
       <a-form>
         <a-form-item field="name" label="题号">
-          <a-input-number v-model="stage"/>
+          <a-select v-model="type" placeholder="请选择关卡类型">
+            <a-option>0</a-option>
+            <a-option>2</a-option>
+          </a-select>
         </a-form-item>
         <a-form-item field="file" label="文件">
           <a-upload :custom-request="customRequest"/>
@@ -71,13 +80,14 @@ export default {
     const selectedKeys = ref([]);
     const visible = ref(false);
     let url = ref("");
+    let type = ref();
     var router = useRouter();
     var tDataLength = ref(0);
     const handleUpload = () => {
       visible.value = true;
     };
     const handleAdd = () => {
-      router.push({name: "cmedit", params:{stage: tDataLength.value+1, type: "add"}})
+      router.push({name: "mission", params: {stage: tDataLength.value + 1, type: "add"}})
     }
     const handleCancel = () => {
       visible.value = false;
@@ -106,7 +116,7 @@ export default {
       },
       {
         title: 'Type',
-        dataIndex: 'type',
+        slotName: 'type',
       }
       ,
       {
@@ -122,6 +132,7 @@ export default {
       selectedKeys,
       pagination,
       visible,
+      type,
       handleAdd,
       handleCancel,
       handleUpload,
@@ -146,7 +157,7 @@ export default {
       if (type === 1) {
         this.$router.push(
             {name: 'mission', params: {stage, type: "edit"}})
-      } else if (type === 2) {
+      } else if (type === 2 || type === 0) {
         this.$router.push(
             {name: 'mdedit', params: {stage}})
       }
@@ -154,18 +165,21 @@ export default {
     },
     async handleOk() {
       // 创建关卡
-      await this.axios.post("/api/episode/createEp", {
-        id: this.stage,
+      let res = await this.axios.post("/api/episode/createEp", {
+        id: this.tDataLength + 1,
         markdownUrl: this.url,
-        type: 2
+        type: this.type
       })
+
+      // console.log(this.$message.)
+      this.$message.success(res.data.data.message)
       this.visible = false;
       await this.getData();
 
     },
     async getData() {
       const res = await this.axios.get("/api/episode/get");
-      this.tData = res.data;
+      this.tData = res.data.data;
       this.tDataLength = this.tData.length;
     },
     customRequest(option) {
@@ -206,10 +220,14 @@ export default {
       }
     }
     ,
-    async handleDelete(id) {
-      await this.axios.delete("/api/episode/delete/" + id)
-      await this.axios.delete(`/api/questionnaire/DeleteQuestionnaire/${id}`)
-      await this.axios.put(`/api/questionnaire/moveQuestionnaire/${id}`)
+    async handleDelete(id, type) {
+      let res = await this.axios.delete("/api/episode/delete/" + id)
+
+      if (type === 1) {
+        await this.axios.delete(`/api/questionnaire/DeleteQuestionnaire/${id}`)
+        await this.axios.put(`/api/questionnaire/moveQuestionnaire/${id}`)
+      }
+      this.$message.success(res.data.data.message)
       await this.getData()
     }
     ,

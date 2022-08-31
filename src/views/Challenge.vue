@@ -119,7 +119,7 @@ export default {
       let res = await axios.get("/api/episode/getOne", {
         params: { id: this.cur },
       });
-      let url = res.data.markdownUrl;
+      let url = res.data.data.markdownUrl;
       let md = (await this.axios.get(url)).data;
       this.content = this.markded.parse(md);
     },
