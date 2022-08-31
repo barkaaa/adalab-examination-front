@@ -4,13 +4,13 @@ import Login from "@/views/Login";
 import Ranking from "@/views/Ranking";
 import Student from "@/views/StudentLogin";
 import {createRouter, createWebHistory} from "vue-router";
-import RankingKai from "./hubaba/RankingKai.vue";
-import UserManagement from "@/hubaba/UserManagement";
-import Test1 from "@/hubaba/TestOne";
-import BackTemplate from "@/hubaba/BackTemplate";
-import image from "@/hubaba/imageManager";
-import TestTwo from "@/hubaba/TestTwo";
-import MarkdownEdit from "@/hubaba/MarkdownEdit";
+import RankingList from "./backPanel/RankingList.vue";
+import UserManagement from "@/backPanel/UserManagement";
+import CommonEdit from "@/backPanel/CommonEdit";
+import BackTemplate from "@/backPanel/BackTemplate";
+import image from "@/backPanel/imageManager";
+import MissionManagement from "@/backPanel/MissionManagement";
+import MarkdownEdit from "@/backPanel/MarkdownEdit";
 import Test from "@/components/episodeMaker"
 import Challenge from "@/views/Challenge";
 import Success from "@/components/Success";
@@ -53,14 +53,14 @@ const routes = [
     }, {
         path: "/backpanel",
         component: BackTemplate,
-        redirect: "/backpanel/rankingkai",
+        redirect: "/backpanel/RankingList",
         children: [{
-            path: "two", component: TestTwo
+            path: "missionManagement", component: MissionManagement
         },
             {
-                path: "mission",
-                name: "mission",
-                component: Test1,
+                path: "cmedit",
+                name: "cmedit",
+                component: CommonEdit,
             }, {
                 name: "mdedit",
                 path: "mdedit", component: MarkdownEdit
@@ -75,9 +75,9 @@ const routes = [
                 component: UserManagement,
             },
             {
-                path: "rankingkai",
-                name: "rankingkai",
-                component: RankingKai,
+                path: "RankingList",
+                name: "RankingList",
+                component: RankingList,
             },{
                 path: "image",
                 name: "image",
