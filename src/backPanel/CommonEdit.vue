@@ -222,7 +222,7 @@ export default defineComponent({
       this.$router.push(key);
     },
     addOneQuestion() {
-      this.$router.push("test1");
+      this.$router.push("CommonEdit");
     },
     async saveMission() {
       if (this.routeType == "add") {
@@ -247,7 +247,7 @@ export default defineComponent({
         .catch(function (error) {
           console.log(error);
         });
-      this.$router.replace("two");
+      this.$router.replace("missionManagement");
     },
   },
   setup() {

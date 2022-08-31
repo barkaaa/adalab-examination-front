@@ -64,7 +64,7 @@ import {reactive, ref} from "vue";
 import {useRouter} from "vue-router";
 
 export default {
-  name: "TestTwo",
+  name: "MissionManagement",
   components: {IconDelete, IconEdit, IconPlus, IconUpload, IconSettings},
   setup() {
 
@@ -77,7 +77,7 @@ export default {
       visible.value = true;
     };
     const handleAdd = () => {
-      router.push({name: "mission", params:{stage: tDataLength.value+1, type: "add"}})
+      router.push({name: "cmedit", params:{stage: tDataLength.value+1, type: "add"}})
     }
     const handleCancel = () => {
       visible.value = false;
