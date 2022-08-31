@@ -244,7 +244,7 @@ export default {
     },
     async getRanking() {
       let res = await this.axios.get("/api/studentInfo/getRanking")
-      this.rankings = res.data;
+      this.rankings = res.data.data;
     },
 
     async getChallengeNum() {

@@ -6,17 +6,17 @@
       <div class="container">
         <div
           class="progress"
-          v-bind:style="{ width: (item.episode / 13) * 100 + '%' }"
+          v-bind:style="{ width: (item.episode / trueEpisodeNum) * 100 + '%' }"
           :class="[
-            item.episode / 13 < 0.3
+            item.episode / trueEpisodeNum < 0.3
               ? 'status1'
-              : item.episode / 13 < 0.4
+              : item.episode / trueEpisodeNum < 0.4
               ? 'status2'
               : 'status3',
           ]"
         >
            <p class="proportion">
-          {{ item.episode + "/13" }}
+          {{ item.episode + "/"+trueEpisodeNum }}
         </p>
         </div>
       </div>
@@ -52,9 +52,16 @@ export default {
           this.trueEpisodeNum= res.data.data;
           console.log("实际关卡数："+this.trueEpisodeNum)
       });
+    },
+    getCurUser(){
+      this.axios.get('/api/studentInfo/curUserID')
+      .then(res=>{
+        console.log('curUsr='+res.data.data);
+      });
     }
   },created(){
     this.getCounts();
+    this.getCurUser();
   }
   // mounted() {
   //   fetch("/api/student/getRanking", {
