@@ -21,6 +21,7 @@
 
 <script>
 import {ref} from "vue";
+import {Message} from "@arco-design/web-vue";
 
 export default {
   props: [
@@ -52,31 +53,33 @@ export default {
   width: 92%;
   border-radius: 10px;
   border: 3px solid #000;
-
-  .top {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    margin-bottom: 10%;
-
-    .username {
-      font-size: 120%;
-    }
-
-    .avatar {
-      width: 10%
-    }
-  }
-
-  .bottom {
-    display: flex;
-    justify-content: center;
-
-    .countdown {
-      font-size: 10%;
-      margin-bottom: 3%;
-    }
-  }
-
 }
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10%;
+}
+
+.username {
+  font-size: 120%;
+}
+
+.avatar {
+  width: 10%
+}
+
+
+.bottom {
+  display: flex;
+  justify-content: center;
+}
+
+.countdown {
+  font-size: 10%;
+  margin-bottom: 3%;
+}
+
+
 </style>

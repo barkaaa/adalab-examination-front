@@ -14,6 +14,7 @@ import MarkdownEdit from "@/backPanel/MarkdownEdit";
 import Test from "@/components/episodeMaker"
 import Challenge from "@/views/Challenge";
 import Success from "@/components/Success";
+import YAYTest from "@/components/popOver"
 
 const routes = [
     {
@@ -38,6 +39,11 @@ const routes = [
         path: "/ranking",
         name: "Ranking",
         component: Ranking,
+    },
+    {
+        path: "/setRepo",
+        name: "setRepo",
+        component: YAYTest,
     },
     {
         path: "/home",

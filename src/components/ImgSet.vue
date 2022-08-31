@@ -16,7 +16,7 @@
     <template #columns>
       <a-table-column title="Tag" data-index="address"></a-table-column>
       <a-table-column title="Optional">
-        <template #cell="{ record }">
+        <template #cell="{ record}">
           <a-button href="#open-modal">删除</a-button>
         </template>
       </a-table-column>

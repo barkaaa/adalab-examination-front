@@ -35,12 +35,6 @@
       </a-menu>
     </a-layout-sider>
     <a-layout style="padding: 0 24px;">
-      <a-breadcrumb style="padding: 20px">
-        <router-link to="/backpanel/missionManagement">
-          <a-breadcrumb-item>关卡设置</a-breadcrumb-item>
-        </router-link>
-        <a-breadcrumb-item v-if="$route.path!=='/backpanel/missionManagement'">编辑关卡</a-breadcrumb-item>
-      </a-breadcrumb>
       <router-view/>
     </a-layout>
   </a-layout>
