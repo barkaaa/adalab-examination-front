@@ -19,8 +19,10 @@
 
       <!-- <router-view v-if="fresh" /> -->
       <challenge ref="Challenge" :key="componentKey" />
+      <div v-if="cur > totalChallenge" style="text-align: center;font-size: 60px; padding: 100px"> 您通关了</div>
       <div class="submit_box">
         <a-button
+          v-if="cur <= totalChallenge"
           type="primary"
           @click="nextChallenge"
           :loading="loading"
@@ -120,7 +122,7 @@ export default {
         //调用子组件方法，收集信息
         // 直接调用成功方法
         const status =
-         await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
+          await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
         if (status == 200) {
           challengeNumAdd();
           btnSuccess();
