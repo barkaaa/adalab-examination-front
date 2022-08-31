@@ -54,7 +54,8 @@ export default {
       });
     },
     getCurUser() {
-      this.axios.get("/api/studentInfo/curUserID").then((res) => {
+      this.axios.get("/api/studentInfo/me").then((res) => {
+        this.curUser = res.data.data;
         console.log("curUsr=" + res.data.data);
       });
     },
