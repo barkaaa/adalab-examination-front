@@ -88,6 +88,7 @@ export default {
     };
 
     const nextChallenge = async () => {
+      
       // 首次闯关记录闯关时间
       if (flag) {
         await axios.get("/api/studentInfo/begin/" + userId.value);
@@ -101,6 +102,7 @@ export default {
           if(type.value == 0){
             challengeNumAdd();
           }
+
         }
         if (challenge.cur === totalChallenge.value + 1) {
           // 已通关，跳到通关页面
@@ -118,9 +120,10 @@ export default {
         return;
       }
 
-      // let type = 2;
+
+      let curType = obtainType();
       // 问卷调查：
-      if (type.value === 1) {
+      if (curType === 1) {
         //调用子组件方法，收集信息
         // 直接调用成功方法
         const status =
@@ -129,7 +132,7 @@ export default {
           challengeNumAdd();
           btnSuccess();
         }
-      } else if (type.value === 2) {
+      } else if (curType === 2) {
         testing();
         axios
           .get(`/api/episode/test/${cur.value}`)
@@ -148,8 +151,11 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
+      }else if(curType === 0){
+        this.btnSuccess();
       }
     };
+    
     const gotoChallenge = async (i) => {
       if (i <= userDoneNum.value) {
         challenge.cur = i;
