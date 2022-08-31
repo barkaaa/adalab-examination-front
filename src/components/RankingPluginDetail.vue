@@ -30,7 +30,8 @@
             <a-table-column title="测评结果">
               <template #cell="{ record }">
                 <!-- :status="[record.curEpisode<9 ? 'success':'error']" -->
-                <a-result status="success" style="width:1vw; " ></a-result>
+                <!-- <a-result status="success" style="width:1vw; " ></a-result> -->
+                <div :class="[record.curEpisode>record.episode ? 'success':'fail']"></div>
                 <!-- <a-button href="#open-modal">删除</a-button> -->
               </template>
             </a-table-column>
@@ -51,7 +52,7 @@
 <!-- 模态框组件 -->
 <a-modal v-model:visible="visible" @ok="handleOk" :hide-cancel="true" :closable="false">
           <template #title>{{ tData.name + "的详细信息" }}</template>
-          <a-descriptions style="margin-top: 20px" :data="list" :column="1" :align="align" :size="size">
+          <!-- <a-descriptions style="margin-top: 20px" :data="list" :column="1" :align="align" :size="size">
             <a-descriptions-item v-for="item of list" :label="item.label">
               <template #label>
                 <icon-font :type="item.cName" :size="20" style="vertical-align: middle">
@@ -60,7 +61,8 @@
               </template>
               <a-tag>{{ item.value }}</a-tag>
             </a-descriptions-item>
-          </a-descriptions>
+          </a-descriptions> -->
+          
         </a-modal>
 <!-- 模态框组件 -->
   
@@ -151,6 +153,9 @@
   <li><a href="#" @click="getNextPage">下一页»</a></li>
   </ul>
 
+
+  
+
 </template>
 
 <script>
@@ -169,16 +174,17 @@ export default {
     pageNum: Number,
     step:Number,
     fileSrc:Array,
-    allUsrFile:Array,
-
+    
   },
   data() {
     return {
       // arr1: {},
       // arr2: {},
-      page:0,
+      trueEpisodeNum:0,
+      page:1,
       totalPage:0,
       users:[],
+      allUsrFile:[{},{}],
       columns:[
         {
           title: '测评？果',
@@ -262,7 +268,7 @@ export default {
     getPage(){
       this.axios.get(`/api/studentInfo/getPagingRanking/${this.page}`)
       .then(res=>{
-        this.users = res.data;
+        this.users = res.data.data;
         //console.log(res.data[0].id);
       });
     },
@@ -270,7 +276,15 @@ export default {
       this.axios.get(`/api/studentInfo/studentCode/FilesTree`)
       .then(res=>{
         console.log(res.data);
-        //console.log(res.data[0].id);
+        this.allUsrFile=res.data;
+        console.log("所有提交的文件："+this.allUsrFile['佐々木玲奈']);
+      });
+    },
+    getCounts(){
+      this.axios.get('/api/episode/counts')
+      .then(res=>{
+          this.trueEpisodeNum= res.data.data;
+          console.log("实际关卡数："+this.trueEpisodeNum)
       });
     }
   },
@@ -284,8 +298,8 @@ export default {
   created(){
     this.getTotalPage();
     this.getPage();
-    // this.getAll();
-
+    this.getAll();
+    this.getCounts();
   },
   // setup() {
   //   const columns = [
@@ -355,7 +369,7 @@ export default {
       visible.value = false;
     }
     const list = [{
-      label: 'name',
+      label: 'status',
       value: "",
       cName: "icon-sort",
     }, {
@@ -600,4 +614,23 @@ ul.pagination li a:hover:not(.active) {background-color: #ddd;}
 a-result{
   width:5px;
 }
+/*  */
+.success{
+  background-color: #4CAF50;
+  width: 10px;
+  height: 10px;
+}
+.fail{
+  background-color: red;
+  width: 10px;
+  height: 10px;
+}
+.success-text{
+  display:inline
+}
+.fail-text{
+  display: none;
+}
+/*  */
+
 </style>
