@@ -126,7 +126,7 @@ export default {
 
       let curType = await obtainType();
       // 问卷调查：
-      if (curType.data === 1) {
+      if (curType === 1) {
         //调用子组件方法，收集信息
         // 直接调用成功方法
         const status =
