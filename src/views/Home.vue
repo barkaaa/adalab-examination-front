@@ -98,7 +98,9 @@ export default {
         //  刷新子组件
         if (challenge.cur <= totalChallenge.value) {
           challenge.cur++;
-          challengeNumAdd();
+          if(type.value == 0){
+            challengeNumAdd();
+          }
         }
         if (challenge.cur === totalChallenge.value + 1) {
           // 已通关，跳到通关页面
@@ -124,6 +126,7 @@ export default {
         const status =
             await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
         if (status == 200) {
+          challengeNumAdd();
           btnSuccess();
         }
       } else if (type.value === 2) {
@@ -135,6 +138,7 @@ export default {
             // 根据返回结果，分别调用
             // 成功
             if (res.data.status === 200) {
+              challengeNumAdd();
               btnSuccess();
             } else {
               // 失败
