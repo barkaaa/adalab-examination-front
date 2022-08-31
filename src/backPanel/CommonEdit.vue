@@ -278,9 +278,10 @@ export default defineComponent({
       let r = await axios.get("/api/questionnaire/getone", {
         params: { missionNum: selectMission },
       });
+      const rData = r.data.data;
       missions.missionNumber = selectMission;
 
-      for (let i = 0; i < r.data.length; i++) {
+      for (let i = 0; i < rData.length; i++) {
         missions.textContents.push({
           questionType: "",
           description: "",
@@ -288,13 +289,13 @@ export default defineComponent({
           isMultiple: "",
           options: [],
         });
-        missions.textContents[i].description = r.data[i].theme;
-        missions.textContents[i].isAdditional = r.data[i].isAddtional;
-        missions.textContents[i].isMultiple = r.data[i].isMultiple;
-        missions.textContents[i].options = r.data[i].options
+        missions.textContents[i].description = rData[i].theme;
+        missions.textContents[i].isAdditional = rData[i].isAddtional;
+        missions.textContents[i].isMultiple = rData[i].isMultiple;
+        missions.textContents[i].options = rData[i].options
           .split("?")
           .slice(0, -1);
-        const type = r.data[i].questionType;
+        const type = rData[i].questionType;
         if (type == 2) {
           missions.textContents[i].questionType = "选择";
         } else {

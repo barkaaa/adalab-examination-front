@@ -111,7 +111,7 @@ export default {
       let r = await axios.get("/api/questionnaire/getone", {
         params: { missionNum: this.cur },
       });
-      this.res = r.data;
+      this.res = r.data.data;
       this.initAnswer();
     },
     async getMd() {

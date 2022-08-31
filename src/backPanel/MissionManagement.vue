@@ -225,9 +225,9 @@ export default {
 
       if (type === 1) {
         await this.axios.delete(`/api/questionnaire/DeleteQuestionnaire/${id}`)
-        await this.axios.put(`/api/questionnaire/moveQuestionnaire/${id}`)
+        await this.axios.put(`/api/questionnaire/putQuestionnaire/${id}`)
       }
-      this.$message.success(res.data.data.message)
+      this.$message.success(res.data.message)
       await this.getData()
     }
     ,
