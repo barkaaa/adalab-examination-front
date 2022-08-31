@@ -27,11 +27,11 @@
       </div>
       <div class="submit_box">
         <a-button
-            v-if="cur <= totalChallenge"
-            type="primary"
-            @click="nextChallenge"
-            :loading="loading"
-            :style="bStyle"
+          v-if="cur <= totalChallenge"
+          type="primary"
+          @click="nextChallenge"
+          :loading="loading"
+          :style="bStyle"
         >
           <template #icon>
             <icon-double-right />
@@ -88,7 +88,6 @@ export default {
     };
 
     const nextChallenge = async () => {
-      
       // 首次闯关记录闯关时间
       if (flag) {
         await axios.get("/api/studentInfo/begin/" + userId.value);
@@ -97,21 +96,26 @@ export default {
       // 成功
       if (status.value === 1) {
         //  刷新子组件
+        let curType = await obtainType();
         if (challenge.cur <= totalChallenge.value) {
           challenge.cur++;
-          if(type.value == 0){
+
+          if (curType == 0) {
             challengeNumAdd();
           }
-
         }
         if (challenge.cur === totalChallenge.value + 1) {
           // 已通关，跳到通关页面
           await router.push("/success");
         }
+
         forceRerender();
         //  按键恢复
         btnReset();
 
+        if (curType == 0) {
+          btnSuccess();
+        }
         return;
       } else if (status.value === 2) {
         // 失败
@@ -120,14 +124,13 @@ export default {
         return;
       }
 
-
-      let curType = obtainType();
+      let curType = await obtainType();
       // 问卷调查：
-      if (curType === 1) {
+      if (curType.data === 1) {
         //调用子组件方法，收集信息
         // 直接调用成功方法
         const status =
-            await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
+          await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
         if (status == 200) {
           challengeNumAdd();
           btnSuccess();
@@ -151,11 +154,11 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
-      }else if(curType === 0){
+      } else if (curType === 0) {
         this.btnSuccess();
       }
     };
-    
+
     const gotoChallenge = async (i) => {
       if (i <= userDoneNum.value) {
         challenge.cur = i;
@@ -302,34 +305,32 @@ export default {
   display: flex;
   width: 100%;
 
-aside {
-  width: 25%;
-  background-color: #eee;
+  aside {
+    width: 25%;
+    background-color: #eee;
 
-.timer {
-  margin: 16% 7% 0 7%;
-  border-bottom: 1px solid #000;
-  padding-bottom: 12%;
-}
+    .timer {
+      margin: 16% 7% 0 7%;
+      border-bottom: 1px solid #000;
+      padding-bottom: 12%;
+    }
 
-.leaderboard {
-}
+    .leaderboard {
+    }
 
-.footer {
-}
+    .footer {
+    }
+  }
 
-}
+  main {
+    width: 75%;
+    margin: 8% 7% 0 7%;
 
-main {
-  width: 75%;
-  margin: 8% 7% 0 7%;
-
-.submit_box {
-  margin: 5% 0;
-  display: flex;
-  justify-content: center;
-}
-
-}
+    .submit_box {
+      margin: 5% 0;
+      display: flex;
+      justify-content: center;
+    }
+  }
 }
 </style>
