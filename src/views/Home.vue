@@ -77,10 +77,10 @@ export default {
       let res = await axios
           .get(`/api/studentInfo/getStudent/${userId.value}`)
 
-      user.value["name"] = res.data.name
-      user.value["avatar"] = res.data.avatar;
-      user.value['cDate'] = res.data.beginDate;
-      userDoneNum.value = res.data.episode;
+      user.value["name"] = res.data.data.name
+      user.value["avatar"] = res.data.data.avatar;
+      user.value['cDate'] = res.data.data.beginDate;
+      userDoneNum.value = res.data.data.episode;
       challenge.cur = userDoneNum.value + 1;
 
     };
@@ -117,7 +117,8 @@ export default {
           id: challenge.cur,
         },
       });
-      let type = res.data.type;
+
+      let type = res.data.data.type;
 
       // let type = 2;
       // 问卷调查：
@@ -135,7 +136,7 @@ export default {
               // markdown闯关：发起请求验证代码是否有误
               // 根据返回结果，分别调用
               // 成功
-              if (res.data.passed === true) {
+              if (res.data.data.passed === true) {
                 btnSuccess();
               } else {
                 // 失败
@@ -240,7 +241,7 @@ export default {
 
     async getData() {
       let res = await this.axios.get("/api/studentInfo/getStudent/1")
-      this.users = res.data;
+      this.users = res.data.data;
     },
     async getRanking() {
       let res = await this.axios.get("/api/studentInfo/getRanking")
@@ -249,7 +250,7 @@ export default {
 
     async getChallengeNum() {
       let res = await this.axios.get("/api/episode/get");
-      this.totalChallenge = res.data.length;
+      this.totalChallenge = res.data.data.length;
     },
 
     handle() {

@@ -4,12 +4,12 @@ import Login from "@/views/Login";
 import Ranking from "@/views/Ranking";
 import Student from "@/views/StudentLogin";
 import {createRouter, createWebHistory} from "vue-router";
-import RankingList from "./backPanel/RankingList.vue";
+import RankingKai from "./backPanel/RankingList.vue";
 import UserManagement from "@/backPanel/UserManagement";
 import CommonEdit from "@/backPanel/CommonEdit";
 import BackTemplate from "@/backPanel/BackTemplate";
 import image from "@/backPanel/imageManager";
-import MissionManagement from "@/backPanel/MissionManagement";
+import MissionManagement from "./backPanel/MissionManagement";
 import MarkdownEdit from "@/backPanel/MarkdownEdit";
 import Test from "@/components/episodeMaker"
 import Challenge from "@/views/Challenge";
@@ -53,13 +53,13 @@ const routes = [
     }, {
         path: "/backpanel",
         component: BackTemplate,
-        redirect: "/backpanel/RankingList",
+        redirect: "/backpanel/rankingkai",
         children: [{
-            path: "missionManagement", component: MissionManagement
+            path: "challengeSetting", component: MissionManagement
         },
             {
-                path: "cmedit",
-                name: "cmedit",
+                path: "mission",
+                name: "mission",
                 component: CommonEdit,
             }, {
                 name: "mdedit",
@@ -75,10 +75,10 @@ const routes = [
                 component: UserManagement,
             },
             {
-                path: "RankingList",
-                name: "RankingList",
-                component: RankingList,
-            },{
+                path: "rankingkai",
+                name: "rankingkai",
+                component: RankingKai,
+            }, {
                 path: "image",
                 name: "image",
                 component: image,
