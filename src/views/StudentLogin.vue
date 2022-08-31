@@ -10,7 +10,7 @@
     <span class="text" id="output">{{ obj.output }}</span>
     <br/>
     <br/>
-    <a href="https://github.com/login/oauth/authorize?client_id=d9f9e0e5413419ab273e&redirect_uri=http://localhost:8080/callback&scope=user&state=1">
+    <a href="https://github.com/login/oauth/authorize?client_id=d9f9e0e5413419ab273e&redirect_uri=http://localhost:9000/callback&scope=user&state=1">
     <img :src="require('../assets/github.svg')" alt="Login using Github" /></a>
   </div>
 </template>

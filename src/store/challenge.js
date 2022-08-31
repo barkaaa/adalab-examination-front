@@ -6,5 +6,5 @@ export const useChallengeStore = defineStore('challenge', {
         return {
             cur: 1
         }
-    }
+    },
 })
