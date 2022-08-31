@@ -156,7 +156,7 @@ export default {
       // 问卷
       if (type === 1) {
         this.$router.push(
-            {name: 'mission', params: {stage, type: "edit"}})
+            {name: 'cmedit', params: {stage, type: "edit"}})
       } else if (type === 2 || type === 0) {
         this.$router.push(
             {name: 'mdedit', params: {stage}})
