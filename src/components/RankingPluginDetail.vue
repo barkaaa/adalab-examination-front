@@ -276,9 +276,9 @@ export default {
     getAll(){
       this.axios.get(`/api/studentInfo/studentCode/FilesTree`)
       .then(res=>{
-        console.log(res.data.data);
+        console.log("获取到树状结构"+res.data.data);
         this.allUsrFile=res.data.data;
-        console.log("所有提交的文件："+this.allUsrFile['佐々木玲奈']);
+        console.log("所有提交的文件："+this.allUsrFile['佐々木玲奈']['step1']);
       });
     },
     getCounts(){
