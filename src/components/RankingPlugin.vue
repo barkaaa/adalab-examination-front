@@ -41,8 +41,21 @@ export default {
       // number: this.rankings[1].clear + "%",
       user: this.rankings,
       students: {},
+      trueEpisodeNum:0,
+      curUser:'',
     };
   },
+  methods:{
+    getCounts(){
+      this.axios.get('/api/episode/counts')
+      .then(res=>{
+          this.trueEpisodeNum= res.data.data;
+          console.log("实际关卡数："+this.trueEpisodeNum)
+      });
+    }
+  },created(){
+    this.getCounts();
+  }
   // mounted() {
   //   fetch("/api/student/getRanking", {
   //     method: "get",
