@@ -2,10 +2,8 @@
   <div class="box">
     <div class="top">
       <span class="username">{{ uName }}</span>
-
-      <pop-over></pop-over>
-
       <img :src="avatar" class="avatar" alt=""/>
+      <pop-over></pop-over>
     </div>
     <div class="bottom">
       <div class="countdown">
@@ -66,7 +64,6 @@ export default {
   justify-content: space-between;
   width: 100%;
   margin-bottom: 10%;
-  background: black;
   flex-grow: 1;
   overflow: auto;
 }

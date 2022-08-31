@@ -41,6 +41,8 @@
 
 <script>
 
+import {Message} from "@arco-design/web-vue";
+
 export default {
   // eslint-disable-next-line vue/multi-word-component-names
   name: "Login",
@@ -53,10 +55,14 @@ export default {
   //Custom style for main and input for make the page responsive:
   methods: {
     async login() {
-      let res = await this.axios.post("/api/manage/login", {
+      await this.axios.post("/api/manage/login", {
         username: this.username, password: this.password
-      }).then(() => {
-        this.$router.push({path: "/backpanel/RankingList"})
+      }).then((res) => {
+        if (res.data.status === 200) {
+          this.$router.push({path: "/backpanel/RankingList"});
+        } else {
+          Message.error(res.data.message);
+        }
       })
 
     }
@@ -66,12 +72,6 @@ export default {
     inputStyle: String,
   },
 
-  async created() {
-    let res = await fetch("api/login").then((res) => {
-      res.json()
-    });
-    console.log(res)
-  }
 }
 </script>
 
