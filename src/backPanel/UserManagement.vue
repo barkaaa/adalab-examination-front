@@ -54,7 +54,7 @@ export default {
     const handleClick = (name) => {
       visible.value = true;
       axios.post("/api/studentInfo/getDetail", {name}).then((res) => {
-        tData.value = res.data;
+        tData.value = res.data.data;
         list.map((item) => {
           item.value = tData.value[item.label];
         })
@@ -145,7 +145,8 @@ export default {
     fetch("/api/studentInfo/getRanking")
         .then((res) => res.json())
         .then((response) => {
-          this.tableData = response;
+          console.log(response);
+          this.tableData = response.data;
         });
   },
 };
