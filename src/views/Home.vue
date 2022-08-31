@@ -96,25 +96,26 @@ export default {
       // 成功
       if (status.value === 1) {
         //  刷新子组件
-        let curType = await obtainType();
-        if (challenge.cur <= totalChallenge.value) {
+        
+        if (challenge.cur < totalChallenge.value) {
           challenge.cur++;
-
-          if (curType == 0) {
+          let curType = await obtainType();
+          if (curType == 0 && userDoneNum.value + 2 == cur.value) {
             challengeNumAdd();
           }
         }
-        if (challenge.cur === totalChallenge.value + 1) {
+        if (challenge.cur === totalChallenge.value) {
           // 已通关，跳到通关页面
+          
           await router.push("/success");
         }
 
         forceRerender();
         //  按键恢复
-        btnReset();
-
-        if (curType == 0) {
-          btnSuccess();
+        
+        let curType = await obtainType();
+        if (curType != 0) {
+          btnReset();
         }
         return;
       } else if (status.value === 2) {
