@@ -109,7 +109,7 @@
       >
      
         <div
-          v-for="count in 13"
+          v-for="count in this.trueEpisodeNum"
           class="dot"
           :class="[count <= item.episode ? 'statusGreen' : 'statusNormal']"
           @click="getLocalPersonelInfo(item, count)"
