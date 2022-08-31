@@ -2,7 +2,7 @@
   <div class="main-box">
     <aside>
       <div class="timer">
-        <timer :uName="user.name" :avatar="user.avatar" :cDate="user.cDate"/>
+        <timer :uName="user.name" :avatar="user.avatar" :cDate="user.cDate" />
       </div>
       <RankingPlugin v-bind:rankings="rankings"></RankingPlugin>
       <div class="leaderboard"></div>
@@ -12,14 +12,19 @@
       <a-steps :current="cur" small>
         <a-step v-for="i in totalChallenge" @click="gotoChallenge(i)">
           <template #icon v-if="i <= userDoneNum">
-            <icon-check/>
+            <icon-check />
           </template>
         </a-step>
       </a-steps>
 
       <!-- <router-view v-if="fresh" /> -->
       <challenge ref="Challenge" :key="componentKey" />
-      <div v-if="cur > totalChallenge" style="text-align: center;font-size: 60px; padding: 100px"> 您通关了</div>
+      <div
+        v-if="cur > totalChallenge"
+        style="text-align: center; font-size: 60px; padding: 100px"
+      >
+        您通关了
+      </div>
       <div class="submit_box">
         <a-button
           v-if="cur <= totalChallenge"
@@ -29,7 +34,7 @@
           :style="bStyle"
         >
           <template #icon>
-            <icon-double-right/>
+            <icon-double-right />
           </template>
           {{ bVal }}
         </a-button>
@@ -42,12 +47,12 @@
 import Timer from "@/components/Timer";
 import Challenge from "./Challenge.vue";
 import RankingPlugin from "@/components/RankingPlugin.vue";
-import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
-import {useChallengeStore} from "../store/challenge";
-import {storeToRefs} from "pinia";
-import {getCookie} from "../utils/Utils";
-import {ref, getCurrentInstance, reactive} from "vue";
-import {useRouter} from "vue-router";
+import { IconDoubleRight } from "@arco-design/web-vue/es/icon";
+import { useChallengeStore } from "../store/challenge";
+import { storeToRefs } from "pinia";
+import { getCookie } from "../utils/Utils";
+import { ref, getCurrentInstance, reactive } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
   name: "Home",
@@ -58,14 +63,14 @@ export default {
     let user = ref({});
     let userDoneNum = ref();
     let currentInstance = getCurrentInstance();
-    let {axios} = currentInstance.appContext.config.globalProperties;
+    let { axios } = currentInstance.appContext.config.globalProperties;
     let router = useRouter();
     let bVal = ref("提交");
     // 控制第二次点击 1成功，2失败
     let status = ref(0);
     let loading = ref(false);
     const challenge = useChallengeStore();
-    let {cur} = storeToRefs(challenge);
+    let { cur } = storeToRefs(challenge);
     let totalChallenge = ref();
     let bStyle = reactive({
       "background-color": "#1a8fdd",
@@ -91,7 +96,10 @@ export default {
       // 成功
       if (status.value === 1) {
         //  刷新子组件
-        if (challenge.cur <= totalChallenge.value) challenge.cur++;
+        if (challenge.cur <= totalChallenge.value) {
+          challenge.cur++;
+          challengeNumAdd();
+        }
         if (challenge.cur === totalChallenge.value + 1) {
           // 已通关，跳到通关页面
           await router.push("/success");
@@ -99,6 +107,7 @@ export default {
         forceRerender();
         //  按键恢复
         btnReset();
+
         return;
       } else if (status.value === 2) {
         // 失败
@@ -109,16 +118,15 @@ export default {
 
       // let type = 2;
       // 问卷调查：
-      if (this.type === 1) {
+      if (type.value === 1) {
         //调用子组件方法，收集信息
         // 直接调用成功方法
         const status =
           await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
         if (status == 200) {
-          challengeNumAdd();
           btnSuccess();
         }
-      } else if (type === 2) {
+      } else if (type.value === 2) {
         testing();
         axios
           .get(`/api/episode/test/${cur.value}`)
@@ -136,9 +144,7 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
-        challengeNumAdd();
       }
-
     };
     const gotoChallenge = async (i) => {
       if (i <= userDoneNum.value) {
@@ -185,10 +191,10 @@ export default {
 
     const challengeNumAdd = () => {
       axios
-          .get(`/api/studentInfo/setDoneMission/${userId.value}`)
-          .then((res) => {
-            console.log(res);
-          });
+        .get(`/api/studentInfo/setDoneMission/${userId.value}`)
+        .then((res) => {
+          console.log(res);
+        });
       userDoneNum.value += 1;
     };
 
@@ -197,10 +203,10 @@ export default {
       const res = await axios.get("/api/episode/getOne", {
         params: {
           id: challenge.cur,
-        }
+        },
       });
       return res.data.data.type;
-    }
+    };
     return {
       loading,
       challenge,
@@ -228,10 +234,11 @@ export default {
     };
   },
   async created() {
+    await this.getUserId();
     await this.getData();
     await this.getRanking();
     await this.getChallengeNum();
-    await this.getUserId();
+
     await this.getUserDone();
 
     this.type = await this.obtainType();
@@ -242,11 +249,13 @@ export default {
   methods: {
     async getUserId() {
       let res = await this.axios.get("/api/studentInfo/me");
-      this.userId = res.data;
+      this.userId = res.data.data;
     },
 
     async getData() {
-      let res = await this.axios.get("/api/studentInfo/getStudent/" + this.userId)
+      let res = await this.axios.get(
+        "/api/studentInfo/getStudent/" + this.userId
+      );
       this.users = res.data.data;
     },
     async getRanking() {
