@@ -9,7 +9,7 @@ import UserManagement from "@/backPanel/UserManagement";
 import CommonEdit from "@/backPanel/CommonEdit";
 import BackTemplate from "@/backPanel/BackTemplate";
 import image from "@/backPanel/imageManager";
-import MissionManagement from "@/backPanel/MissionManagement";
+import MissionManagement from "./backPanel/MissionManagement";
 import MarkdownEdit from "@/backPanel/MarkdownEdit";
 import Test from "@/components/episodeMaker"
 import Challenge from "@/views/Challenge";
@@ -53,7 +53,7 @@ const routes = [
     }, {
         path: "/backpanel",
         component: BackTemplate,
-        redirect: "/backpanel/RankingList",
+        redirect: "/backpanel/rankingList",
         children: [{
             path: "missionManagement", component: MissionManagement
         },
@@ -75,10 +75,10 @@ const routes = [
                 component: UserManagement,
             },
             {
-                path: "RankingList",
-                name: "RankingList",
+                path: "rankingList",
+                name: "rankingList",
                 component: RankingList,
-            },{
+            }, {
                 path: "image",
                 name: "image",
                 component: image,
