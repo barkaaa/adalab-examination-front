@@ -55,7 +55,7 @@ const routes = [
         component: BackTemplate,
         redirect: "/backpanel/rankingkai",
         children: [{
-            path: "challengeSetting", component: MissionManagement
+            path: "missionManagement", component: MissionManagement
         },
             {
                 path: "mission",
