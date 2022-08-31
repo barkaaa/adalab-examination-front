@@ -18,15 +18,15 @@
       </a-steps>
 
       <!-- <router-view v-if="fresh" /> -->
-      <challenge ref="Challenge" :key="componentKey" />
+      <challenge ref="Challenge" :key="componentKey"/>
       <div v-if="cur > totalChallenge" style="text-align: center;font-size: 60px; padding: 100px"> 您通关了</div>
       <div class="submit_box">
         <a-button
-          v-if="cur <= totalChallenge"
-          type="primary"
-          @click="nextChallenge"
-          :loading="loading"
-          :style="bStyle"
+            v-if="cur <= totalChallenge"
+            type="primary"
+            @click="nextChallenge"
+            :loading="loading"
+            :style="bStyle"
         >
           <template #icon>
             <icon-double-right/>
@@ -85,7 +85,7 @@ export default {
     const nextChallenge = async () => {
       // 首次闯关记录闯关时间
       if (flag) {
-        axios.get("/api/studentInfo/begin/" + userId.value);
+        await axios.get("/api/studentInfo/begin/" + userId.value);
         flag = false;
       }
       // 成功
@@ -113,7 +113,7 @@ export default {
         //调用子组件方法，收集信息
         // 直接调用成功方法
         const status =
-          await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
+            await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
         if (status == 200) {
           challengeNumAdd();
           btnSuccess();
@@ -121,21 +121,21 @@ export default {
       } else if (type === 2) {
         testing();
         axios
-          .get(`/api/episode/test/${cur.value}`)
-          .then((res) => {
-            // markdown闯关：发起请求验证代码是否有误
-            // 根据返回结果，分别调用
-            // 成功
-            if (res.data.data.passed === true) {
-              btnSuccess();
-            } else {
-              // 失败
-              btnFail();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+            .get(`/api/episode/test/${cur.value}`)
+            .then((res) => {
+              // markdown闯关：发起请求验证代码是否有误
+              // 根据返回结果，分别调用
+              // 成功
+              if (res.data.data.passed === true) {
+                btnSuccess();
+              } else {
+                // 失败
+                btnFail();
+              }
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
         challengeNumAdd();
       }
 
@@ -228,10 +228,10 @@ export default {
     };
   },
   async created() {
+    await this.getUserId();
     await this.getData();
     await this.getRanking();
     await this.getChallengeNum();
-    await this.getUserId();
     await this.getUserDone();
 
     this.type = await this.obtainType();
@@ -242,7 +242,7 @@ export default {
   methods: {
     async getUserId() {
       let res = await this.axios.get("/api/studentInfo/me");
-      this.userId = res.data;
+      this.userId = res.data.data;
     },
 
     async getData() {
@@ -283,32 +283,34 @@ export default {
   display: flex;
   width: 100%;
 
-  aside {
-    width: 25%;
-    background-color: #eee;
+aside {
+  width: 25%;
+  background-color: #eee;
 
-    .timer {
-      margin: 16% 7% 0 7%;
-      border-bottom: 1px solid #000;
-      padding-bottom: 12%;
-    }
+.timer {
+  margin: 16% 7% 0 7%;
+  border-bottom: 1px solid #000;
+  padding-bottom: 12%;
+}
 
-    .leaderboard {
-    }
+.leaderboard {
+}
 
-    .footer {
-    }
-  }
+.footer {
+}
 
-  main {
-    width: 75%;
-    margin: 8% 7% 0 7%;
+}
 
-    .submit_box {
-      margin: 5% 0;
-      display: flex;
-      justify-content: center;
-    }
-  }
+main {
+  width: 75%;
+  margin: 8% 7% 0 7%;
+
+.submit_box {
+  margin: 5% 0;
+  display: flex;
+  justify-content: center;
+}
+
+}
 }
 </style>

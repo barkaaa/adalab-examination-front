@@ -2,12 +2,12 @@
   <h1 id="rankingList">排行榜</h1>
   <div class="list">
     <div class="outer-container" v-for="(item, i) in rankings">
-    <p class="name">{{ item.name }}</p>
+      <p class="name">{{ item.name }}</p>
       <div class="container">
         <div
-          class="progress"
-          v-bind:style="{ width: (item.episode / trueEpisodeNum) * 100 + '%' }"
-          :class="[
+            class="progress"
+            v-bind:style="{ width: (item.episode / trueEpisodeNum) * 100 + '%' }"
+            :class="[
             item.episode / trueEpisodeNum < 0.3
               ? 'status1'
               : item.episode / trueEpisodeNum < 0.4
@@ -15,16 +15,15 @@
               : 'status3',
           ]"
         >
-           <p class="proportion">
-          {{ item.episode + "/"+trueEpisodeNum }}
-        </p>
+          <p class="proportion">
+            {{ item.episode + "/" + trueEpisodeNum }}
+          </p>
         </div>
       </div>
-      
-     
-       
+
+
     </div>
- 
+
   </div>
   <br>
 </template>
@@ -41,25 +40,26 @@ export default {
       // number: this.rankings[1].clear + "%",
       user: this.rankings,
       students: {},
-      trueEpisodeNum:0,
-      curUser:'',
+      trueEpisodeNum: 0,
+      curUser: '',
     };
   },
-  methods:{
-    getCounts(){
+  methods: {
+    getCounts() {
       this.axios.get('/api/episode/counts')
-      .then(res=>{
-          this.trueEpisodeNum= res.data.data;
-          console.log("实际关卡数："+this.trueEpisodeNum)
-      });
+          .then(res => {
+            this.trueEpisodeNum = res.data.data;
+            console.log("实际关卡数：" + this.trueEpisodeNum)
+          });
     },
-    getCurUser(){
-      this.axios.get('/api/studentInfo/curUserID')
-      .then(res=>{
-        console.log('curUsr='+res.data.data);
-      });
+    getCurUser() {
+      this.axios.get('/api/studentInfo/me').then(
+          (res) => {
+            this.curUser = res.data.data;
+          }
+      );
     }
-  },created(){
+  }, created() {
     this.getCounts();
     this.getCurUser();
   }
@@ -81,15 +81,19 @@ export default {
 html {
   scrollbar-width: none;
 }
+
 a {
   text-decoration: none;
 }
+
 * {
   box-sizing: border-box;
 }
+
 #rankingList {
   text-align: center;
 }
+
 /* template{
   text-align: center;
 } */
@@ -112,17 +116,20 @@ a {
   border-radius: 15px;
   height: 15px;
 }
+
 .progress p {
   text-align: center;
   margin: 0px;
   padding: 0px;
 }
+
 .list {
   overflow: scroll;
   overflow-x: hidden;
   margin: 1vw;
   height: 63vh;
 }
+
 .list::-webkit-scrollbar {
   display: none;
 }
@@ -146,11 +153,13 @@ a {
   font-size: 4px;
   height: 15px;
 }
-.proportion{
+
+.proportion {
   font-size: 4px;
 }
-.outer-container{
-  
+
+.outer-container {
+
 
 }
 
@@ -162,6 +171,7 @@ a {
 .status2 {
   background-color: #2196f3;
 }
+
 .status3 {
   /* background-color: #0f0; */
   background: linear-gradient(90deg, #0f0, #0ff);
