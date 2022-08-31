@@ -224,9 +224,9 @@ export default defineComponent({
     addOneQuestion() {
       this.$router.push("test1");
     },
-    saveMission() {
+    async saveMission() {
       if (this.routeType == "add") {
-        this.axios
+        await this.axios
           .post("/api/episode/createEp", this.episodeAdd)
           .then((res) => {
             console.log(res.data);
@@ -235,11 +235,11 @@ export default defineComponent({
             console.log(error);
           });
       } else {
-        this.axios.delete(
+        await this.axios.delete(
           `/api/questionnaire/DeleteQuestionnaire/${this.missionNum}`
         );
       }
-      this.axios
+      await this.axios
         .put("/api/questionnaire/addorupdate", this.missions)
         .then((res) => {
           console.log(res.data);

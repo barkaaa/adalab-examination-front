@@ -62,6 +62,7 @@ import { storeToRefs } from "pinia";
 import { ref, onBeforeMount, getCurrentInstance, reactive } from "vue";
 
 export default {
+  
   setup() {
     let answer = reactive([]);
     const challenge = useChallengeStore();
@@ -106,7 +107,7 @@ export default {
     uploadStudentAnswer() {
       let id = parseInt(getCookie('id'));
       this.axios
-        .put("", this.answer, this.cur, id)
+        .put("/api/reply/putReply", this.answer, this.cur, id)
         .then((res) => {
           console.log(res.data);
         })
@@ -118,6 +119,7 @@ export default {
   async mounted() {
     let res = await this.axios.get("/api/episode/getOne", {
       params: { id: this.cur },
+      
     });
     let url = res.data.markdownUrl;
     let md = (await this.axios.get(url)).data;
