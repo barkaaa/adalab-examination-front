@@ -134,7 +134,7 @@ export default {
             // markdown闯关：发起请求验证代码是否有误
             // 根据返回结果，分别调用
             // 成功
-            if (res.data.data.passed === true) {
+            if (res.data.status === 200) {
               btnSuccess();
             } else {
               // 失败
