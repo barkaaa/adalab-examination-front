@@ -27,11 +27,11 @@
       </div>
       <div class="submit_box">
         <a-button
-          v-if="cur <= totalChallenge"
-          type="primary"
-          @click="nextChallenge"
-          :loading="loading"
-          :style="bStyle"
+            v-if="cur <= totalChallenge"
+            type="primary"
+            @click="nextChallenge"
+            :loading="loading"
+            :style="bStyle"
         >
           <template #icon>
             <icon-double-right />
@@ -90,7 +90,7 @@ export default {
     const nextChallenge = async () => {
       // 首次闯关记录闯关时间
       if (flag) {
-        axios.get("/api/studentInfo/begin/" + userId.value);
+        await axios.get("/api/studentInfo/begin/" + userId.value);
         flag = false;
       }
       // 成功
@@ -122,7 +122,7 @@ export default {
         //调用子组件方法，收集信息
         // 直接调用成功方法
         const status =
-          await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
+            await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
         if (status == 200) {
           btnSuccess();
         }
@@ -292,32 +292,34 @@ export default {
   display: flex;
   width: 100%;
 
-  aside {
-    width: 25%;
-    background-color: #eee;
+aside {
+  width: 25%;
+  background-color: #eee;
 
-    .timer {
-      margin: 16% 7% 0 7%;
-      border-bottom: 1px solid #000;
-      padding-bottom: 12%;
-    }
+.timer {
+  margin: 16% 7% 0 7%;
+  border-bottom: 1px solid #000;
+  padding-bottom: 12%;
+}
 
-    .leaderboard {
-    }
+.leaderboard {
+}
 
-    .footer {
-    }
-  }
+.footer {
+}
 
-  main {
-    width: 75%;
-    margin: 8% 7% 0 7%;
+}
 
-    .submit_box {
-      margin: 5% 0;
-      display: flex;
-      justify-content: center;
-    }
-  }
+main {
+  width: 75%;
+  margin: 8% 7% 0 7%;
+
+.submit_box {
+  margin: 5% 0;
+  display: flex;
+  justify-content: center;
+}
+
+}
 }
 </style>

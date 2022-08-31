@@ -3,6 +3,7 @@
     <div class="top">
       <span class="username">{{ uName }}</span>
       <img :src="avatar" class="avatar" alt=""/>
+      <pop-over></pop-over>
     </div>
     <div class="bottom">
       <div class="countdown">
@@ -22,8 +23,10 @@
 <script>
 import {ref} from "vue";
 import {Message} from "@arco-design/web-vue";
+import PopOver from "@/components/popOver";
 
 export default {
+  components: {PopOver},
   props: [
     'uName', 'avatar', 'cDate'
   ],
@@ -57,9 +60,12 @@ export default {
 
 .top {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   width: 100%;
   margin-bottom: 10%;
+  flex-grow: 1;
+  overflow: auto;
 }
 
 .username {
@@ -70,6 +76,9 @@ export default {
   width: 10%
 }
 
+.repo {
+
+}
 
 .bottom {
   display: flex;

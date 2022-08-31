@@ -24,7 +24,7 @@
       <div>
         
         <VueTable></VueTable>
-        <!--  -->
+        <!-- 提交表 -->
         <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table">
           <template #columns>
             <a-table-column title="测评结果">
@@ -43,9 +43,11 @@
           </template>
         </a-table>
        
-        <!--  -->
-        <!-- {{ arr1 }}
-        {{ arr2 }} -->
+
+        <!-- 提交表  -->
+      <!-- 文件表 -->
+      <p>{{this.file}}</p>
+      <!-- 文件包 -->
       </div>
     </div>
   </div>
@@ -53,7 +55,7 @@
 <!-- 模态框组件 -->
 <a-modal v-model:visible="visible" @ok="handleOk" :hide-cancel="true" :closable="false">
           <template #title>{{ tData.name + "的详细信息" }}</template>
-          <!-- <a-descriptions style="margin-top: 20px" :data="list" :column="1" :align="align" :size="size">
+          <a-descriptions style="margin-top: 20px" :data="list" :column="1" :align="align" :size="size">
             <a-descriptions-item v-for="item of list" :label="item.label">
               <template #label>
                 <icon-font :type="item.cName" :size="20" style="vertical-align: middle">
@@ -62,7 +64,7 @@
               </template>
               <a-tag>{{ item.value }}</a-tag>
             </a-descriptions-item>
-          </a-descriptions> -->
+          </a-descriptions>
           
         </a-modal>
 <!-- 模态框组件 -->
@@ -105,14 +107,16 @@
           align-items: center;
         "
       >
+     
         <div
           v-for="count in 13"
           class="dot"
           :class="[count <= item.episode ? 'statusGreen' : 'statusNormal']"
-          @click="getPersonelInfo(item, count)"
+          @click="getLocalPersonelInfo(item, count)"
         >
-          <p class="number">{{ count }}</p>
+          <a href="#open-modal" ><p class="number">{{ count }}</p></a>
         </div>
+      
       </div>
       <div
         class="btn"
@@ -167,6 +171,7 @@ import {IconBarChart, IconPen, IconRobot, IconUser} from "@arco-design/web-vue/e
 import {getCurrentInstance, ref} from "vue";
 import {Icon} from '@arco-design/web-vue';
 import FilePlugin from "./FilePlugin.vue";
+import { useRoute } from "vue-router";
 const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3611034_pmqkuts7v7b.js'});
 export default {
   name: "RankingPluginDetail",
@@ -181,6 +186,7 @@ export default {
     return {
       // arr1: {},
       // arr2: {},
+      file:[],
       trueEpisodeNum:0,
       page:1,
       totalPage:0,
@@ -232,6 +238,16 @@ export default {
           console.log(res.data.data);
           this.arr2 = res.data.data;
         });
+    },
+    getLocalPersonelInfo(user, level) {
+      if(this.allUsrFile[user.name]!==undefined){
+        if(this.allUsrFile[user.name]["step"+level]!==undefined){
+          this.file = this.allUsrFile[user.name]["step"+level];
+        console.log("imanoName:"+user.name+"imanoName:"+"step"+level)
+        }
+       
+      }
+      
     },
     onClickMenuItem(key) {
       this.$router.push(key);

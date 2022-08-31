@@ -75,7 +75,7 @@ export default {
           Message.success('上传成功!');
           setTimeout(function (path) {
             that.$router.push(path);
-          }, 1000, "cmedit");
+          }, 1000, "missionManagement");
         }
       })
 
