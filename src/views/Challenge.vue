@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <div > 
+    <div>
       <div class="problem_box" v-for="(item, index) in res">
         <h3>{{ item.theme }}</h3>
 
@@ -126,17 +126,14 @@ export default {
     sleepFun(time) {
       return new Promise((resolve) => setTimeout(resolve, time));
     },
-    uploadStudentAnswer() {
+    async uploadStudentAnswer() {
       let id = parseInt(getCookie("id"));
-      this.axios
-        .put("/api/reply/putReply", {
-          list: this.answer,
-          currentMission: this.cur,
-          currentStudent: id,
-        })
-        .then((res) => {
-          return res.status;
-        });
+      let res = await this.axios.put("/api/reply/putReply", {
+        list: this.answer,
+        currentMission: this.cur,
+        currentStudent: id,
+      });
+      return res.status;
     },
   },
 };

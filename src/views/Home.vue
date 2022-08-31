@@ -70,15 +70,13 @@ export default {
     let componentKey = ref(0);
 
     const getUserDone = async () => {
-      let res = await axios
-          .get(`/api/studentInfo/getStudent/${userId.value}`)
+      let res = await axios.get(`/api/studentInfo/getStudent/${userId.value}`);
 
-      user.value["name"] = res.data.data.name
+      user.value["name"] = res.data.data.name;
       user.value["avatar"] = res.data.data.avatar;
-      user.value['cDate'] = res.data.data.beginDate;
+      user.value["cDate"] = res.data.data.beginDate;
       userDoneNum.value = res.data.data.episode;
       challenge.cur = userDoneNum.value + 1;
-
     };
 
     const nextChallenge = async () => {
@@ -121,32 +119,30 @@ export default {
       if (type === 1) {
         //调用子组件方法，收集信息
         // 直接调用成功方法
-        await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer().then(
-          (res) => {
-            if (res == 200) {
-              challengeNumAdd();
-              btnSuccess();
-            }
-          }
-        );
+        const status =
+         await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
+        if (status == 200) {
+          challengeNumAdd();
+          btnSuccess();
+        }
       } else if (type === 2) {
         testing();
         axios
-            .get(`/api/episode/test/${cur.value}`)
-            .then((res) => {
-              // markdown闯关：发起请求验证代码是否有误
-              // 根据返回结果，分别调用
-              // 成功
-              if (res.data.data.passed === true) {
-                btnSuccess();
-              } else {
-                // 失败
-                btnFail();
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
+          .get(`/api/episode/test/${cur.value}`)
+          .then((res) => {
+            // markdown闯关：发起请求验证代码是否有误
+            // 根据返回结果，分别调用
+            // 成功
+            if (res.data.data.passed === true) {
+              btnSuccess();
+            } else {
+              // 失败
+              btnFail();
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
         challengeNumAdd();
       }
     };
@@ -241,11 +237,11 @@ export default {
     },
 
     async getData() {
-      let res = await this.axios.get("/api/studentInfo/getStudent/1")
+      let res = await this.axios.get("/api/studentInfo/getStudent/1");
       this.users = res.data.data;
     },
     async getRanking() {
-      let res = await this.axios.get("/api/studentInfo/getRanking")
+      let res = await this.axios.get("/api/studentInfo/getRanking");
       this.rankings = res.data.data;
     },
 
