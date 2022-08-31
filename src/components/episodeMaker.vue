@@ -5,7 +5,7 @@
       <a-input :style="{width:'320px'}" type="text" v-model="timeOut"/>
       <a-divider orientation="center">选择镜像</a-divider>
       <select v-model="img">
-        <option v-for="image in images" :key="image.imgName" :value="image.imgName">
+        <option v-for="image in images" :key="image.imgName" :value="image.imgName + ':' + image.imgVersion">
           {{ image.imgName + ":" + image.imgVersion }}
         </option>
       </select>
@@ -44,6 +44,7 @@ export default {
 
   },
   methods: {
+
     getFile(event) {
       this.files = event.currentTarget.files;
     },
