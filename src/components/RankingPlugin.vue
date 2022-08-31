@@ -62,7 +62,7 @@ export default {
     getMe(){
       // var x = document.querySelector('.test');
       var x = document.getElementById(this.curUser);
-      var name = 
+       
       x.innerHTML='You：'+x.innerHTML;
       // var i;
 			// 	for (i = 0; i < x.length; i++) {
