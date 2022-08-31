@@ -51,9 +51,9 @@
 
       </a-table>
     </a-layout>
-    <a-modal v-model:visible="visible" title="添加关卡" @cancel="handleCancel" @ok="handleOk">
-      <a-form>
-        <a-form-item field="name" label="题号">
+    <a-modal v-model:visible="visible" title="添加关卡" @cancel="handleCancel" @ok="handleOk" @close="handleClose">
+      <a-form ref="form" >
+        <a-form-item field="name" label="类型">
           <a-select v-model="type" placeholder="请选择关卡类型">
             <a-option>0</a-option>
             <a-option>2</a-option>
@@ -108,7 +108,10 @@ export default {
       showCheckedAll: true,
       onlyCurrent: false,
     });
-    const pagination = {pageSize: 5}
+
+
+    const
+        pagination = {pageSize: 10}
     const columns = [
       {
         title: 'Stage',
@@ -152,11 +155,15 @@ export default {
     cancelDelete() {
       this.$message.info("您取消了删除");
     },
+    handleClose() {
+      console.log(this.$refs.form)
+      this.$refs.form.resetFields();
+    },
     edit(stage, type) {
       // 问卷
       if (type === 1) {
         this.$router.push(
-            {name: 'mission', params: {stage, type: "edit"}})
+            {name: 'cmedit', params: {stage, type: "edit"}})
       } else if (type === 2 || type === 0) {
         this.$router.push(
             {name: 'mdedit', params: {stage}})
@@ -172,7 +179,7 @@ export default {
       })
 
       // console.log(this.$message.)
-      this.$message.success(res.data.data.message)
+      this.$message.success(res.data.message)
       this.visible = false;
       await this.getData();
 
@@ -227,7 +234,7 @@ export default {
         await this.axios.delete(`/api/questionnaire/DeleteQuestionnaire/${id}`)
         await this.axios.put(`/api/questionnaire/moveQuestionnaire/${id}`)
       }
-      this.$message.success(res.data.data.message)
+      this.$message.success(res.data.message)
       await this.getData()
     }
     ,

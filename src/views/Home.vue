@@ -2,7 +2,7 @@
   <div class="main-box">
     <aside>
       <div class="timer">
-        <timer :uName="user.name" :avatar="user.avatar" :cDate="user.cDate" />
+        <timer :uName="user.name" :avatar="user.avatar" :cDate="user.cDate"/>
       </div>
       <RankingPlugin v-bind:rankings="rankings"></RankingPlugin>
       <div class="leaderboard"></div>
@@ -12,22 +12,22 @@
       <a-steps :current="cur" small>
         <a-step v-for="i in totalChallenge" @click="gotoChallenge(i)">
           <template #icon v-if="i <= userDoneNum">
-            <icon-check />
+            <icon-check/>
           </template>
         </a-step>
       </a-steps>
 
       <!-- <router-view v-if="fresh" /> -->
-      <challenge ref="Challenge" :key="componentKey" />
+      <challenge ref="Challenge" :key="componentKey"/>
       <div class="submit_box">
         <a-button
-          type="primary"
-          @click="nextChallenge"
-          :loading="loading"
-          :style="bStyle"
+            type="primary"
+            @click="nextChallenge"
+            :loading="loading"
+            :style="bStyle"
         >
           <template #icon>
-            <icon-double-right />
+            <icon-double-right/>
           </template>
           {{ bVal }}
         </a-button>
@@ -40,29 +40,30 @@
 import Timer from "@/components/Timer";
 import Challenge from "./Challenge.vue";
 import RankingPlugin from "@/components/RankingPlugin.vue";
-import { IconDoubleRight } from "@arco-design/web-vue/es/icon";
-import { useChallengeStore } from "../store/challenge";
-import { storeToRefs } from "pinia";
-import { getCookie } from "../utils/Utils";
-import { ref, getCurrentInstance, reactive } from "vue";
-import { useRouter } from "vue-router";
+import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
+import {useChallengeStore} from "../store/challenge";
+import {storeToRefs} from "pinia";
+import {getCookie} from "../utils/Utils";
+import {ref, getCurrentInstance, reactive} from "vue";
+import {useRouter} from "vue-router";
 
 export default {
   name: "Home",
   setup() {
+    let type = ref();
     const userId = ref();
     let flag = true;
     let user = ref({});
     let userDoneNum = ref();
     let currentInstance = getCurrentInstance();
-    let { axios } = currentInstance.appContext.config.globalProperties;
+    let {axios} = currentInstance.appContext.config.globalProperties;
     let router = useRouter();
     let bVal = ref("提交");
     // 控制第二次点击 1成功，2失败
     let status = ref(0);
     let loading = ref(false);
     const challenge = useChallengeStore();
-    let { cur } = storeToRefs(challenge);
+    let {cur} = storeToRefs(challenge);
     let totalChallenge = ref();
     let bStyle = reactive({
       "background-color": "#1a8fdd",
@@ -106,30 +107,20 @@ export default {
         return;
       }
 
-      // 获取题目类型
-
-      const res = await axios.get("/api/episode/getOne", {
-        params: {
-          id: challenge.cur,
-        },
-      });
-
-      let type = res.data.data.type;
-
       // let type = 2;
       // 问卷调查：
-      if (type === 1) {
+      if (this.type === 1) {
         //调用子组件方法，收集信息
         // 直接调用成功方法
         await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer().then(
-          (res) => {
-            if (res == 200) {
-              challengeNumAdd();
-              btnSuccess();
+            (res) => {
+              if (res == 200) {
+                challengeNumAdd();
+                btnSuccess();
+              }
             }
-          }
         );
-      } else if (type === 2) {
+      } else if (this.type === 2) {
         testing();
         axios
             .get(`/api/episode/test/${cur.value}`)
@@ -149,6 +140,7 @@ export default {
             });
         challengeNumAdd();
       }
+
     };
     const gotoChallenge = async (i) => {
       if (i <= userDoneNum.value) {
@@ -195,18 +187,28 @@ export default {
 
     const challengeNumAdd = () => {
       axios
-        .get(`/api/studentInfo/setDoneMission/${userId.value}`)
-        .then((res) => {
-          console.log(res);
-        });
+          .get(`/api/studentInfo/setDoneMission/${userId.value}`)
+          .then((res) => {
+            console.log(res);
+          });
       userDoneNum.value += 1;
     };
 
+    const obtainType = async () => {
+      // 获取题目类型
+      const res = await axios.get("/api/episode/getOne", {
+        params: {
+          id: challenge.cur,
+        }
+      });
+      return res.data.data.type;
+    }
     return {
       loading,
       challenge,
       cur,
       flag,
+      type,
       getUserDone,
       nextChallenge,
       gotoChallenge,
@@ -216,6 +218,7 @@ export default {
       btnFail,
       btnSuccess,
       btnReset,
+      obtainType,
       bVal,
       user,
       bStyle,
@@ -230,18 +233,22 @@ export default {
     await this.getData();
     await this.getRanking();
     await this.getChallengeNum();
-    this.getUserId();
-    console.log(this.userId);
+    await this.getUserId();
     await this.getUserDone();
+
+    this.type = await this.obtainType();
+    if (this.type === 0) {
+      this.btnSuccess();
+    }
   },
   methods: {
-    getUserId() {
-      this.userId = getCookie("id");
-      this.userId = 1;
+    async getUserId() {
+      let res = await this.axios.get("/api/studentInfo/me");
+      this.userId = res.data;
     },
 
     async getData() {
-      let res = await this.axios.get("/api/studentInfo/getStudent/1")
+      let res = await this.axios.get("/api/studentInfo/getStudent/" + this.userId)
       this.users = res.data.data;
     },
     async getRanking() {

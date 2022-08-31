@@ -32,7 +32,7 @@ export default {
       let r = await this.axios.patch("/api/episode/updateChallengeInfo", {
         id, markdownUrl
       })
-      this.$message.success(r.data.data.message);
+      this.$message.success(r.data.message);
       this.$router.push("/backpanel/missionManagement")
     },
 
