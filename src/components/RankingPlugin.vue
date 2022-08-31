@@ -5,7 +5,7 @@
   <h1 id="rankingList">排行榜</h1>
   <div class="list">
     <div class="outer-container" v-for="(item, i) in rankings">
-      <p class="name" :class="me">{{ item.name }}</p>
+      <p class="name" :class="me" :id="[item.id]">{{ item.name }}</p>
       <div class="container">
         <div
           class="progress"
@@ -61,17 +61,19 @@ export default {
     },
     getMe(){
       // var x = document.querySelector('.test');
-      var x = document.getElementsByClassName('name');
-      var i;
-				for (i = 0; i < x.length; i++) {
-					// x[i].style.minWidth = "80px"
+      var x = document.getElementById(this.curUser);
+      var name = 
+      x.innerHTML='You：'+x.innerHTML;
+      // var i;
+			// 	for (i = 0; i < x.length; i++) {
+			// 		// x[i].style.minWidth = "80px"
           
-          if(x[i].innerHTML===this.curUser){
-            x[i].innerHTML='You：'+this.curUser;
-            x[i].style.color = 'orange';
-          }
+      //     if(x[i].innerHTML===this.curUser){
+      //       x[i].innerHTML='You：'+this.curUser;
+      //       x[i].style.color = 'orange';
+      //     }
           
-				}
+			// 	}
     }
   },
   created() {
@@ -96,6 +98,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  *::webkit
 html {
   scrollbar-width: none;
 }
@@ -160,11 +163,11 @@ a {
 } */
 .name {
   width: 100px;
-  font-size: 4px;
-  height: 15px;
+  font-size: 16px;
+  height: 16px;
 }
 .proportion {
-  font-size: 4px;
+  font-size: 16px;
 }
 .outer-container {
 }
