@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import {Message} from '@arco-design/web-vue';
+
 export default {
   name: "upLoadDokcerModel",
   data() {
@@ -48,6 +50,7 @@ export default {
 
     submit(event) {
       event.preventDefault();
+      let that = this;
       let formData = new FormData();
       let ep = {
         id: this.$route.params.stage,
@@ -67,23 +70,30 @@ export default {
       });
 
 
-      this.axios.patch('/api/episode/update', formData, config)
-      //todo
+      this.axios.patch('/api/episode/update', formData, config).then((res) => {
+        if (res.data.status === 200) {
+          Message.success('上传成功!');
+          setTimeout(function (path) {
+            that.$router.push(path);
+          }, 1000, "test1");
+        }
+      })
+
 
     },
     getImg() {
       this.axios.get("/api/episode/images")
           .then(res => {
-            this.images = res.data;
+            this.images = res.data.data;
           });
     },
     getConfig() {
       this.axios.get("/api/episode/getOne", {
         params: {id: this.$route.params.stage}
       }).then(res => {
-        this.cmd = res.data.cmd;
-        this.timeOut = res.data.timeOut;
-        this.img = res.data.imgId;
+        this.cmd = res.data.data.cmd;
+        this.timeOut = res.data.data.timeOut;
+        this.img = res.data.data.imgId;
       });
     }
 
