@@ -402,6 +402,9 @@ export default {
 html {
   scrollbar-width: none;
 }
+a {
+  text-decoration: none;
+}
 
 * {
   box-sizing: border-box;
