@@ -8,7 +8,7 @@
           @menu-item-click="onClickMenuItem"
       >
 
-        <router-link to="rankingkai">
+        <router-link to="RankingList">
           <a-menu-item key="1">
             <IconBarChart></IconBarChart>
             排行榜单
@@ -20,7 +20,7 @@
             用户管理
           </a-menu-item>
         </router-link>
-        <router-link to="two">
+        <router-link to="missionManagement">
           <a-menu-item key="3">
             <IconPen></IconPen>
             关卡设置

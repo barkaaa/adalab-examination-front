@@ -16,9 +16,11 @@
 <script>
 
 import {ref} from "vue";
+import {Message} from '@arco-design/web-vue';
 
 export default {
   name: "upLoadDokcerModel",
+  emits: ['submit'],
   setup() {
     const defaultSelectedKey = ref([]);
 
@@ -39,6 +41,7 @@ export default {
       this.form.file = event.target.files[0];
     },
     submit() {
+      let that = this;
       let formData = new FormData();
       formData.append('tag', this.form.tag);
       formData.append('docker', this.form.file);
@@ -48,9 +51,12 @@ export default {
         }
       }
       this.axios.post('/api/episode/docker', formData, config).then(function (res) {
-        console.log(res.data);
+        if (res.data.status === 200) {
+          that.$emit('submit', '上传成功');
+        } else {
+          Message.error(res.data.message);
+        }
       })
-
     }
   },
 }

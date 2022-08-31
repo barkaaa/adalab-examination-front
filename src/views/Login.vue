@@ -56,7 +56,7 @@ export default {
       let res = await this.axios.post("/api/manage/login", {
         username: this.username, password: this.password
       }).then(() => {
-        this.$router.push({path: "/backpanel/rankingkai"})
+        this.$router.push({path: "/backpanel/RankingList"})
       })
 
     }

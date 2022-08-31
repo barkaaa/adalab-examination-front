@@ -36,10 +36,10 @@ export default {
         id, markdown_url
       })
 
-      this.$router.push("/backpanel/two")
+      this.$router.push("/backpanel/missionManagement")
     },
     navToSetting() {
-      this.$router.push("/backpanel/two")
+      this.$router.push("/backpanel/missionManagement")
     },
     navToEdit() {
       this.$router.push("/backpanel/mdedit")
