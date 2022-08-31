@@ -19,7 +19,7 @@
     <template #title>
       {{ '上传文档' }}
     </template>
-    <up-load-docker-model></up-load-docker-model>
+    <up-load-docker-model @submit="info"></up-load-docker-model>
   </a-modal>
 </template>
 
@@ -27,7 +27,7 @@
 import upLoadDockerModel from "@/components/upLoadDockerModel";
 import {ref} from "vue";
 import {IconDelete} from "@arco-design/web-vue/es/icon";
-import {Icon} from "@arco-design/web-vue";
+import {Icon, Message} from "@arco-design/web-vue";
 
 const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3618179_rwptmmu55y9.js'});
 
@@ -89,15 +89,19 @@ export default {
         }
       }).then(() => this.getImg());
     },
-    getImg() {
+    async getImg() {
       this.axios.get("/api/episode/images")
           .then(res => {
-            this.tableData = res.data;
-            console.log(this.tableData)
+            this.tableData = res.data.data;
           });
+    },
+    info(message) {
+      this.getImg();
+      this.handleOk();
+      Message.success(message);
     }
-
   },
+
 
   mounted() {
     this.getImg();
