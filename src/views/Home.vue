@@ -2,7 +2,7 @@
   <div class="main-box">
     <aside>
       <div class="timer">
-        <timer :uName="user.name" :avatar="user.avatar" :cDate="user.cDate"/>
+        <timer :uName="user.name" :avatar="user.avatar" :cDate="user.cDate" />
       </div>
       <RankingPlugin v-bind:rankings="rankings"></RankingPlugin>
       <div class="leaderboard"></div>
@@ -12,22 +12,22 @@
       <a-steps :current="cur" small>
         <a-step v-for="i in totalChallenge" @click="gotoChallenge(i)">
           <template #icon v-if="i <= userDoneNum">
-            <icon-check/>
+            <icon-check />
           </template>
         </a-step>
       </a-steps>
 
       <!-- <router-view v-if="fresh" /> -->
-      <challenge ref="Challenge" :key="componentKey"/>
+      <challenge ref="Challenge" :key="componentKey" />
       <div class="submit_box">
         <a-button
-            type="primary"
-            @click="nextChallenge"
-            :loading="loading"
-            :style="bStyle"
+          type="primary"
+          @click="nextChallenge"
+          :loading="loading"
+          :style="bStyle"
         >
           <template #icon>
-            <icon-double-right/>
+            <icon-double-right />
           </template>
           {{ bVal }}
         </a-button>
@@ -40,33 +40,29 @@
 import Timer from "@/components/Timer";
 import Challenge from "./Challenge.vue";
 import RankingPlugin from "@/components/RankingPlugin.vue";
-import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
-import {useChallengeStore} from "../store/challenge";
-import {storeToRefs} from "pinia";
-import {getCookie} from "../utils/Utils"
-import {
-  ref,
-  getCurrentInstance,
-  reactive,
-} from "vue";
-import {useRouter} from "vue-router";
+import { IconDoubleRight } from "@arco-design/web-vue/es/icon";
+import { useChallengeStore } from "../store/challenge";
+import { storeToRefs } from "pinia";
+import { getCookie } from "../utils/Utils";
+import { ref, getCurrentInstance, reactive } from "vue";
+import { useRouter } from "vue-router";
 
 export default {
   name: "Home",
   setup() {
     const userId = ref();
     let flag = true;
-    let user = ref({})
+    let user = ref({});
     let userDoneNum = ref();
     let currentInstance = getCurrentInstance();
-    let {axios} = currentInstance.appContext.config.globalProperties;
+    let { axios } = currentInstance.appContext.config.globalProperties;
     let router = useRouter();
     let bVal = ref("提交");
     // 控制第二次点击 1成功，2失败
     let status = ref(0);
     let loading = ref(false);
     const challenge = useChallengeStore();
-    let {cur} = storeToRefs(challenge);
+    let { cur } = storeToRefs(challenge);
     let totalChallenge = ref();
     let bStyle = reactive({
       "background-color": "#1a8fdd",
@@ -74,15 +70,13 @@ export default {
     let componentKey = ref(0);
 
     const getUserDone = async () => {
-      let res = await axios
-          .get(`/api/studentInfo/getStudent/${userId.value}`)
+      let res = await axios.get(`/api/studentInfo/getStudent/${userId.value}`);
 
-      user.value["name"] = res.data.name
+      user.value["name"] = res.data.name;
       user.value["avatar"] = res.data.avatar;
-      user.value['cDate'] = res.data.beginDate;
+      user.value["cDate"] = res.data.beginDate;
       userDoneNum.value = res.data.episode;
       challenge.cur = userDoneNum.value + 1;
-
     };
 
     const nextChallenge = async () => {
@@ -124,27 +118,32 @@ export default {
       if (type === 1) {
         //调用子组件方法，收集信息
         // 直接调用成功方法
-        await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
-        challengeNumAdd();
-        btnSuccess();
+        await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer().then(
+          (res) => {
+            if (res == 200) {
+              challengeNumAdd();
+              btnSuccess();
+            }
+          }
+        );
       } else if (type === 2) {
         testing();
         axios
-            .get(`/api/episode/test/${cur.value}`)
-            .then((res) => {
-              // markdown闯关：发起请求验证代码是否有误
-              // 根据返回结果，分别调用
-              // 成功
-              if (res.data.passed === true) {
-                btnSuccess();
-              } else {
-                // 失败
-                btnFail();
-              }
-            })
-            .catch(function (error) {
-              console.log(error);
-            });
+          .get(`/api/episode/test/${cur.value}`)
+          .then((res) => {
+            // markdown闯关：发起请求验证代码是否有误
+            // 根据返回结果，分别调用
+            // 成功
+            if (res.data.passed === true) {
+              btnSuccess();
+            } else {
+              // 失败
+              btnFail();
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
         challengeNumAdd();
       }
     };
@@ -193,10 +192,10 @@ export default {
 
     const challengeNumAdd = () => {
       axios
-          .get(`/api/studentInfo/setDoneMission/${userId.value}`)
-          .then((res) => {
-            console.log(res);
-          });
+        .get(`/api/studentInfo/setDoneMission/${userId.value}`)
+        .then((res) => {
+          console.log(res);
+        });
       userDoneNum.value += 1;
     };
 
@@ -229,8 +228,8 @@ export default {
     await this.getRanking();
     await this.getChallengeNum();
     this.getUserId();
-    console.log(this.userId)
-    await this.getUserDone()
+    console.log(this.userId);
+    await this.getUserDone();
   },
   methods: {
     getUserId() {
@@ -239,11 +238,11 @@ export default {
     },
 
     async getData() {
-      let res = await this.axios.get("/api/studentInfo/getStudent/1")
+      let res = await this.axios.get("/api/studentInfo/getStudent/1");
       this.users = res.data;
     },
     async getRanking() {
-      let res = await this.axios.get("/api/studentInfo/getRanking")
+      let res = await this.axios.get("/api/studentInfo/getRanking");
       this.rankings = res.data;
     },
 
