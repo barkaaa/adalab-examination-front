@@ -35,7 +35,7 @@
       </a-menu>
     </a-layout-sider>
     <a-layout style="padding: 0 24px;">
-      
+
       <router-view/>
     </a-layout>
   </a-layout>
