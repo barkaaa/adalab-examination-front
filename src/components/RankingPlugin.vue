@@ -5,7 +5,8 @@
   <h1 id="rankingList">排行榜</h1>
   <div class="list">
     <div class="outer-container" v-for="(item) in rankings">
-      <p class="name" :id="['uid'+item.id]" :style="item.id===this.curUser?uStyle:''">{{ item.name }}</p>
+      <p class="name" :id="['uid'+item.id]" :style="[item.id===curUser?uStyle:'']">
+        {{ item.name }}</p>
       <div class="container">
         <div
             class="progress"
@@ -46,7 +47,7 @@ export default {
       curUser: "",
 
       uStyle: {
-        "color": "orange"
+        color: "orange !important"
       }
     };
   },
@@ -54,37 +55,14 @@ export default {
     getCounts() {
       this.axios.get("/api/episode/counts").then((res) => {
         this.trueEpisodeNum = res.data.data;
-        console.log("实际关卡数：" + this.trueEpisodeNum);
       });
     },
     getCurUser() {
       this.axios.get("/api/studentInfo/me").then((res) => {
         this.curUser = res.data.data.id;
-        console.log("curUsr=" + res.data.data);
-      }).then(() => {
-        this.getMe();
       });
     },
-    getMe() {
-      // var x = document.querySelector('.test');
-      // var x = document.getElementById('uid'+this.curUser).innerHTML;
-      var dom = document.getElementById('uid' + this.curUser);
 
-      dom.innerHTML = "You：" + dom.innerHTML;
-      dom.style.color = 'orange';
-      //     }
-      // x.innerHTML='You：'+x.innerHTML;
-      // var i;
-      // 	for (i = 0; i < x.length; i++) {
-      // 		// x[i].style.minWidth = "80px"
-
-      //     if(x[i].innerHTML===this.curUser){
-      //       x[i].innerHTML='You：'+this.curUser;
-      //       x[i].style.color = 'orange';
-      //     }
-
-      // 	}
-    }
   },
   created() {
     this.getCounts();

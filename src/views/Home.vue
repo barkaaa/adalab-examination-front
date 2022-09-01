@@ -2,7 +2,7 @@
   <div class="main-box">
     <aside>
       <div class="timer">
-        <timer :uName="user.name" :avatar="user.avatar" :cDate="user.cDate" />
+        <timer :uName="user.name" :avatar="user.avatar" :cDate="user.cDate"/>
       </div>
       <RankingPlugin v-bind:rankings="rankings"></RankingPlugin>
       <div class="leaderboard"></div>
@@ -12,7 +12,7 @@
       <a-steps :current="cur" small>
         <a-step v-for="i in totalChallengeNum" @click="turnToChallenge(i)">
           <template #icon v-if="i <= userPassedNum">
-            <icon-check />
+            <icon-check/>
           </template>
         </a-step>
       </a-steps>
@@ -24,77 +24,77 @@
           <div class="problem_box" v-for="(item, index) in questions">
             <h3>{{ item.theme }}</h3>
             <a-textarea
-              v-model="onePageAnswers[index].fill"
-              placeholder="请在这里输入"
-              allow-clear
-              auto-size
-              v-if="item.questionType === 1"
+                v-model="onePageAnswers[index].fill"
+                placeholder="请在这里输入"
+                allow-clear
+                auto-size
+                v-if="item.questionType === 1"
             />
 
             <div v-if="item.isMultiple === 'false' && item.questionType === 2">
               <a-radio-group
-                v-if="item.isMultiple === 'false'"
-                v-model="onePageAnswers[index].selectOptions[0]"
+                  v-if="item.isMultiple === 'false'"
+                  v-model="onePageAnswers[index].selectOptions[0]"
               >
                 <a-radio
-                  :value="option"
-                  v-for="option in item.options.split('?').slice(0, -1)"
+                    :value="option"
+                    v-for="option in item.options.split('?').slice(0, -1)"
                 >
                   {{ option }}
                 </a-radio>
                 <a-radio value="自己填选项" v-if="item.isAddtional === 'true'"
-                  >自己填选项
+                >自己填选项
                 </a-radio>
               </a-radio-group>
-              <a-divider />
+              <a-divider/>
             </div>
 
             <div v-if="item.isMultiple === 'true' && item.questionType === 2">
               <a-checkbox-group v-model="onePageAnswers[index].selectOptions">
                 <a-checkbox
-                  :value="option"
-                  v-for="option in item.options.split('?').slice(0, -1)"
-                  >{{ option }}
+                    :value="option"
+                    v-for="option in item.options.split('?').slice(0, -1)"
+                >{{ option }}
                 </a-checkbox>
                 <a-checkbox
-                  value="自己填选项"
-                  v-if="item.isAddtional === 'true'"
-                  >自己填选项
+                    value="自己填选项"
+                    v-if="item.isAddtional === 'true'"
+                >自己填选项
                 </a-checkbox>
               </a-checkbox-group>
-              <a-divider />
+              <a-divider/>
             </div>
 
             <a-textarea
-              v-model="onePageAnswers[index].fill"
-              placeholder="自己填选项"
-              allow-clear
-              auto-size
-              v-if="item.questionType == 2 && item.isAddtional === 'true'"
+                v-model="onePageAnswers[index].fill"
+                placeholder="自己填选项"
+                allow-clear
+                auto-size
+                v-if="item.questionType == 2 && item.isAddtional === 'true'"
             />
           </div>
         </div>
       </div>
       <div class="box">
-        <div v-html="content" />
+        <div v-html="content"/>
       </div>
       <div
-        v-if="cur > totalChallengeNum"
-        style="text-align: center; font-size: 60px; padding: 100px"
+          v-if="cur > totalChallengeNum"
+          style="text-align: center; font-size: 60px; padding: 100px"
       >
         您通关了
       </div>
 
       <div class="submit_box">
         <a-button
-          v-if="cur <= totalChallengeNum"
-          type="primary"
-          @click="buttomClick"
-          :loading="loading"
-          :style="bStyle"
+            v-if="cur <= totalChallengeNum"
+            type="primary"
+            @click="buttomClick"
+            :loading="loading"
+            :style="bStyle"
         >
           <template #icon>
-            <icon-double-right />
+            <icon-double-right/>
           </template>
           {{ bVal }}
         </a-button>
@@ -102,16 +102,16 @@
     </main>
   </div>
 </template>
-  
-  <script>
+
+<script>
 import Timer from "@/components/Timer";
 
 import RankingPlugin from "@/components/RankingPlugin.vue";
-import { IconDoubleRight } from "@arco-design/web-vue/es/icon";
-import { useChallengeStore } from "../store/challenge";
-import { storeToRefs } from "pinia";
-import { getCookie } from "../utils/Utils";
-import { ref, getCurrentInstance, reactive } from "vue";
+import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
+import {useChallengeStore} from "../store/challenge";
+import {storeToRefs} from "pinia";
+import {getCookie} from "../utils/Utils";
+import {ref, getCurrentInstance, reactive} from "vue";
 
 export default {
   name: "Home",
@@ -121,12 +121,12 @@ export default {
     let user = ref({});
     let userPassedNum = ref();
     let currentInstance = getCurrentInstance();
-    let { axios, markded } = currentInstance.appContext.config.globalProperties;
+    let {axios, markded} = currentInstance.appContext.config.globalProperties;
     let content = ref(" ");
     let bVal = ref("提交");
     let loading = ref(false);
     const challenge = useChallengeStore();
-    let { cur } = storeToRefs(challenge);
+    let {cur} = storeToRefs(challenge);
     let totalChallengeNum = ref();
     let bStyle = reactive({
       "background-color": "#1a8fdd",
@@ -145,7 +145,7 @@ export default {
       //获取闯关数，以及跳转至正在闯的关卡
       userPassedNum.value = res.data.data.episode;
       challenge.cur = userPassedNum.value + 1;
-       //不刷新默认按钮就是 提交
+      //不刷新默认按钮就是 提交
       freshBtnStyle();
     };
 
@@ -260,7 +260,7 @@ export default {
     const getQuestion = async () => {
       await sleepFun(1000);
       let r = await axios.get("/api/questionnaire/getone", {
-        params: { missionNum: cur.value },
+        params: {missionNum: cur.value},
       });
       questions.value = r.data.data;
       initAnswer();
@@ -269,7 +269,7 @@ export default {
     //初始化答案
     const initAnswer = () => {
       for (let i = 0; i < questions.value.length; i++) {
-        onePageAnswers.push({ fill: "", selectOptions: [] });
+        onePageAnswers.push({fill: "", selectOptions: []});
       }
     };
 
@@ -277,7 +277,7 @@ export default {
     const getMd = async () => {
       await sleepFun(1000);
       let res = await axios.get("/api/episode/getOne", {
-        params: { id: cur.value },
+        params: {id: cur.value},
       });
       let url = res.data.data.markdownUrl;
       if (url) {
@@ -344,12 +344,13 @@ export default {
   methods: {
     async getUserId() {
       let res = await this.axios.get("/api/studentInfo/me");
-      this.userId = res.data.data;
+      this.userId = res.data.data.id;
+      console.log(this.userId + "+++156316");
     },
 
     async getData() {
       let res = await this.axios.get(
-        "/api/studentInfo/getStudent/" + this.userId
+          "/api/studentInfo/getStudent/" + this.userId
       );
       this.users = res.data.data;
     },
@@ -376,32 +377,34 @@ export default {
   },
 };
 </script>
-  
-  <style scoped lang="less">
+
+<style scoped lang="less">
 .main-box {
   display: flex;
   width: 100%;
 
-  aside {
-    width: 25%;
-    background-color: #eee;
+aside {
+  width: 25%;
+  background-color: #eee;
 
-    .timer {
-      margin: 16% 7% 0 7%;
-      border-bottom: 1px solid #000;
-      padding-bottom: 12%;
-    }
-  }
+.timer {
+  margin: 16% 7% 0 7%;
+  border-bottom: 1px solid #000;
+  padding-bottom: 12%;
+}
 
-  main {
-    width: 75%;
-    margin: 8% 7% 0 7%;
+}
 
-    .submit_box {
-      margin: 5% 0;
-      display: flex;
-      justify-content: center;
-    }
-  }
+main {
+  width: 75%;
+  margin: 8% 7% 0 7%;
+
+.submit_box {
+  margin: 5% 0;
+  display: flex;
+  justify-content: center;
+}
+
+}
 }
 </style>

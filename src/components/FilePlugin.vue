@@ -3,15 +3,15 @@
         <div class="file-icon"></div>
         <p class="file-name">12313</p>
     </div> -->
-<!--  @click="getFileContent(fileName[2] + '/' + fileName[3] + '/' + fileName[0] + '/' + item)" -->
+  <!--  @click="getFileContent(fileName[2] + '/' + fileName[3] + '/' + fileName[0] + '/' + item)" -->
   <div
-    class="a-file"
-    v-for="item in fileName[1]"
-    @click="doubleFuc(fileName[2] + '/' + fileName[3] + '/' + fileName[0] + '/' + item)"
-    
+      class="a-file"
+      v-for="item in fileName[1]"
+      @click="doubleFuc(fileName[2] + '/' + fileName[3] + '/' + fileName[0] + '/' + item)"
+
   >
     <div class="file-icon">
-      <img id="img" :src="require('../assets/img/file.png')" alt="屁都没有" />
+      <img id="img" :src="require('../assets/img/file.png')" alt="屁都没有"/>
     </div>
     <div id="file-container">
       <p class="file-name">{{ item }}</p>
@@ -23,33 +23,33 @@ export default {
   props: {
     fileName: Array,
     //[key,value,name,step]
-    arr:Array
+    arr: Array
   },
 
-    methods: {
-      getFileContent(aString) {
-        console.log("address:" + aString);
-        this.axios
-          .post(`/api/studentInfo/fileContent`,{src:aString})
+  methods: {
+    getFileContent(aString) {
+      console.log("address:" + aString);
+      this.axios
+          .post(`/api/studentInfo/fileContent`, {src: aString})
           .then((res) => {
             this.fileContent = res.data.data;
             console.log("getdaole:" + this.fileContent);
           });
-      },
-      emitFileContent() {
-      this.$emit("content",this.fileContent);
-        },
-        doubleFuc(aString){
-            this.getFileContent(aString);
-            this.emitFileContent();
-        }
     },
-    data() {
+    emitFileContent() {
+      // this.$emit("content", this.fileContent);
+    },
+    doubleFuc(aString) {
+      this.getFileContent(aString);
+      this.emitFileContent();
+    }
+  },
+  data() {
     return {
       // arr1: {},
       // arr2: {},
-      fileContent:"",
-     
+      fileContent: "",
+
     };
   },
 };
@@ -122,12 +122,14 @@ height: 0;
   height: 500px;
   align-items: center;
 }
+
 .file-name {
   padding: 0px;
   margin: 0px;
   font-size: 4vh;
   height: 1rem;
 }
+
 #img {
   height: 5rem;
 }

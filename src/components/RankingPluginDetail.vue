@@ -63,7 +63,7 @@
     </div>
   </div>
 
-  <a-menu mode="horizontal" v-model:selected-keys="selectedKeys" :default-selected-keys="['3']">
+  <a-menu mode="horizontal" v-model:selected-keys="selectedKeys">
     <a-menu-item key="1" @click="handleWeek">七日数据</a-menu-item>
     <a-menu-item key="2" @click="handlePass">通关数据</a-menu-item>
     <a-menu-item key="3" @click="handleAll">全部数据</a-menu-item>
