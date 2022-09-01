@@ -18,66 +18,7 @@
       </a-steps>
 
       <!-- <router-view v-if="fresh" /> -->
-      <div class="box">
-        <div>
-          <div class="problem_box" v-for="(item, index) in res">
-            <h3>{{ item.theme }}</h3>
-
-            <a-textarea
-              v-model="answer[index].fill"
-              placeholder="请在这里输入"
-              allow-clear
-              auto-size
-              v-if="item.questionType === 1"
-            />
-
-            <div v-if="item.isMultiple === 'false' && item.questionType === 2">
-              <a-radio-group
-                v-if="item.isMultiple === 'false'"
-                v-model="answer[index].selectOptions[0]"
-              >
-                <a-radio
-                  :value="option"
-                  v-for="option in item.options.split('?').slice(0, -1)"
-                >
-                  {{ option }}
-                </a-radio>
-                <a-radio value="自己填选项" v-if="item.isAddtional === 'true'"
-                  >自己填选项
-                </a-radio>
-              </a-radio-group>
-              <a-divider />
-            </div>
-
-            <div v-if="item.isMultiple === 'true' && item.questionType === 2">
-              <a-checkbox-group v-model="answer[index].selectOptions">
-                <a-checkbox
-                  :value="option"
-                  v-for="(option, x) in item.options.split('?').slice(0, -1)"
-                  >{{ option }}
-                </a-checkbox>
-                <a-checkbox
-                  value="自己填选项"
-                  v-if="item.isAddtional === 'true'"
-                  >自己填选项
-                </a-checkbox>
-              </a-checkbox-group>
-              <a-divider />
-            </div>
-
-            <a-textarea
-              v-model="answer[index].fill"
-              placeholder="自己填选项"
-              allow-clear
-              auto-size
-              v-if="item.questionType == 2 && item.isAddtional === 'true'"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="box">
-        <div v-html="content" />
-      </div>
+      <challenge ref="Challenge" :key="componentKey" />
       <div
         v-if="cur > totalChallenge"
         style="text-align: center; font-size: 60px; padding: 100px"
@@ -101,20 +42,17 @@
     </main>
   </div>
 </template>
-  
-  <script>
-import Timer from "@/components/Timer";
 
+<script>
+import Timer from "@/components/Timer";
+import Challenge from "./Challenge.vue";
 import RankingPlugin from "@/components/RankingPlugin.vue";
 import { IconDoubleRight } from "@arco-design/web-vue/es/icon";
 import { useChallengeStore } from "../store/challenge";
 import { storeToRefs } from "pinia";
 import { getCookie } from "../utils/Utils";
-import { ref, getCurrentInstance, reactive ,onBeforeMount,} from "vue";
+import { ref, getCurrentInstance, reactive } from "vue";
 import { useRouter } from "vue-router";
-
-import axios from "axios";
-
 
 export default {
   name: "Home",
@@ -139,29 +77,6 @@ export default {
     });
     let componentKey = ref(0);
 
-
-
-
-    let id = parseInt(getCookie("id"));
-    let answer = reactive([]);
-    
-    
-    
-    const bLoading = ref(false);
-    let res = ref([]);
-
-    const interNextChallenge = () => {
-      bLoading.value = !bLoading.value;
-    };
-
-    const initAnswer = () => {
-      for (let i = 0; i < res.value.length; i++) {
-        answer.push({fill: "", selectOptions: []});
-      }
-    };
-
-   
-
     const getUserDone = async () => {
       let res = await axios.get(`/api/studentInfo/getStudent/${userId.value}`);
 
@@ -172,7 +87,6 @@ export default {
       challenge.cur = userDoneNum.value + 1;
     };
 
-    //点击按钮
     const nextChallenge = async () => {
       // 首次闯关记录闯关时间
       if (flag) {
@@ -182,7 +96,7 @@ export default {
       // 成功
       if (status.value === 1) {
         //  刷新子组件
-
+        
         if (challenge.cur < totalChallenge.value) {
           challenge.cur++;
           let curType = await obtainType();
@@ -190,15 +104,15 @@ export default {
             challengeNumAdd();
           }
         }
-        if (challenge.cur === totalChallenge.value + 1) {
+        if (challenge.cur === totalChallenge.value) {
           // 已通关，跳到通关页面
-
+          
           await router.push("/success");
         }
 
         forceRerender();
         //  按键恢复
-
+        
         let curType = await obtainType();
         if (curType != 0) {
           btnReset();
@@ -217,7 +131,7 @@ export default {
         //调用子组件方法，收集信息
         // 直接调用成功方法
         const status =
-          await uploadStudentAnswer();
+          await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
         if (status == 200) {
           challengeNumAdd();
           btnSuccess();
@@ -246,29 +160,14 @@ export default {
       }
     };
 
-    //点击上面步骤条 切换关卡
     const gotoChallenge = async (i) => {
-      //切换到已经闯过的
       if (i <= userDoneNum.value) {
         challenge.cur = i;
-        //按钮变为 下一关
-        btnToNext();
         forceRerender();
       } else if (i === userDoneNum.value + 1) {
-        //切换到正在闯的关卡
         challenge.cur = i;
-
-        //需要判断：1.正在闯的关卡需要
         btnReset();
       }
-    };
-
-    //按钮变为 下一关
-    const btnToNext = () => {
-      bVal.value = "下一关";
-      bStyle["background-color"] = "#006a4e";
-      //状态为 0 点击无任何效果
-      status.value = 0;
     };
 
     const testing = () => {
@@ -322,17 +221,6 @@ export default {
       });
       return res.data.data.type;
     };
-
-    const uploadStudentAnswer= async () => {
-      let id = parseInt(getCookie("id"));
-      let res = await axios.put("/api/reply/putReply", {
-        list: answer,
-        currentMission: cur.value,
-        currentStudent: id,
-      });
-      return res.status;
-    };
-
     return {
       loading,
       challenge,
@@ -357,18 +245,6 @@ export default {
       userDoneNum,
       testing,
       challengeNumAdd,
-      
-
-
-      id,
-      bLoading,
-      interNextChallenge,
-      res,
-    
-      
-      answer,
-      initAnswer,
-      uploadStudentAnswer,
     };
   },
   async created() {
@@ -383,11 +259,6 @@ export default {
     if (this.type === 0) {
       this.btnSuccess();
     }
-
-
-
-    await this.getQuestion();
-    await this.getMd();
   },
   methods: {
     async getUserId() {
@@ -411,50 +282,26 @@ export default {
       this.totalChallenge = res.data.data.length;
     },
 
-    async getQuestion() {
-      await this.sleepFun(1000);
-      let r = await axios.get("/api/questionnaire/getone", {
-        params: {missionNum: this.cur},
-      });
-      this.res = r.data.data;
-      this.initAnswer();
+    handle() {
+      this.$refs.Challenge.test();
     },
-    async getMd() {
-      await this.sleepFun(1000);
-      let res = await axios.get("/api/episode/getOne", {
-        params: {id: this.cur},
-      });
-      let url = res.data.data.markdownUrl;
-      if (url) {
-        let md = (await this.axios.get(url)).data;
-        this.content = this.markded.parse(md);
-      }
-
-    },
-    sleepFun(time) {
-      return new Promise((resolve) => setTimeout(resolve, time));
-    },
-    
-
-
   },
   components: {
     Timer,
     RankingPlugin,
     IconDoubleRight,
-   
+    Challenge,
   },
   data() {
     return {
       users: [],
       rankings: [],
-      content: " ",
     };
   },
 };
 </script>
-  
-  <style scoped lang="less">
+
+<style scoped lang="less">
 .main-box {
   display: flex;
   width: 100%;
