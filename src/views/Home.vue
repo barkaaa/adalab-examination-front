@@ -18,74 +18,71 @@
       </a-steps>
 
       <!-- <router-view v-if="fresh" /> -->
-      <div :key="componentKey">
-        <div class="box">
-          <div>
-            <div class="problem_box" v-for="(item, index) in questions">
-              <h3>{{ item.theme }}</h3>
-              <a-textarea
-                v-model="onePageAnswers[index].fill"
-                placeholder="请在这里输入"
-                allow-clear
-                auto-size
-                v-if="item.questionType === 1"
-              />
 
-              <div
-                v-if="item.isMultiple === 'false' && item.questionType === 2"
+      <div class="box">
+        <div>
+          <div class="problem_box" v-for="(item, index) in questions">
+            <h3>{{ item.theme }}</h3>
+            <a-textarea
+              v-model="onePageAnswers[index].fill"
+              placeholder="请在这里输入"
+              allow-clear
+              auto-size
+              v-if="item.questionType === 1"
+            />
+
+            <div v-if="item.isMultiple === 'false' && item.questionType === 2">
+              <a-radio-group
+                v-if="item.isMultiple === 'false'"
+                v-model="onePageAnswers[index].selectOptions[0]"
               >
-                <a-radio-group
-                  v-if="item.isMultiple === 'false'"
-                  v-model="onePageAnswers[index].selectOptions[0]"
+                <a-radio
+                  :value="option"
+                  v-for="option in item.options.split('?').slice(0, -1)"
                 >
-                  <a-radio
-                    :value="option"
-                    v-for="option in item.options.split('?').slice(0, -1)"
-                  >
-                    {{ option }}
-                  </a-radio>
-                  <a-radio value="自己填选项" v-if="item.isAddtional === 'true'"
-                    >自己填选项
-                  </a-radio>
-                </a-radio-group>
-                <a-divider />
-              </div>
-
-              <div v-if="item.isMultiple === 'true' && item.questionType === 2">
-                <a-checkbox-group v-model="onePageAnswers[index].selectOptions">
-                  <a-checkbox
-                    :value="option"
-                    v-for="option in item.options.split('?').slice(0, -1)"
-                    >{{ option }}
-                  </a-checkbox>
-                  <a-checkbox
-                    value="自己填选项"
-                    v-if="item.isAddtional === 'true'"
-                    >自己填选项
-                  </a-checkbox>
-                </a-checkbox-group>
-                <a-divider />
-              </div>
-
-              <a-textarea
-                v-model="onePageAnswers[index].fill"
-                placeholder="自己填选项"
-                allow-clear
-                auto-size
-                v-if="item.questionType == 2 && item.isAddtional === 'true'"
-              />
+                  {{ option }}
+                </a-radio>
+                <a-radio value="自己填选项" v-if="item.isAddtional === 'true'"
+                  >自己填选项
+                </a-radio>
+              </a-radio-group>
+              <a-divider />
             </div>
+
+            <div v-if="item.isMultiple === 'true' && item.questionType === 2">
+              <a-checkbox-group v-model="onePageAnswers[index].selectOptions">
+                <a-checkbox
+                  :value="option"
+                  v-for="option in item.options.split('?').slice(0, -1)"
+                  >{{ option }}
+                </a-checkbox>
+                <a-checkbox
+                  value="自己填选项"
+                  v-if="item.isAddtional === 'true'"
+                  >自己填选项
+                </a-checkbox>
+              </a-checkbox-group>
+              <a-divider />
+            </div>
+
+            <a-textarea
+              v-model="onePageAnswers[index].fill"
+              placeholder="自己填选项"
+              allow-clear
+              auto-size
+              v-if="item.questionType == 2 && item.isAddtional === 'true'"
+            />
           </div>
         </div>
-        <div class="box">
-          <div v-html="content" />
-        </div>
-        <div
-          v-if="cur > totalChallengeNum"
-          style="text-align: center; font-size: 60px; padding: 100px"
-        >
-          您通关了
-        </div>
+      </div>
+      <div class="box">
+        <div v-html="content" />
+      </div>
+      <div
+        v-if="cur > totalChallengeNum"
+        style="text-align: center; font-size: 60px; padding: 100px"
+      >
+        您通关了
       </div>
 
       <div class="submit_box">
@@ -114,22 +111,19 @@ import { IconDoubleRight } from "@arco-design/web-vue/es/icon";
 import { useChallengeStore } from "../store/challenge";
 import { storeToRefs } from "pinia";
 import { getCookie } from "../utils/Utils";
-import { ref, getCurrentInstance, reactive, } from "vue";
+import { ref, getCurrentInstance, reactive } from "vue";
 
 export default {
   name: "Home",
   setup() {
     let type = ref();
     const userId = ref();
-    let flag = true;
     let user = ref({});
     let userPassedNum = ref();
     let currentInstance = getCurrentInstance();
     let { axios, markded } = currentInstance.appContext.config.globalProperties;
     let content = ref(" ");
     let bVal = ref("提交");
-    // 控制第二次点击 1成功，2失败
-    let status = ref(0);
     let loading = ref(false);
     const challenge = useChallengeStore();
     let { cur } = storeToRefs(challenge);
@@ -137,25 +131,22 @@ export default {
     let bStyle = reactive({
       "background-color": "#1a8fdd",
     });
-    let componentKey = ref(0);
 
     let id = parseInt(getCookie("id"));
     let onePageAnswers = reactive([]);
-
-    const bLoading = ref(false);
     let questions = ref([]);
 
-    const interNextChallenge = () => {
-      bLoading.value = !bLoading.value;
-    };
-
+    //进入页面，初始化用户
     const getUserDone = async () => {
       let res = await axios.get(`/api/studentInfo/getStudent/${userId.value}`);
       user.value["name"] = res.data.data.name;
       user.value["avatar"] = res.data.data.avatar;
       user.value["cDate"] = res.data.data.beginDate;
+      //获取闯关数，以及跳转至正在闯的关卡
       userPassedNum.value = res.data.data.episode;
       challenge.cur = userPassedNum.value + 1;
+       //不刷新默认按钮就是 提交
+      freshBtnStyle();
     };
 
     //更新学生闯关数
@@ -236,7 +227,6 @@ export default {
     const btnToNext = () => {
       bVal.value = "下一关";
       bStyle["background-color"] = "#006a4e";
-      //状态为 0 点击无任何效果
     };
 
     //按钮变为 提交
@@ -255,6 +245,7 @@ export default {
       return res.data.data.type;
     };
 
+    //提交问卷
     const uploadStudentAnswer = async () => {
       let id = parseInt(getCookie("id"));
       let res = await axios.put("/api/reply/putReply", {
@@ -265,6 +256,7 @@ export default {
       return res.status;
     };
 
+    //更新问卷页面
     const getQuestion = async () => {
       await sleepFun(1000);
       let r = await axios.get("/api/questionnaire/getone", {
@@ -274,12 +266,14 @@ export default {
       initAnswer();
     };
 
+    //初始化答案
     const initAnswer = () => {
       for (let i = 0; i < questions.value.length; i++) {
         onePageAnswers.push({ fill: "", selectOptions: [] });
       }
     };
 
+    //更新markdown页面
     const getMd = async () => {
       await sleepFun(1000);
       let res = await axios.get("/api/episode/getOne", {
@@ -292,6 +286,7 @@ export default {
       }
     };
 
+    //刷新
     const forceRerender = async () => {
       await getQuestion();
       await getMd();
@@ -305,24 +300,19 @@ export default {
       loading,
       challenge,
       cur,
-      flag,
       type,
       getUserDone,
       buttomClick,
       turnToChallenge,
       totalChallengeNum,
-      componentKey,
       content,
       obtainType,
       bVal,
       user,
       bStyle,
-      status,
       userId,
       userPassedNum,
       id,
-      bLoading,
-      interNextChallenge,
       questions,
       onePageAnswers,
       getQuestion,
@@ -400,12 +390,6 @@ export default {
       margin: 16% 7% 0 7%;
       border-bottom: 1px solid #000;
       padding-bottom: 12%;
-    }
-
-    .leaderboard {
-    }
-
-    .footer {
     }
   }
 
