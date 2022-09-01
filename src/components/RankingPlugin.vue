@@ -55,7 +55,7 @@ export default {
     },
     getCurUser() {
       this.axios.get("/api/studentInfo/me").then((res) => {
-        this.curUser = res.data.data;
+        this.curUser = res.data.data.id;
         console.log("curUsr=" + res.data.data);
       });
     },
