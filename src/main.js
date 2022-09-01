@@ -14,8 +14,8 @@ import Hljs from "highlight.js"
 import {marked} from 'marked'
 import "highlight.js/styles/atelier-plateau-light.css"
 // 状态管理
-
 import {createPinia} from "pinia"
+
 const pinia = createPinia();
 
 // import Test from "@/Test";
@@ -45,3 +45,24 @@ app.use(router);
 app.use(ArcoVueIcon);
 app.use(pinia)
 app.mount('#app')
+
+router.beforeEach((to, form, next) => {
+    //如果进入到的路由是前台登录页或者后台登录页面，则正常展示
+    const info = async () => {
+        let res = await this.axios.get(`/api/studentInfo/me`);
+        return res.data
+    }
+    if (to.path === '/login' || to.path === '/student') {
+        next();
+    } else if (to.path === '/home/challenge' && !info().data) {
+        alert("还没有登录，请先登录！");     //觉得丑的人来改
+        next('/student'); //转入login登录页面
+    } else if (!info().data) {
+        alert("还没有登录，请先登录！");
+        next('/login'); //转入login登录页面
+    } else if (info().data.role !== "root") {
+        next('/home/challenge');
+    } else {
+        next();
+    }
+})

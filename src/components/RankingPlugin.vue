@@ -4,15 +4,14 @@
   <p class="test"></p>
   <h1 id="rankingList">排行榜</h1>
   <div class="list">
-
     <div class="outer-container" v-for="(item, i) in rankings">
-      <p class="name" :class="me" :id="[item.id]">{{ item.name }}</p>
+      <p class="name"  :id="[item.id]">{{ item.name }}</p>
       <div class="container">
         <div
-            class="progress"
-            v-bind:style="{ width: (item.episode / trueEpisodeNum) * 100 + '%' }"
-            :class="[
-            item.name === this.curUser
+          class="progress"
+          v-bind:style="{ width: (item.episode / trueEpisodeNum) * 100 + '%' }"
+          :class="[
+            item.id === this.curUser
               ? 'statusMe'
               : item.episode / trueEpisodeNum < 0.3
               ? 'status1'
@@ -28,7 +27,7 @@
       </div>
     </div>
   </div>
-  <br/>
+  <br />
 </template>
 
 <script>
@@ -56,42 +55,46 @@ export default {
     },
     getCurUser() {
       this.axios.get("/api/studentInfo/me").then((res) => {
-        this.curUser = res.data.data;
+        this.curUser = res.data.data.id;
         console.log("curUsr=" + res.data.data);
       });
     },
-    getMe() {
+    getMe(){
       // var x = document.querySelector('.test');
-      var x = document.getElementById(this.curUser);
+      // var x = document.getElementById('uid'+this.curUser).innerHTML;
+      var dom = document.getElementById('uid'+this.curUser);
 
-      x.innerHTML = 'You：' + x.innerHTML;
+    dom.innerHTML="You："+ dom.innerHTML;
+    dom.style.color= 'orange';
+      //     }
+      // x.innerHTML='You：'+x.innerHTML;
       // var i;
-      // 	for (i = 0; i < x.length; i++) {
-      // 		// x[i].style.minWidth = "80px"
-
+			// 	for (i = 0; i < x.length; i++) {
+			// 		// x[i].style.minWidth = "80px"
+          
       //     if(x[i].innerHTML===this.curUser){
       //       x[i].innerHTML='You：'+this.curUser;
       //       x[i].style.color = 'orange';
       //     }
-
-      // 	}
+          
+			// 	}
     }
   },
   created() {
     this.getCounts();
     this.getCurUser();
-
+    
   },
   mounted() {
-
+    
   },
-  beforeMount() {
-
+  beforeMount(){
+    
   },
-  beforeUpdate() {
-
+  beforeUpdate(){
+    
   },
-  updated() {
+  updated(){
     this.getMe();
   }
 };
@@ -99,23 +102,19 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-*::webkit
+  *::webkit
 html {
   scrollbar-width: none;
 }
-
 a {
   text-decoration: none;
 }
-
 * {
   box-sizing: border-box;
 }
-
 #rankingList {
   text-align: center;
 }
-
 /* template{
   text-align: center;
 } */
@@ -137,20 +136,17 @@ a {
   border-radius: 15px;
   height: 15px;
 }
-
 .progress p {
   text-align: center;
   margin: 0px;
   padding: 0px;
 }
-
 .list {
   overflow: scroll;
   overflow-x: hidden;
   margin: 1vw;
   height: 63vh;
 }
-
 .list::-webkit-scrollbar {
   display: none;
 }
@@ -170,15 +166,13 @@ a {
   width: 1vh;
 } */
 .name {
-  width: 100px;
+  width: 100%;
   font-size: 16px;
   height: 16px;
 }
-
 .proportion {
   font-size: 16px;
 }
-
 .outer-container {
 }
 
@@ -190,13 +184,11 @@ a {
 .status2 {
   background-color: #2196f3;
 }
-
 .status3 {
   /* background-color: #0f0; */
   background: linear-gradient(90deg, #0f0, #0ff);
 }
-
-.statusMe {
-  background: linear-gradient(90deg, #c83a62, #f00166, #3a3494);
+.statusMe{
+  background: linear-gradient(90deg,#c83a62,#f00166,#3a3494);
 }
 </style>

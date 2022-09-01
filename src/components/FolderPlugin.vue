@@ -1,4 +1,8 @@
 <template>
+
+
+
+
     <div class="folderContainer">
         <div class="folderWrapper">
             <div class="folder">
@@ -6,9 +10,11 @@
                 <div class="center"></div>
                 <div class="back"></div>
             </div>
+            
             <div class="folderName">
-                <span>工作/学习</span>
+                <span>{{folderName}}</span>
             </div>
+       
             <div class="folderTime">
                 <span>2021/07/17 10:49</span>
             </div>
@@ -19,6 +25,10 @@
 <script>
     export default {
         name: "fileCard",
+        props:{
+            folderName:String,
+            // keyAndValue:Array
+        }
     }
 </script>
 
@@ -133,4 +143,59 @@
         -o-text-overflow: ellipsis;
         text-overflow: ellipsis;
     }
+    /* 模态 */
+    .modal-window {
+  position: fixed;
+  /* background-color: rgba(255, 255, 255, 0.25); */
+  background-color: rgba(0, 0, 0, 0.25);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 999;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.modal-window:target {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal-window > div {
+  width: 80vw;
+  height: 80vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  padding: 2em;
+  background: #ffffff;
+}
+.modal-window header {
+  font-weight: bold;
+}
+.modal-window h1 {
+  font-size: 150%;
+  margin: 0 0 15px;
+}
+
+.modal-close {
+  color: #aaa;
+  line-height: 50px;
+  font-size: 80%;
+  position: absolute;
+  right: 0;
+  text-align: center;
+  top: 0;
+  width: 70px;
+  text-decoration: none;
+}
+.modal-close:hover {
+  color: black;
+}
+    /* 模态 */
 </style>
