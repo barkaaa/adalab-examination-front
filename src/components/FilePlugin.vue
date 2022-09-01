@@ -7,7 +7,7 @@
   <div
     class="a-file"
     v-for="item in fileName[1]"
-    @click="getFileContent(fileName[2] + '/' + fileName[3] + '/' + fileName[0] + '/' + item);emitFileContent()"
+    @click="doubleFuc(fileName[2] + '/' + fileName[3] + '/' + fileName[0] + '/' + item)"
     
   >
     <div class="file-icon">
@@ -37,8 +37,12 @@ export default {
           });
       },
       emitFileContent() {
-      this.$emit("content",this.fileContent);//自定义事件  传递值“子向父组件传值”
-    }
+      this.$emit("content",this.fileContent);
+        },
+        doubleFuc(aString){
+            this.getFileContent(aString);
+            this.emitFileContent();
+        }
     },
     data() {
     return {
