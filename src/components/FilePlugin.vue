@@ -1,24 +1,57 @@
 <template>
-    <!-- <div class="a-file">
+  <!-- <div class="a-file">
         <div class="file-icon"></div>
         <p class="file-name">12313</p>
     </div> -->
+<!--  @click="getFileContent(fileName[2] + '/' + fileName[3] + '/' + fileName[0] + '/' + item)" -->
+  <div
+    class="a-file"
+    v-for="item in fileName[1]"
+    @click="getFileContent(fileName[2] + '/' + fileName[3] + '/' + fileName[0] + '/' + item);emitFileContent()"
     
-    <div class="a-file">
-        <div class="file-icon" ><img :src="require('../assets/img/file.png')"  alt="屁都没有"/></div>
-        <p class="file-name">{{fileName}}</p>
+  >
+    <div class="file-icon">
+      <img id="img" :src="require('../assets/img/file.png')" alt="屁都没有" />
     </div>
+    <div id="file-container">
+      <p class="file-name">{{ item }}</p>
+    </div>
+  </div>
 </template>
 <script>
-    export default{
-        props: {
-            fileName: String,
-        },
+export default {
+  props: {
+    fileName: Array,
+    //[key,value,name,step]
+    arr:Array
+  },
+
+    methods: {
+      getFileContent(aString) {
+        console.log("address:" + aString);
+        this.axios
+          .post(`/api/studentInfo/fileContent`,{src:aString})
+          .then((res) => {
+            this.fileContent = res.data.data;
+            console.log("getdaole:" + this.fileContent);
+          });
+      },
+      emitFileContent() {
+      this.$emit("content",this.fileContent);//自定义事件  传递值“子向父组件传值”
     }
+    },
+    data() {
+    return {
+      // arr1: {},
+      // arr2: {},
+      fileContent:"",
+     
+    };
+  },
+};
 </script>
 <style scoped>
-    
-    /* 文件 */
+/* 文件 */
 /* .file-icon{
 padding: 0px;
 margin: 0px;
@@ -77,18 +110,21 @@ width: 0;
 height: 0;
 
 } */
-    /* 文件 */
-    .a-file{
-        display: flex;
-        flex-direction: column;
-        width: 500px;
-        height: 500px;
-        align-items: center;
-    }
-    .file-name{
-        padding: 0px;
-        margin: 0px;
-        font-size:4vh;
-    }
-    
+/* 文件 */
+.a-file {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  height: 500px;
+  align-items: center;
+}
+.file-name {
+  padding: 0px;
+  margin: 0px;
+  font-size: 4vh;
+  height: 1rem;
+}
+#img {
+  height: 5rem;
+}
 </style>
