@@ -5,7 +5,7 @@
   <h1 id="rankingList">排行榜</h1>
   <div class="list">
     <div class="outer-container" v-for="(item) in rankings">
-      <p class="name" :id="['uid'+item.id]">{{ item.name }}</p>
+      <p class="name" :id="['uid'+item.id]" :style="item.id===this.curUser?uStyle:''">{{ item.name }}</p>
       <div class="container">
         <div
             class="progress"
@@ -44,6 +44,10 @@ export default {
       students: {},
       trueEpisodeNum: 0,
       curUser: "",
+
+      uStyle: {
+        "color": "orange"
+      }
     };
   },
   methods: {
