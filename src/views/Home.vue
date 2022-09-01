@@ -10,85 +10,89 @@
     </aside>
     <main>
       <a-steps :current="cur" small>
-        <a-step v-for="i in totalChallenge" @click="gotoChallenge(i)">
-          <template #icon v-if="i <= userDoneNum">
+        <a-step v-for="i in totalChallengeNum" @click="turnToChallenge(i)">
+          <template #icon v-if="i <= userPassedNum">
             <icon-check />
           </template>
         </a-step>
       </a-steps>
 
       <!-- <router-view v-if="fresh" /> -->
-      <div class="box">
-        <div>
-          <div class="problem_box" v-for="(item, index) in res">
-            <h3>{{ item.theme }}</h3>
+      <div :key="componentKey">
+        <div class="box">
+          <div>
+            <div class="problem_box" v-for="(item, index) in questions">
+              <h3>{{ item.theme }}</h3>
+              <a-textarea
+                v-model="onePageAnswers[index].fill"
+                placeholder="请在这里输入"
+                allow-clear
+                auto-size
+                v-if="item.questionType === 1"
+              />
 
-            <a-textarea
-              v-model="answer[index].fill"
-              placeholder="请在这里输入"
-              allow-clear
-              auto-size
-              v-if="item.questionType === 1"
-            />
-
-            <div v-if="item.isMultiple === 'false' && item.questionType === 2">
-              <a-radio-group
-                v-if="item.isMultiple === 'false'"
-                v-model="answer[index].selectOptions[0]"
+              <div
+                v-if="item.isMultiple === 'false' && item.questionType === 2"
               >
-                <a-radio
-                  :value="option"
-                  v-for="option in item.options.split('?').slice(0, -1)"
+                <a-radio-group
+                  v-if="item.isMultiple === 'false'"
+                  v-model="onePageAnswers[index].selectOptions[0]"
                 >
-                  {{ option }}
-                </a-radio>
-                <a-radio value="自己填选项" v-if="item.isAddtional === 'true'"
-                  >自己填选项
-                </a-radio>
-              </a-radio-group>
-              <a-divider />
-            </div>
+                  <a-radio
+                    :value="option"
+                    v-for="option in item.options.split('?').slice(0, -1)"
+                  >
+                    {{ option }}
+                  </a-radio>
+                  <a-radio value="自己填选项" v-if="item.isAddtional === 'true'"
+                    >自己填选项
+                  </a-radio>
+                </a-radio-group>
+                <a-divider />
+              </div>
 
-            <div v-if="item.isMultiple === 'true' && item.questionType === 2">
-              <a-checkbox-group v-model="answer[index].selectOptions">
-                <a-checkbox
-                  :value="option"
-                  v-for="(option, x) in item.options.split('?').slice(0, -1)"
-                  >{{ option }}
-                </a-checkbox>
-                <a-checkbox
-                  value="自己填选项"
-                  v-if="item.isAddtional === 'true'"
-                  >自己填选项
-                </a-checkbox>
-              </a-checkbox-group>
-              <a-divider />
-            </div>
+              <div v-if="item.isMultiple === 'true' && item.questionType === 2">
+                <a-checkbox-group v-model="onePageAnswers[index].selectOptions">
+                  <a-checkbox
+                    :value="option"
+                    v-for="option in item.options.split('?').slice(0, -1)"
+                    >{{ option }}
+                  </a-checkbox>
+                  <a-checkbox
+                    value="自己填选项"
+                    v-if="item.isAddtional === 'true'"
+                    >自己填选项
+                  </a-checkbox>
+                </a-checkbox-group>
+                <a-divider />
+              </div>
 
-            <a-textarea
-              v-model="answer[index].fill"
-              placeholder="自己填选项"
-              allow-clear
-              auto-size
-              v-if="item.questionType == 2 && item.isAddtional === 'true'"
-            />
+              <a-textarea
+                v-model="onePageAnswers[index].fill"
+                placeholder="自己填选项"
+                allow-clear
+                auto-size
+                v-if="item.questionType == 2 && item.isAddtional === 'true'"
+              />
+            </div>
           </div>
         </div>
+        <div class="box">
+          <div v-html="content" />
+        </div>
+        <div
+          v-if="cur > totalChallengeNum"
+          style="text-align: center; font-size: 60px; padding: 100px"
+        >
+          您通关了
+        </div>
       </div>
-      <div class="box">
-        <div v-html="content" />
-      </div>
-      <div
-        v-if="cur > totalChallenge"
-        style="text-align: center; font-size: 60px; padding: 100px"
-      >
-        您通关了
-      </div>
+
       <div class="submit_box">
         <a-button
-          v-if="cur <= totalChallenge"
+          v-if="cur <= totalChallengeNum"
           type="primary"
-          @click="nextChallenge"
+          @click="buttomClick"
           :loading="loading"
           :style="bStyle"
         >
@@ -110,11 +114,7 @@ import { IconDoubleRight } from "@arco-design/web-vue/es/icon";
 import { useChallengeStore } from "../store/challenge";
 import { storeToRefs } from "pinia";
 import { getCookie } from "../utils/Utils";
-import { ref, getCurrentInstance, reactive ,onBeforeMount,} from "vue";
-import { useRouter } from "vue-router";
-
-import axios from "axios";
-
+import { ref, getCurrentInstance, reactive, } from "vue";
 
 export default {
   name: "Home",
@@ -123,143 +123,112 @@ export default {
     const userId = ref();
     let flag = true;
     let user = ref({});
-    let userDoneNum = ref();
+    let userPassedNum = ref();
     let currentInstance = getCurrentInstance();
-    let { axios } = currentInstance.appContext.config.globalProperties;
-    let router = useRouter();
+    let { axios, markded } = currentInstance.appContext.config.globalProperties;
+    let content = ref(" ");
     let bVal = ref("提交");
     // 控制第二次点击 1成功，2失败
     let status = ref(0);
     let loading = ref(false);
     const challenge = useChallengeStore();
     let { cur } = storeToRefs(challenge);
-    let totalChallenge = ref();
+    let totalChallengeNum = ref();
     let bStyle = reactive({
       "background-color": "#1a8fdd",
     });
     let componentKey = ref(0);
 
-
-
-
     let id = parseInt(getCookie("id"));
-    let answer = reactive([]);
-    
-    
-    
+    let onePageAnswers = reactive([]);
+
     const bLoading = ref(false);
-    let res = ref([]);
+    let questions = ref([]);
 
     const interNextChallenge = () => {
       bLoading.value = !bLoading.value;
     };
 
-    const initAnswer = () => {
-      for (let i = 0; i < res.value.length; i++) {
-        answer.push({fill: "", selectOptions: []});
-      }
-    };
-
-   
-
     const getUserDone = async () => {
       let res = await axios.get(`/api/studentInfo/getStudent/${userId.value}`);
-
       user.value["name"] = res.data.data.name;
       user.value["avatar"] = res.data.data.avatar;
       user.value["cDate"] = res.data.data.beginDate;
-      userDoneNum.value = res.data.data.episode;
-      challenge.cur = userDoneNum.value + 1;
+      userPassedNum.value = res.data.data.episode;
+      challenge.cur = userPassedNum.value + 1;
+    };
+
+    //更新学生闯关数
+    const getUserPassedNumber = async () => {
+      let res = await axios.get(`/api/studentInfo/getStudent/${userId.value}`);
+      userPassedNum.value = res.data.data.episode;
     };
 
     //点击按钮
-    const nextChallenge = async () => {
-      // 首次闯关记录闯关时间
-      if (flag) {
-        await axios.get("/api/studentInfo/begin/" + userId.value);
-        flag = false;
-      }
-      // 成功
-      if (status.value === 1) {
-        //  刷新子组件
+    const buttomClick = async () => {
+      //判断当前页面的关卡是否为正在闯的关卡
+      if (challenge.cur === userPassedNum.value + 1) {
+        //需要发请求
+        loading.value = true;
+        const res = await axios.post(`/api/episode/test/${challenge.cur}`, {
+          list: onePageAnswers,
+          currentMission: cur.value,
+          currentStudent: userId.value,
+        });
+        if (res.data.status === 200) {
+          loading.value = false;
+          const curType = await obtainType();
+          if (curType === 0) {
+            //不需要提交的关卡
 
-        if (challenge.cur < totalChallenge.value) {
-          challenge.cur++;
-          let curType = await obtainType();
-          if (curType == 0 && userDoneNum.value + 2 == cur.value) {
-            challengeNumAdd();
+            userPassedNum.value += 1;
+            turnToChallenge(challenge.cur + 1);
+            freshBtnStyle();
+          } else {
+            //按钮变下一关
+            btnToNext();
+            //前端页面记录闯关数+1
+            userPassedNum.value += 1;
           }
+        } else {
+          //闯关失败
+          loading.value = false;
         }
-        if (challenge.cur === totalChallenge.value + 1) {
-          // 已通关，跳到通关页面
-
-          await router.push("/success");
-        }
-
-        forceRerender();
-        //  按键恢复
-
-        let curType = await obtainType();
-        if (curType != 0) {
-          btnReset();
-        }
-        return;
-      } else if (status.value === 2) {
-        // 失败
-        status.value = 0;
-        await nextChallenge();
-        return;
-      }
-
-      let curType = await obtainType();
-      // 问卷调查：
-      if (curType === 1) {
-        //调用子组件方法，收集信息
-        // 直接调用成功方法
-        const status =
-          await uploadStudentAnswer();
-        if (status == 200) {
-          challengeNumAdd();
-          btnSuccess();
-        }
-      } else if (curType === 2) {
-        testing();
-        axios
-          .get(`/api/episode/test/${cur.value}`)
-          .then((res) => {
-            // markdown闯关：发起请求验证代码是否有误
-            // 根据返回结果，分别调用
-            // 成功
-            if (res.data.status === 200) {
-              challengeNumAdd();
-              btnSuccess();
-            } else {
-              // 失败
-              btnFail();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
-      } else if (curType === 0) {
-        this.btnSuccess();
+      } else if (challenge.cur < userPassedNum.value) {
+        //已经闯过的关卡，进入下一关后还是闯过的关卡
+        turnToChallenge(challenge.cur + 1);
+      } else if (challenge.cur == userPassedNum.value) {
+        //已经闯过的关卡。进入下一关后是正在闯的关卡
+        turnToChallenge(challenge.cur + 1);
+        freshBtnStyle();
       }
     };
 
     //点击上面步骤条 切换关卡
-    const gotoChallenge = async (i) => {
+    const turnToChallenge = async (i) => {
       //切换到已经闯过的
-      if (i <= userDoneNum.value) {
+      if (i <= userPassedNum.value) {
         challenge.cur = i;
         //按钮变为 下一关
         btnToNext();
         forceRerender();
-      } else if (i === userDoneNum.value + 1) {
+      } else if (i === userPassedNum.value + 1) {
         //切换到正在闯的关卡
         challenge.cur = i;
+        freshBtnStyle();
+        forceRerender();
+      }
+    };
 
-        //需要判断：1.正在闯的关卡需要
-        btnReset();
+    //跳转到正在闯的关卡后刷新按钮
+    const freshBtnStyle = async () => {
+      //需要判断：1.正在闯的关卡需要提交 2.可以直接下一关
+      // 仅仅改变按钮样式，但还是需要点击（提交/下一关）的
+      const curType = await obtainType();
+      if (curType === 0) {
+        btnToNext();
+      } else {
+        btnToSubmit();
       }
     };
 
@@ -268,49 +237,12 @@ export default {
       bVal.value = "下一关";
       bStyle["background-color"] = "#006a4e";
       //状态为 0 点击无任何效果
-      status.value = 0;
     };
 
-    const testing = () => {
-      // 修改按钮状态
-      bVal.value = "测评中";
-      loading.value = true;
-      bStyle["background-color"] = "#c3c3c3";
-    };
-    const btnSuccess = () => {
-      bVal.value = "下一关";
-      bStyle["background-color"] = "#006a4e";
-      loading.value = false;
-      status.value = 1;
-    };
-    const btnFail = () => {
-      bVal.value = "闯关失败";
-      bStyle["background-color"] = "#cc0000";
-      loading.value = false;
-      status.value = 2;
-    };
-
-    const btnReset = () => {
+    //按钮变为 提交
+    const btnToSubmit = () => {
       bVal.value = "提交";
-      loading.value = false;
       bStyle["background-color"] = "#1a8fdd";
-      status.value = 0;
-      forceRerender();
-    };
-    const forceRerender = () => {
-      if (cur.value <= userDoneNum.value) {
-        btnSuccess();
-      }
-      componentKey.value += 1;
-    };
-
-    const challengeNumAdd = () => {
-      axios
-        .get(`/api/studentInfo/setDoneMission/${userId.value}`)
-        .then((res) => {
-          console.log(res);
-        });
-      userDoneNum.value += 1;
     };
 
     const obtainType = async () => {
@@ -323,14 +255,50 @@ export default {
       return res.data.data.type;
     };
 
-    const uploadStudentAnswer= async () => {
+    const uploadStudentAnswer = async () => {
       let id = parseInt(getCookie("id"));
       let res = await axios.put("/api/reply/putReply", {
-        list: answer,
+        list: onePageAnswers,
         currentMission: cur.value,
         currentStudent: id,
       });
       return res.status;
+    };
+
+    const getQuestion = async () => {
+      await sleepFun(1000);
+      let r = await axios.get("/api/questionnaire/getone", {
+        params: { missionNum: cur.value },
+      });
+      questions.value = r.data.data;
+      initAnswer();
+    };
+
+    const initAnswer = () => {
+      for (let i = 0; i < questions.value.length; i++) {
+        onePageAnswers.push({ fill: "", selectOptions: [] });
+      }
+    };
+
+    const getMd = async () => {
+      await sleepFun(1000);
+      let res = await axios.get("/api/episode/getOne", {
+        params: { id: cur.value },
+      });
+      let url = res.data.data.markdownUrl;
+      if (url) {
+        let md = (await axios.get(url)).data;
+        content.value = markded.parse(md);
+      }
+    };
+
+    const forceRerender = async () => {
+      await getQuestion();
+      await getMd();
+    };
+
+    const sleepFun = (time) => {
+      return new Promise((resolve) => setTimeout(resolve, time));
     };
 
     return {
@@ -340,35 +308,32 @@ export default {
       flag,
       type,
       getUserDone,
-      nextChallenge,
-      gotoChallenge,
-      totalChallenge,
+      buttomClick,
+      turnToChallenge,
+      totalChallengeNum,
       componentKey,
-      forceRerender,
-      btnFail,
-      btnSuccess,
-      btnReset,
+      content,
       obtainType,
       bVal,
       user,
       bStyle,
       status,
       userId,
-      userDoneNum,
-      testing,
-      challengeNumAdd,
-      
-
-
+      userPassedNum,
       id,
       bLoading,
       interNextChallenge,
-      res,
-    
-      
-      answer,
+      questions,
+      onePageAnswers,
+      getQuestion,
+      getMd,
       initAnswer,
       uploadStudentAnswer,
+      getUserPassedNumber,
+      btnToSubmit,
+      btnToNext,
+      freshBtnStyle,
+      sleepFun,
     };
   },
   async created() {
@@ -376,15 +341,12 @@ export default {
     await this.getData();
     await this.getRanking();
     await this.getChallengeNum();
-
     await this.getUserDone();
 
     this.type = await this.obtainType();
     if (this.type === 0) {
       this.btnSuccess();
     }
-
-
 
     await this.getQuestion();
     await this.getMd();
@@ -408,47 +370,18 @@ export default {
 
     async getChallengeNum() {
       let res = await this.axios.get("/api/episode/get");
-      this.totalChallenge = res.data.data.length;
+      this.totalChallengeNum = res.data.data.length;
     },
-
-    async getQuestion() {
-      await this.sleepFun(1000);
-      let r = await axios.get("/api/questionnaire/getone", {
-        params: {missionNum: this.cur},
-      });
-      this.res = r.data.data;
-      this.initAnswer();
-    },
-    async getMd() {
-      await this.sleepFun(1000);
-      let res = await axios.get("/api/episode/getOne", {
-        params: {id: this.cur},
-      });
-      let url = res.data.data.markdownUrl;
-      if (url) {
-        let md = (await this.axios.get(url)).data;
-        this.content = this.markded.parse(md);
-      }
-
-    },
-    sleepFun(time) {
-      return new Promise((resolve) => setTimeout(resolve, time));
-    },
-    
-
-
   },
   components: {
     Timer,
     RankingPlugin,
     IconDoubleRight,
-   
   },
   data() {
     return {
       users: [],
       rankings: [],
-      content: " ",
     };
   },
 };

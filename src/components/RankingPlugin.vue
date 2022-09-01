@@ -5,7 +5,7 @@
   <h1 id="rankingList">排行榜</h1>
   <div class="list">
     <div class="outer-container" v-for="(item, i) in rankings">
-      <p class="name" :class="me" :id="[item.id]">{{ item.name }}</p>
+      <p class="name"  :id="[item.id]">{{ item.name }}</p>
       <div class="container">
         <div
           class="progress"
