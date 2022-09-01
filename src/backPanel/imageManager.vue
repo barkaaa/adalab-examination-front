@@ -8,7 +8,6 @@
           </template>
         </a-button>
       </template>
-
     </a-table>
   </a-space>
   <a-button @click="handleClick">
@@ -21,6 +20,11 @@
     </template>
     <up-load-docker-model @submit="info"></up-load-docker-model>
   </a-modal>
+  <a-space direction="vertical" size="large">
+    <a-input-search v-model="pullImageName" :placeholder="inputText" button-text="拉取镜像" @search="pullImage"
+                    search-button :loading="loading"/>
+  </a-space>
+
 </template>
 
 <script>
@@ -77,7 +81,10 @@ export default {
   },
   data() {
     return {
-      images: {}
+      images: {},
+      pullImageName: '',
+      inputText: '请输入要拉取的镜像名',
+      loading: false
     }
   },
 
@@ -99,6 +106,24 @@ export default {
       this.getImg();
       this.handleOk();
       Message.success(message);
+    },
+    pullImage() {
+      this.loading = true;
+      this.axios.put("/api/episode/pull", null, {
+        params: {
+          image: this.pullImageName
+        }
+      }).then(
+          (res) => {
+            this.loading = false;
+            this.inputText = res.data.message;
+          }
+      ).catch(
+          () => {
+            this.loading = false;
+            this.inputText = "拉取失败"
+          }
+      )
     }
   },
 
