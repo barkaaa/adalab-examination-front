@@ -19,7 +19,7 @@ import YAYTest from "@/components/popOver"
 const routes = [
     {
         path: "/",
-        redirect: "/login",
+        redirect: "/student",
     },
     {
         path: "/success",

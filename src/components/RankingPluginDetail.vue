@@ -54,14 +54,6 @@
   </a-modal>
 
   <!-- 模态框组件 -->
-  <div id="open-modal2" class="modal-window">
-    <div>
-      <a href="#" title="Close" class="modal-close">Close</a>
-      <div>
-        <FilePlugin></FilePlugin>
-      </div>
-    </div>
-  </div>
 
   <a-menu mode="horizontal" v-model:selected-keys="selectedKeys">
     <a-menu-item key="1" @click="handleWeek">七日数据</a-menu-item>
