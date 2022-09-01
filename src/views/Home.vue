@@ -2,7 +2,7 @@
   <div class="main-box">
     <aside>
       <div class="timer">
-        <timer :uName="user.name" :avatar="user.avatar" :cDate="user.cDate" />
+        <timer :uName="user.name" :avatar="user.avatar" :cDate="user.cDate"/>
       </div>
       <RankingPlugin v-bind:rankings="rankings"></RankingPlugin>
       <div class="leaderboard"></div>
@@ -11,30 +11,30 @@
     <main>
       <a-steps :current="cur" small>
         <a-step v-for="i in totalChallenge" @click="gotoChallenge(i)">
-          <template #icon v-if="i <= userDoneNum">
-            <icon-check />
+          <template #icon v-if="i <= user.maxChallenge">
+            <icon-check/>
           </template>
         </a-step>
       </a-steps>
 
       <!-- <router-view v-if="fresh" /> -->
-      <challenge ref="Challenge" :key="componentKey" />
+      <challenge ref="Challenge" :key="componentKey"/>
       <div
-        v-if="cur > totalChallenge"
-        style="text-align: center; font-size: 60px; padding: 100px"
+          v-if="cur > totalChallenge"
+          style="text-align: center; font-size: 60px; padding: 100px"
       >
         您通关了
       </div>
       <div class="submit_box">
         <a-button
-          v-if="cur <= totalChallenge"
-          type="primary"
-          @click="nextChallenge"
-          :loading="loading"
-          :style="bStyle"
+            v-if="cur <= totalChallenge"
+            type="primary"
+            @click="nextChallenge"
+            :loading="loading"
+            :style="bStyle"
         >
           <template #icon>
-            <icon-double-right />
+            <icon-double-right/>
           </template>
           {{ bVal }}
         </a-button>
@@ -47,74 +47,74 @@
 import Timer from "@/components/Timer";
 import Challenge from "./Challenge.vue";
 import RankingPlugin from "@/components/RankingPlugin.vue";
-import { IconDoubleRight } from "@arco-design/web-vue/es/icon";
-import { useChallengeStore } from "../store/challenge";
-import { storeToRefs } from "pinia";
-import { getCookie } from "../utils/Utils";
-import { ref, getCurrentInstance, reactive } from "vue";
-import { useRouter } from "vue-router";
+import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
+import {useChallengeStore} from "../store/challenge";
+import {storeToRefs} from "pinia";
+import {ref, getCurrentInstance, reactive} from "vue";
+import {useRouter} from "vue-router";
 
 export default {
   name: "Home",
   setup() {
-    let type = ref();
-    const userId = ref();
-    let flag = true;
-    let user = ref({});
-    let userDoneNum = ref();
+
+    // 公共工具
     let currentInstance = getCurrentInstance();
-    let { axios } = currentInstance.appContext.config.globalProperties;
+    let {axios} = currentInstance.appContext.config.globalProperties;
     let router = useRouter();
+    const challenge = useChallengeStore();
+    // 共享值  关卡状态
+    let {cur} = storeToRefs(challenge);
+    let totalChallenge = ref();
+
+
+    // 题目类型
+    let type = ref();
+
+    // 用户id
+    const userId = ref();
+    // 当前用户信息
+    let user = reactive({
+      "name": "",
+      "avatar": "",
+      "cData": "",
+      "maxChallenge": 0
+    });
+    // 按钮状态
     let bVal = ref("提交");
     // 控制第二次点击 1成功，2失败
     let status = ref(0);
     let loading = ref(false);
-    const challenge = useChallengeStore();
-    let { cur } = storeToRefs(challenge);
-    let totalChallenge = ref();
     let bStyle = reactive({
       "background-color": "#1a8fdd",
     });
+
+
+    // 控制组件刷新
     let componentKey = ref(0);
-
-    const getUserDone = async () => {
-      let res = await axios.get(`/api/studentInfo/getStudent/${userId.value}`);
-
-      user.value["name"] = res.data.data.name;
-      user.value["avatar"] = res.data.data.avatar;
-      user.value["cDate"] = res.data.data.beginDate;
-      userDoneNum.value = res.data.data.episode;
-      challenge.cur = userDoneNum.value + 1;
-    };
-
     const nextChallenge = async () => {
       // 首次闯关记录闯关时间
-      if (flag) {
-        await axios.get("/api/studentInfo/begin/" + userId.value);
-        flag = false;
-      }
       // 成功
       if (status.value === 1) {
         //  刷新子组件
-        
+
+        // 第一次点击
+        let curType = await obtainType();
         if (challenge.cur < totalChallenge.value) {
           challenge.cur++;
-          let curType = await obtainType();
-          if (curType == 0 && userDoneNum.value + 2 == cur.value) {
+          if (curType === 0 && +2 === cur.value) {
             challengeNumAdd();
           }
         }
+
         if (challenge.cur === totalChallenge.value) {
           // 已通关，跳到通关页面
-          
           await router.push("/success");
         }
-
+        // 下一关的类型
+        curType = await obtainType();
         forceRerender();
         //  按键恢复
-        
-        let curType = await obtainType();
-        if (curType != 0) {
+        if (curType !== 0) {
           btnReset();
         }
         return;
@@ -130,45 +130,44 @@ export default {
       if (curType === 1) {
         //调用子组件方法，收集信息
         // 直接调用成功方法
-        const status =
-          await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
-        if (status == 200) {
+        const status = await currentInstance.ctx.$refs.Challenge.uploadStudentAnswer();
+        if (status === 200) {
           challengeNumAdd();
           btnSuccess();
         }
       } else if (curType === 2) {
         testing();
         axios
-          .get(`/api/episode/test/${cur.value}`)
-          .then((res) => {
-            // markdown闯关：发起请求验证代码是否有误
-            // 根据返回结果，分别调用
-            // 成功
-            if (res.data.status === 200) {
-              challengeNumAdd();
-              btnSuccess();
-            } else {
-              // 失败
-              btnFail();
-            }
-          })
-          .catch(function (error) {
-            console.log(error);
-          });
+            .get(`/api/episode/test/${cur.value}`)
+            .then((res) => {
+              // markdown闯关：发起请求验证代码是否有误
+              // 根据返回结果，分别调用
+              // 成功
+              if (res.data.status === 200) {
+                challengeNumAdd();
+                btnSuccess();
+              } else {
+                // 失败
+                btnFail();
+              }
+            })
+            .catch(function (error) {
+              console.log(error);
+            });
       } else if (curType === 0) {
-        this.btnSuccess();
+        btnSuccess();
       }
     };
-
     const gotoChallenge = async (i) => {
-      if (i <= userDoneNum.value) {
+      if (i <= user.maxChallenge) {
         challenge.cur = i;
         forceRerender();
-      } else if (i === userDoneNum.value + 1) {
+      } else if (i === user.maxChallenge + 1) {
         challenge.cur = i;
         btnReset();
       }
     };
+
 
     const testing = () => {
       // 修改按钮状态
@@ -188,7 +187,6 @@ export default {
       loading.value = false;
       status.value = 2;
     };
-
     const btnReset = () => {
       bVal.value = "提交";
       loading.value = false;
@@ -197,7 +195,7 @@ export default {
       forceRerender();
     };
     const forceRerender = () => {
-      if (cur.value <= userDoneNum.value) {
+      if (cur.value <= user.maxChallenge.value) {
         btnSuccess();
       }
       componentKey.value += 1;
@@ -205,11 +203,11 @@ export default {
 
     const challengeNumAdd = () => {
       axios
-        .get(`/api/studentInfo/setDoneMission/${userId.value}`)
-        .then((res) => {
-          console.log(res);
-        });
-      userDoneNum.value += 1;
+          .get(`/api/studentInfo/setDoneMission/${userId.value}`)
+          .then((res) => {
+            console.log(res);
+          });
+      user.maxChallenge.value += 1;
     };
 
     const obtainType = async () => {
@@ -225,11 +223,7 @@ export default {
       loading,
       challenge,
       cur,
-      flag,
       type,
-      getUserDone,
-      nextChallenge,
-      gotoChallenge,
       totalChallenge,
       componentKey,
       forceRerender,
@@ -237,53 +231,63 @@ export default {
       btnSuccess,
       btnReset,
       obtainType,
+      nextChallenge,
+      gotoChallenge,
       bVal,
       user,
       bStyle,
       status,
       userId,
-      userDoneNum,
       testing,
       challengeNumAdd,
     };
   },
   async created() {
     await this.getUserId();
-    await this.getData();
+    // 获取用户信息
+    await this.getUserData();
+
+    this.maxChallenge();
     await this.getRanking();
     await this.getChallengeNum();
-
-    await this.getUserDone();
-
+    //  处理第一关为0的 情况
     this.type = await this.obtainType();
     if (this.type === 0) {
       this.btnSuccess();
     }
+    if (this.cur.value <= this.user.maxChallenge) {
+      this.btnSuccess();
+    }
   },
   methods: {
+
+    maxChallenge() {
+      this.cur = this.user.maxChallenge;
+    },
+    // 获取用户id
     async getUserId() {
       let res = await this.axios.get("/api/studentInfo/me");
       this.userId = res.data.data;
     },
-
-    async getData() {
+    // 获取用户信息
+    async getUserData() {
       let res = await this.axios.get(
-        "/api/studentInfo/getStudent/" + this.userId
+          "/api/studentInfo/getStudent/" + this.userId
       );
-      this.users = res.data.data;
+      this.user.name = res.data.data.name;
+      this.user.avatar = res.data.data.avatar;
+      this.user.cData = res.data.data.beginDate;
+      this.user.maxChallenge = res.data.data.episode;
     },
+    // 获取排名
     async getRanking() {
       let res = await this.axios.get("/api/studentInfo/getRanking");
       this.rankings = res.data.data;
     },
-
+    // 获取关卡总数量
     async getChallengeNum() {
       let res = await this.axios.get("/api/episode/get");
       this.totalChallenge = res.data.data.length;
-    },
-
-    handle() {
-      this.$refs.Challenge.test();
     },
   },
   components: {
@@ -294,7 +298,6 @@ export default {
   },
   data() {
     return {
-      users: [],
       rankings: [],
     };
   },

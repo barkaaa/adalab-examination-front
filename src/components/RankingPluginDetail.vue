@@ -1,28 +1,10 @@
 <template>
-  <!-- <a-steps :current="2" line-less>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-      <a-step></a-step>
-
-    </a-steps> -->
 
   <!-- item.clear -->
   <div id="open-modal" class="modal-window">
     <div>
       <a href="#" title="Close" class="modal-close">Close</a>
       <div>
-        
         <VueTable></VueTable>
         <!-- 提交表 -->
         <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table">
@@ -42,10 +24,6 @@
             <a-table-column title="当前关卡" data-index="curEpisode"></a-table-column>
           </template>
         </a-table>
-
-        <!--  -->
-        <!-- {{ arr1 }}
-        {{ arr2 }} -->
       </div>
     </div>
   </div>
@@ -85,22 +63,19 @@
     </div>
   </div>
 
-
-  <!-- <a-select :style="{width:'520px'}" placeholder="Please select ..." allow-search>
-        <a-option>待开发</a-option>
-        <a-option>待开发</a-option>
-        <a-option>待开发</a-option>
-        不开发了   开尼玛
-      </a-select> -->
-
+  <a-menu mode="horizontal" v-model:selected-keys="selectedKeys" :default-selected-keys="['3']">
+    <a-menu-item key="1" @click="handleWeek">七日数据</a-menu-item>
+    <a-menu-item key="2" @click="handlePass">通关数据</a-menu-item>
+    <a-menu-item key="3" @click="handleAll">全部数据</a-menu-item>
+  </a-menu>
 
   <div class="list">
     <div id="bigContainer" v-for="(item, i) in users">
       <p class="studentName">{{ item.name }}</p>
       <!-- <a class="btn" href="#open-modal"><p>{{ item.name }}</p></a> -->
       <div
-        class="dots"
-        style="
+          class="dots"
+          style="
           display: flex;
           flex-direction: row;
           justify-content: space-around;
@@ -108,13 +83,14 @@
         "
       >
         <div
-          v-for="count in this.trueEpisodeNum"
-          class="dot"
-          :class="[count <= item.episode ? 'statusGreen' : 'statusNormal']"
-          @click="getLocalPersonelInfo(item, count)"
+            v-for="count in this.trueEpisodeNum"
+            class="dot"
+            :class="[count <= item.episode ? 'statusGreen' : 'statusNormal']"
+            @click="getLocalPersonelInfo(item, count)"
         >
-          <a href="#open-modal" ><p class="number">{{ count }}</p></a>
+          <a href="#open-modal"><p class="number">{{ count }}</p></a>
         </div>
+
       </div>
       <div class="btn"
            style="align-items: center; display: flex; justify-content: center">
@@ -132,8 +108,8 @@
   </div>
 
   <ul class="pagination">
-    <li><a href="#" @click="getPreviousPage">«上一页</a></li>
-    <li><a href="#" @click="getNextPage">下一页»</a></li>
+    <li><a href="#" @click="getPreviousPage" v-if="page>1">«上一页</a></li>
+    <li><a href="#" @click="getNextPage" v-if="page<totalPage">下一页»</a></li>
   </ul>
 
 
@@ -145,6 +121,7 @@ import {IconDesktop, IconHistory, IconPenFill, IconUser} from "@arco-design/web-
 import {getCurrentInstance, ref} from "vue";
 import {Icon} from '@arco-design/web-vue';
 import FilePlugin from "./FilePlugin.vue";
+
 const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3611034_pmqkuts7v7b.js'});
 export default {
   name: "RankingPluginDetail",
@@ -156,15 +133,14 @@ export default {
   },
   data() {
     return {
-      // arr1: {},
-      // arr2: {},
-      file:[],
-      trueEpisodeNum:0,
-      page:1,
-      totalPage:0,
-      users:[],
-      allUsrFile:[{},{}],
-      columns:[
+      selectedKeys: [],
+      file: [],
+      trueEpisodeNum: 0,
+      page: 1,
+      totalPage: 0,
+      users: [],
+      allUsrFile: [{}, {}],
+      columns: [
         {
           title: '测评？果',
           slotName: 'cell'
@@ -194,6 +170,43 @@ export default {
     };
   },
   methods: {
+
+    handleAll() {
+      this.page = 1;
+      this.getPage();
+      this.getTotalPage();
+    },
+    async handleWeek() {
+      this.page = 1;
+      this.getWeekData();
+      await this.getWeekPage();
+    },
+    async handlePass() {
+      this.page = 1;
+      this.getPassData();
+      await this.getPassPage();
+    },
+    getWeekData() {
+      this.axios.get(`/api/studentInfo/getWeekData/${this.page}`).then((res) => {
+        this.users = res.data.data;
+      })
+      console.log(this.selectedKeys)
+    },
+    getPassData() {
+      this.axios.get(`/api/studentInfo/getPass/${this.page}`).then((res) => {
+        this.users = res.data.data;
+      })
+      console.log(this.selectedKeys)
+    },
+
+    async getWeekPage() {
+      let res = await this.axios.get(`/api/studentInfo/getWeekPage/14`);
+      this.totalPage = res.data;
+    },
+    async getPassPage() {
+      let res = await this.axios.get(`/api/studentInfo/getPassedPage/14`);
+      this.totalPage = res.data;
+    },
     getData() {
       this.axios
           .post("/api/studentInfo/studentCode/FilesTree/DingZHneg", {step: 1})
@@ -203,19 +216,19 @@ export default {
           });
     },
     getPersonelInfo(user, level) {
-      const url  = `/api/studentInfo/studentCode/FilesTree/${user.name}`
+      const url = `/api/studentInfo/studentCode/FilesTree/${user.name}`
       this.axios
-        .post(url, { step: level })
-        .then((res) => {
-          console.log(res.data.data);
-          this.arr2 = res.data.data;
-        });
+          .post(url, {step: level})
+          .then((res) => {
+            console.log(res.data.data);
+            this.arr2 = res.data.data;
+          });
     },
     getLocalPersonelInfo(user, level) {
-      if(this.allUsrFile[user.name]!==undefined){
-        if(this.allUsrFile[user.name]["step"+level]!==undefined){
-          this.file = this.allUsrFile[user.name]["step"+level];
-        console.log("imanoName:"+user.name+"imanoName:"+"step"+level)
+      if (this.allUsrFile[user.name] !== undefined) {
+        if (this.allUsrFile[user.name]["step" + level] !== undefined) {
+          this.file = this.allUsrFile[user.name]["step" + level];
+          console.log("imanoName:" + user.name + "imanoName:" + "step" + level)
         }
 
       }
@@ -234,15 +247,26 @@ export default {
           });
     },
     getPreviousPage() {
-      if (this.page > 1) {
-        this.page--;
+
+      this.page--;
+      if (this.selectedKeys[0] === '1') {
+        this.getWeekData()
+      } else if (this.selectedKeys[0] === '2') {
+        this.getPassData()
+      } else {
         this.getPage();
       }
     },
     getNextPage() {
       if (this.page < this.totalPage) {
         this.page++;
-        this.getPage();
+        if (this.selectedKeys[0] === '1') {
+          this.getWeekData()
+        } else if (this.selectedKeys[0] === '2') {
+          this.getPassData()
+        } else {
+          this.getPage();
+        }
       }
     },
     getTotalPage() {
@@ -258,7 +282,6 @@ export default {
       this.axios.get(`/api/studentInfo/getPagingRanking/${this.page}`)
           .then(res => {
             this.users = res.data.data;
-            console.log(this.users);
           });
     },
     getAll() {
@@ -279,7 +302,7 @@ export default {
 
   },
   created() {
-    this.getTotalPage();
+
     this.getPage();
     this.getAll();
     this.getCounts();
@@ -402,6 +425,7 @@ export default {
 html {
   scrollbar-width: none;
 }
+
 a {
   text-decoration: none;
 }
@@ -424,6 +448,7 @@ a {
   padding-top: 10vw;
   padding-bottom: 5vh;
 }
+
 .list::-webkit-scrollbar {
   display: none;
 }
@@ -455,11 +480,13 @@ a {
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
 }
+
 .modal-window:target {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
 }
+
 .modal-window > div {
   width: 80vw;
   height: 80vh;
@@ -471,9 +498,11 @@ a {
   padding: 2em;
   background: #ffffff;
 }
+
 .modal-window header {
   font-weight: bold;
 }
+
 .modal-window h1 {
   font-size: 150%;
   margin: 0 0 15px;
@@ -490,12 +519,15 @@ a {
   width: 70px;
   text-decoration: none;
 }
+
 .modal-close:hover {
   color: black;
 }
+
 a-steps {
   display: flex;
 }
+
 .a-step {
   background-color: black;
 }
@@ -514,6 +546,7 @@ a-steps {
 icon-history {
   size: 30px;
 }
+
 /* .dotContainer{
   display: flex;
   flex-direction: row;
@@ -522,20 +555,25 @@ icon-history {
 .statusGreen {
   background-color: rgba(4, 101, 17, 0.51);
 }
+
 #bigContainer {
   display: flex;
 }
+
 .dots {
   flex: 2;
   border-style: solid;
   border: #aaa;
 }
+
 .studentName {
   flex: 1;
 }
+
 .btn {
   flex: 1;
 }
+
 /*  */
 .trigger-demo-nest {
   padding: 10px;
@@ -548,12 +586,15 @@ icon-history {
 .trigger-demo-nest-popup-content {
   text-align: right;
 }
+
 .number {
   color: rgba(0, 0, 0, 0.5);
 }
+
 a-steps {
   width: 30px;
 }
+
 /* 页码 */
 ul.pagination {
   display: inline-block;
@@ -591,6 +632,7 @@ ul.pagination li a:hover:not(.active) {
 a-result {
   width: 5px;
 }
+
 /*  */
 .success {
   background-color: #4CAF50;
@@ -611,6 +653,7 @@ a-result {
 .fail-text {
   display: none;
 }
+
 /*  */
 
 </style>
