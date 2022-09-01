@@ -11,7 +11,7 @@
           class="progress"
           v-bind:style="{ width: (item.episode / trueEpisodeNum) * 100 + '%' }"
           :class="[
-            item.name === this.curUser
+            item.id === this.curUser
               ? 'statusMe'
               : item.episode / trueEpisodeNum < 0.3
               ? 'status1'
@@ -55,15 +55,19 @@ export default {
     },
     getCurUser() {
       this.axios.get("/api/studentInfo/me").then((res) => {
-        this.curUser = res.data.data;
+        this.curUser = res.data.data.id;
         console.log("curUsr=" + res.data.data);
       });
     },
     getMe(){
       // var x = document.querySelector('.test');
-      var x = document.getElementById(this.curUser);
-       
-      x.innerHTML='You：'+x.innerHTML;
+      // var x = document.getElementById('uid'+this.curUser).innerHTML;
+      var dom = document.getElementById('uid'+this.curUser);
+
+    dom.innerHTML="You："+ dom.innerHTML;
+    dom.style.color= 'orange';
+      //     }
+      // x.innerHTML='You：'+x.innerHTML;
       // var i;
 			// 	for (i = 0; i < x.length; i++) {
 			// 		// x[i].style.minWidth = "80px"
@@ -162,7 +166,7 @@ a {
   width: 1vh;
 } */
 .name {
-  width: 100px;
+  width: 100%;
   font-size: 16px;
   height: 16px;
 }

@@ -115,6 +115,7 @@ export default {
         }
       }).then(
           (res) => {
+            this.getImg();
             this.loading = false;
             this.inputText = res.data.message;
           }
