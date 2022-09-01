@@ -43,7 +43,8 @@ export default {
             }
           }
       ).catch(() => this.url = "数据获取出错")
-    }
+    },
+
   },
   mounted() {
     this.getUrl();
