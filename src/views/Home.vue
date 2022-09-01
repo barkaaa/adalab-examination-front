@@ -359,8 +359,8 @@ export default {
     },
 
     async getChallengeNum() {
-      let res = await this.axios.get("/api/episode/get");
-      this.totalChallengeNum = res.data.data.length;
+      let res = await this.axios.get("/api/episode/counts");
+      this.totalChallengeNum = res.data.data;
     },
   },
   components: {
