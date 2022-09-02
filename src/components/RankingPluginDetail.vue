@@ -245,7 +245,6 @@ export default {
       if (this.allUsrFile[user.id+""] !== undefined) {
         if (this.allUsrFile[user.id+""]["step" + level] !== undefined) {
           this.file = this.allUsrFile[user.id+""]["step" + level];
-          console.log(this.file);
           this.clickedName = user.name;
           this.clickId = user.id;
           this.clickedStep = "step" + level;
