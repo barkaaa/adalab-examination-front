@@ -76,9 +76,9 @@ export default {
           isEnd: false,
           speed: 80,
           sleep: 2000,
-          type: 'custom',
+          type: 'rollback',
           backSpeed: 60,
-          singleBack: true,
+          singleBack: false,
           sentencePause: true
         }
     )
