@@ -4,9 +4,8 @@
     <div>
       <a href=" " title="Close" class="modal-close">Close</a>
       <div>
-        <a href="#fileList">
-          <file-card v-for="(key) in file"
-                     v-bind:folderName="key">
+        <a href="#fileList" v-for="(value,key) in file" @click="changeClickKey(key)">
+          <file-card v-bind:folderName="key">
           </file-card>
         </a>
       </div>
@@ -21,10 +20,11 @@
       <div class="modal-content">
         <div id="file-list-style">
           <FilePlugin
-              v-for="(value, key) in file"
-              v-bind:fileName="[key,value,this.clickedName,this.clickedStep]"
+              v-bind:fileName="[clickKey,file[clickKey],this.clickId,this.clickedStep]"
               @giveFather="getSon"
-          ></FilePlugin>
+          >
+          </FilePlugin>
+
         </div>
         <div>
           <p>{{ fileContent }}</p>
@@ -157,6 +157,8 @@ export default {
   },
   data() {
     return {
+      clickId: '',
+      clickKey: 0,
       clickedName: "",
       clickedStep: "",
       fileContent: "双击左侧显示内容哦",
@@ -200,6 +202,10 @@ export default {
     getSon(fileContent) {
       this.fileContent = fileContent;
     },
+
+    changeClickKey(key) {
+      this.clickKey = key;
+    },
     handleAll() {
       this.page = 1;
       this.getPage();
@@ -236,13 +242,13 @@ export default {
     },
 
     getLocalPersonelInfo(user, level) {
-      if (this.allUsrFile[user.name] !== undefined) {
-        if (this.allUsrFile[user.name]["step" + level] !== undefined) {
-          this.file = this.allUsrFile[user.name]["step" + level];
+      if (this.allUsrFile[user.id+""] !== undefined) {
+        if (this.allUsrFile[user.id+""]["step" + level] !== undefined) {
+          this.file = this.allUsrFile[user.id+""]["step" + level];
+          console.log(this.file);
           this.clickedName = user.name;
-          console.log("click" + this.clickedName)
+          this.clickId = user.id;
           this.clickedStep = "step" + level;
-          console.log("imanoName:" + user.name + "imanoName:" + "step" + level);
         } else {
           this.file = undefined;
           this.clickedName = "";

@@ -6,7 +6,7 @@
   <!-- @click="getFileContent(fileName[2] + '/' + fileName[3] + '/' + fileName[0] + '/' + item)" -->
   <div
       class="a-file"
-      v-for="item in fileName[1]"
+      v-for="(item) in fileName[1]"
       @click="getContentAndGiveFather(fileName[2] + '/' + fileName[3] + '/' + fileName[0] + '/' + item)"
       :key="item"
   >
@@ -24,7 +24,6 @@ export default {
     fileName: Array,
     //[key,value,name,step]
     arr: Array,
-
   },
 
   methods: {
@@ -39,6 +38,7 @@ export default {
 
     giveFather() {
       this.$emit("giveFather", this.fileContent);
+      console.log(this.fileName);
     },
     getContentAndGiveFather(aString) {
       this.getFileContent(aString);
@@ -61,7 +61,7 @@ export default {
   display: flex;
   flex-direction: column;
   width: 100px;
-  height:125px;
+  height: 125px;
   align-items: center;
 }
 
