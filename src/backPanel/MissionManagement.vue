@@ -52,7 +52,7 @@
       </a-table>
     </a-layout>
     <a-modal v-model:visible="visible" title="添加关卡" @cancel="handleCancel" @ok="handleOk" @close="handleClose">
-      <a-form ref="formRef" >
+      <a-form ref="formRef">
         <a-form-item field="name" label="类型">
           <a-select v-model="type" placeholder="请选择关卡类型">
             <a-option>0</a-option>
@@ -60,7 +60,7 @@
           </a-select>
         </a-form-item>
         <a-form-item field="file" label="文件">
-          <a-upload :custom-request="customRequest"/>
+          <a-upload :custom-request="customRequest" @before-remove="beforeRemove"/>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -71,6 +71,7 @@
 import {IconDelete, IconEdit, IconPlus, IconUpload, IconSettings} from "@arco-design/web-vue/es/icon";
 import {reactive, ref} from "vue";
 import {useRouter} from "vue-router";
+import {Modal} from "@arco-design/web-vue";
 
 export default {
   name: "MissionManagement",
@@ -92,8 +93,19 @@ export default {
     const handleCancel = () => {
       visible.value = false;
     }
-
-
+    const beforeRemove = (file) => {
+      return new Promise((resolve, reject) => {
+        Modal.confirm({
+          title: '删除确认',
+          content: `确认删除 ${file.name}`,
+          onOk: () => {
+            url.value = "";
+            resolve(true)
+          },
+          onCancel: () => reject('cancel'),
+        });
+      });
+    }
     const envSet = (stage) => {
       console.log(stage)
       router.push({
@@ -139,6 +151,7 @@ export default {
       handleAdd,
       handleCancel,
       handleUpload,
+      beforeRemove,
       url,
       envSet,
       tDataLength,
@@ -156,7 +169,7 @@ export default {
       this.$message.info("您取消了删除");
     },
     handleClose() {
-      this.url="";
+      this.url = "";
     },
     edit(stage, type) {
       // 问卷

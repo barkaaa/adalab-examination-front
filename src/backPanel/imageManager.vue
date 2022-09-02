@@ -1,15 +1,14 @@
 <template>
-  <a-space direction="vertical"  size="large">
-    <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination=false class="table" bordered="true">
-      <template #delete="{record}">
-        <a-button type="primary" v-on:click="delImg(record.imgName,record.imgVersion)">
-          <template #icon>
-            <icon-delete/>
-          </template>
-        </a-button>
-      </template>
-    </a-table>
-  </a-space>
+  <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination=false class="table"
+           bordered="true">
+    <template #delete="{record}">
+      <a-button type="primary" v-on:click="delImg(record.imgName,record.imgVersion)">
+        <template #icon>
+          <icon-delete/>
+        </template>
+      </a-button>
+    </template>
+  </a-table>
   <a-button @click="handleClick">
     <icon-font type="icon-shangchuan" :size="16"/>
     上传镜像
@@ -22,7 +21,7 @@
   </a-modal>
   <a-space direction="vertical" size="large">
     <a-input-search id="pull"
-        v-model="pullImageName" :placeholder="inputText"
+                    v-model="pullImageName" :placeholder="inputText"
                     button-text="拉取镜像" @search="pullImage"
                     search-button :loading="loading"/>
   </a-space>
@@ -139,16 +138,18 @@ export default {
 </script>
 
 <style scoped>
-::v-deep .arco-table-container {
-  margin: 45% auto auto;
-  width: 85%;
-}
+/*::v-deep .arco-table-container {*/
+/*  margin: 45% auto auto;*/
+/*  width: 85%;*/
+/*}*/
+
 .arco-btn-size-medium {
   margin-left: auto;
   margin-right: auto;
   width: 85%;
 }
-#pull{
+
+#pull {
   margin-left: 7%;
   margin-right: auto;
   width: 85%;
