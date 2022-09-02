@@ -1,6 +1,6 @@
 <template>
   <a-space direction="vertical"  size="large">
-    <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination=false class="table" bordered="true">
+    <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination=false class="table">
       <template #delete="{record}">
         <a-button type="primary" v-on:click="delImg(record.imgName,record.imgVersion)">
           <template #icon>

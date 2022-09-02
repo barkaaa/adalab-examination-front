@@ -52,7 +52,7 @@
       </a-table>
     </a-layout>
     <a-modal v-model:visible="visible" title="添加关卡" @cancel="handleCancel" @ok="handleOk" @close="handleClose">
-      <a-form ref="formRef" >
+      <a-form ref="formRef">
         <a-form-item field="name" label="类型">
           <a-select v-model="type" placeholder="请选择关卡类型">
             <a-option>0</a-option>
@@ -148,7 +148,8 @@ export default {
   data() {
     return {
       tData: [],
-      stage: 0
+      stage: 0,
+      formData: ''
     }
   },
   methods: {
@@ -156,7 +157,7 @@ export default {
       this.$message.info("您取消了删除");
     },
     handleClose() {
-      this.url="";
+      this.url = "";
     },
     edit(stage, type) {
       // 问卷
