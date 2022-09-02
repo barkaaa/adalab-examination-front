@@ -3,7 +3,7 @@
     <a-layout-sider theme="dark" breakpoint="lg" :width="300">
       <div class="logo"/>
       <a-menu
-          :default-selected-keys="defaultSelectedKey"
+          :default-selected-keys="['1']"
           :style="{ width: '100%' }"
           @menu-item-click="onClickMenuItem">
         <router-link to="RankingList">

@@ -52,7 +52,7 @@
       </a-table>
     </a-layout>
     <a-modal v-model:visible="visible" title="添加关卡" @cancel="handleCancel" @ok="handleOk" @close="handleClose">
-      <a-form ref="form" >
+      <a-form ref="formRef" >
         <a-form-item field="name" label="类型">
           <a-select v-model="type" placeholder="请选择关卡类型">
             <a-option>0</a-option>
@@ -95,6 +95,7 @@ export default {
 
 
     const envSet = (stage) => {
+      console.log(stage)
       router.push({
         name: "test",
         params: {
@@ -155,7 +156,7 @@ export default {
       this.$message.info("您取消了删除");
     },
     handleClose() {
-      this.$refs.form.resetFields();
+      this.url="";
     },
     edit(stage, type) {
       // 问卷
@@ -169,6 +170,7 @@ export default {
 
     },
     async handleOk() {
+
       // 创建关卡
       let res = await this.axios.post("/api/episode/createEp", {
         id: this.tDataLength + 1,
@@ -176,10 +178,11 @@ export default {
         type: this.type
       })
 
+      // console.log(this.$message.)
       this.$message.success(res.data.message)
+      this.url = "";
       this.visible = false;
       await this.getData();
-
     },
     async getData() {
       const res = await this.axios.get("/api/episode/get");
@@ -187,7 +190,7 @@ export default {
       this.tDataLength = this.tData.length;
     },
     customRequest(option) {
-      const {onProgress, onError, onSuccess, fileItem} = option
+      const {onProgress, onError, onSuccess, fileItem, name} = option
       const xhr = new XMLHttpRequest();
       if (xhr.upload) {
         xhr.upload.onprogress = function (event) {
