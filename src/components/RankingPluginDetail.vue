@@ -5,7 +5,6 @@
     <div>
       <a href="#" title="Close" class="modal-close">Close</a>
       <div>
-        <VueTable></VueTable>
         <!-- 提交表 -->
         <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table">
           <template #columns>
@@ -62,7 +61,7 @@
   </a-menu>
 
   <div class="list">
-    <div id="bigContainer" v-for="(item, i) in users">
+    <div id="bigContainer" v-for="(item) in users">
       <p class="studentName">{{ item.name }}</p>
       <!-- <a class="btn" href="#open-modal"><p>{{ item.name }}</p></a> -->
       <div
@@ -108,7 +107,6 @@
 </template>
 
 <script>
-import VueTable from "./VueTable.vue";
 import {IconDesktop, IconHistory, IconPenFill, IconUser} from "@arco-design/web-vue/es/icon";
 import {getCurrentInstance, ref} from "vue";
 import {Icon} from '@arco-design/web-vue';
@@ -388,7 +386,6 @@ export default {
   },
 
   components: {
-    VueTable,
     IconUser,
     IconFont,
     FilePlugin,
