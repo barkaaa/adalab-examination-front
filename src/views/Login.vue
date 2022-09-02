@@ -11,7 +11,6 @@
         name="username"
         id="username"
         placeholder="User Name"
-        :style="input"
         v-model="username"
     />
     <br/>
@@ -21,7 +20,6 @@
         name="password"
         id="password"
         placeholder="PASSW0RD"
-        :style="input"
         v-model="password"
     />
     <br/>
