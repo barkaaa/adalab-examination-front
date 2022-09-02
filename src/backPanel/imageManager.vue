@@ -1,6 +1,6 @@
 <template>
-  <a-space direction="vertical" size="large">
-    <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination=false class="table">
+  <a-space direction="vertical"  size="large">
+    <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination=false class="table" bordered="true">
       <template #delete="{record}">
         <a-button type="primary" v-on:click="delImg(record.imgName,record.imgVersion)">
           <template #icon>
@@ -21,7 +21,9 @@
     <up-load-docker-model @submit="info"></up-load-docker-model>
   </a-modal>
   <a-space direction="vertical" size="large">
-    <a-input-search v-model="pullImageName" :placeholder="inputText" button-text="拉取镜像" @search="pullImage"
+    <a-input-search id="pull"
+        v-model="pullImageName" :placeholder="inputText"
+                    button-text="拉取镜像" @search="pullImage"
                     search-button :loading="loading"/>
   </a-space>
 
@@ -137,6 +139,18 @@ export default {
 </script>
 
 <style scoped>
-
-
+::v-deep .arco-table-container {
+  margin: 45% auto auto;
+  width: 85%;
+}
+.arco-btn-size-medium {
+  margin-left: auto;
+  margin-right: auto;
+  width: 85%;
+}
+#pull{
+  margin-left: 7%;
+  margin-right: auto;
+  width: 85%;
+}
 </style>
