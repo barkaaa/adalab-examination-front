@@ -345,7 +345,6 @@ export default {
     async getUserId() {
       let res = await this.axios.get("/api/studentInfo/me");
       this.userId = res.data.data.id;
-      console.log(this.userId + "+++156316");
     },
 
     async getData() {

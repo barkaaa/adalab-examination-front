@@ -47,7 +47,7 @@ export default {
     let url = res.data.data.markdownUrl;
 
     this.initialValue = (await this.axios.get(url)).data;
-    console.log(this.initialValue)
+
     this.contentEditor = new Vditor('vditor', {
       height: 600,
       toolbarConfig: {
@@ -73,7 +73,6 @@ export default {
           let res = JSON.parse(responseText);
           let succ = {};
           succ[res.fileName] = res.url;
-          console.log(succ)
           return JSON.stringify({
             "msg": "",
             "code": 0,

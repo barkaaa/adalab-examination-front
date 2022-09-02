@@ -229,10 +229,10 @@ export default defineComponent({
         await this.axios
           .post("/api/episode/createEp", this.episodeAdd)
           .then((res) => {
-            console.log(res.data);
+
           })
           .catch(function (error) {
-            console.log(error);
+
           });
       } else {
         await this.axios.delete(
@@ -242,10 +242,10 @@ export default defineComponent({
       await this.axios
         .put("/api/questionnaire/addorupdate", this.missions)
         .then((res) => {
-          console.log(res.data);
+
         })
         .catch(function (error) {
-          console.log(error);
+
         });
       this.$router.replace("missionManagement");
     },

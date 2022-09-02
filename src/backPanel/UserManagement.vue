@@ -153,7 +153,6 @@ export default {
     getCounts() {
       this.axios.get("/api/episode/counts")
           .then(res => {
-            console.log(res);
             this.totalNumberOfLevels = res.data.data;
           });
     }
