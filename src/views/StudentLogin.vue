@@ -21,6 +21,7 @@ import {reactive, onMounted} from 'vue'
 import VideoBackground from 'vue-responsive-video-background-player'
 import EasyTyper from 'easy-typer-js'
 
+//在这输入想说的,使用方法参考：https://gitee.com/redqueen/easy-typer-js
 let text = ['Adalab入学筛选', '第一步，使用github以开始']
 
 function setCookie(name, value, day) {
@@ -74,10 +75,10 @@ export default {
           output: '',
           isEnd: false,
           speed: 80,
-          singleBack: true,
           sleep: 2000,
-          type: 'nomal',
+          type: 'rollback',
           backSpeed: 60,
+          singleBack: false,
           sentencePause: true
         }
     )
@@ -92,6 +93,8 @@ export default {
     onMounted(() => {
 
           const typed = new EasyTyper(obj, text)
+
+
 
         }
     )

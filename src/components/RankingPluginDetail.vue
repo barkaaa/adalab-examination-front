@@ -1,5 +1,38 @@
 <template>
+  <!-- 手搓模态2 -->
+  <div id="folderList" class="modal-window">
+    <div>
+      <a href=" " title="Close" class="modal-close">Close</a>
+      <div>
+        <a href="#fileList" v-for="(value,key) in file" @click="changeClickKey(key)">
+          <file-card v-bind:folderName="key">
+          </file-card>
+        </a>
+      </div>
+    </div>
+  </div>
+  <!-- 手搓模态2 -->
+  <!-- 手搓模态3 -->
+  <!-- v-bind:fileName="[key,value,this.clickedName,this.clickedStep]" -->
+  <div id="fileList" class="modal-window">
+    <div class="modal-container">
+      <a href=" " title="Close" class="modal-close">Close</a>
+      <div class="modal-content">
+        <div id="file-list-style">
+          <FilePlugin
+              v-bind:fileName="[clickKey,file[clickKey],this.clickId,this.clickedStep]"
+              @giveFather="getSon"
+          >
+          </FilePlugin>
 
+        </div>
+        <div>
+          <p>{{ fileContent }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 手搓模态3 -->
   <!-- item.clear -->
   <div id="open-modal" class="modal-window">
     <div>
@@ -79,7 +112,7 @@
             :class="[count <= item.episode ? 'statusGreen' : 'statusNormal']"
             @click="getLocalPersonelInfo(item, count)"
         >
-          <a href="#open-modal"><p class="number">{{ count }}</p></a>
+          <a href="#folderList"><p class="number">{{ count }}</p></a>
         </div>
 
       </div>
@@ -111,6 +144,7 @@ import {IconDesktop, IconHistory, IconPenFill, IconUser} from "@arco-design/web-
 import {getCurrentInstance, ref} from "vue";
 import {Icon} from '@arco-design/web-vue';
 import FilePlugin from "./FilePlugin.vue";
+import FileCard from "@/components/FolderPlugin";
 
 const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3611034_pmqkuts7v7b.js'});
 export default {
@@ -123,6 +157,11 @@ export default {
   },
   data() {
     return {
+      clickId: '',
+      clickKey: 0,
+      clickedName: "",
+      clickedStep: "",
+      fileContent: "双击左侧显示内容哦",
       selectedKeys: [],
       file: [],
       trueEpisodeNum: 0,
@@ -160,7 +199,13 @@ export default {
     };
   },
   methods: {
+    getSon(fileContent) {
+      this.fileContent = fileContent;
+    },
 
+    changeClickKey(key) {
+      this.clickKey = key;
+    },
     handleAll() {
       this.page = 1;
       this.getPage();
@@ -195,29 +240,24 @@ export default {
       let res = await this.axios.get(`/api/studentInfo/getPassedPage/14`);
       this.totalPage = res.data;
     },
-    getData() {
-      this.axios
-          .post("/api/studentInfo/studentCode/FilesTree/DingZHneg", {step: 1})
-          .then((res) => {
-            this.arr1 = res.data.data;
-          });
-    },
-    getPersonelInfo(user, level) {
-      const url = `/api/studentInfo/studentCode/FilesTree/${user.name}`
-      this.axios
-          .post(url, {step: level})
-          .then((res) => {
-            this.arr2 = res.data.data;
-          });
-    },
+
     getLocalPersonelInfo(user, level) {
-      if (this.allUsrFile[user.name] !== undefined) {
-        if (this.allUsrFile[user.name]["step" + level] !== undefined) {
-          this.file = this.allUsrFile[user.name]["step" + level];
+      if (this.allUsrFile[user.id+""] !== undefined) {
+        if (this.allUsrFile[user.id+""]["step" + level] !== undefined) {
+          this.file = this.allUsrFile[user.id+""]["step" + level];
+          this.clickedName = user.name;
+          this.clickId = user.id;
+          this.clickedStep = "step" + level;
+        } else {
+          this.file = undefined;
+          this.clickedName = "";
+          this.clickedStep = "";
         }
-
+      } else {
+        this.file = undefined;
+        this.clickedName = "";
+        this.clickedStep = "";
       }
-
     },
     onClickMenuItem(key) {
       this.$router.push(key);
@@ -271,7 +311,7 @@ export default {
       this.axios.get(`/api/studentInfo/studentCode/FilesTree`)
           .then(res => {
             this.allUsrFile = res.data.data;
-                    });
+          });
     },
     getCounts() {
       this.axios.get('/api/episode/counts')
@@ -372,6 +412,7 @@ export default {
   },
 
   components: {
+    FileCard,
     IconUser,
     IconFont,
     FilePlugin,
@@ -590,6 +631,15 @@ ul.pagination li a {
   transition: background-color .3s;
   border: 1px solid #ddd;
   margin: 0 4px;
+}
+
+.modal-container {
+  display: flex;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: row;
 }
 
 ul.pagination li a.active {

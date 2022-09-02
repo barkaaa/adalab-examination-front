@@ -161,7 +161,8 @@ export default {
   data() {
     return {
       tData: [],
-      stage: 0
+      stage: 0,
+      formData: ''
     }
   },
   methods: {

@@ -2,7 +2,7 @@
   <div class="main-box">
     <aside>
       <div class="timer">
-        <timer :uName="user.name" :avatar="user.avatar" :cDate="user.cDate"/>
+        <timer :uName="user.name" :avatar="user.avatar" :cDate="user.cDate" />
       </div>
       <RankingPlugin v-bind:rankings="rankings"></RankingPlugin>
       <div class="leaderboard"></div>
@@ -12,7 +12,7 @@
       <a-steps :current="cur" small>
         <a-step v-for="i in totalChallengeNum" @click="turnToChallenge(i)">
           <template #icon v-if="i <= userPassedNum">
-            <icon-check/>
+            <icon-check />
           </template>
         </a-step>
       </a-steps>
@@ -62,7 +62,7 @@
                 >自己填选项
                 </a-checkbox>
               </a-checkbox-group>
-              <a-divider/>
+              <a-divider />
             </div>
 
             <a-textarea
@@ -76,7 +76,7 @@
         </div>
       </div>
       <div class="box">
-        <div v-html="content"/>
+        <div v-html="content" />
       </div>
       <div
           v-if="cur > totalChallengeNum"
@@ -94,7 +94,7 @@
             :style="bStyle"
         >
           <template #icon>
-            <icon-double-right/>
+            <icon-double-right />
           </template>
           {{ bVal }}
         </a-button>
@@ -107,11 +107,12 @@
 import Timer from "@/components/Timer";
 
 import RankingPlugin from "@/components/RankingPlugin.vue";
-import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
-import {useChallengeStore} from "../store/challenge";
-import {storeToRefs} from "pinia";
-import {getCookie} from "../utils/Utils";
-import {ref, getCurrentInstance, reactive} from "vue";
+import { IconDoubleRight } from "@arco-design/web-vue/es/icon";
+import { useChallengeStore } from "../store/challenge";
+import { storeToRefs } from "pinia";
+import { getCookie } from "../utils/Utils";
+import { ref, getCurrentInstance, reactive } from "vue";
+import { Modal } from "@arco-design/web-vue";
 
 export default {
   name: "Home",
@@ -121,12 +122,12 @@ export default {
     let user = ref({});
     let userPassedNum = ref();
     let currentInstance = getCurrentInstance();
-    let {axios, markded} = currentInstance.appContext.config.globalProperties;
+    let { axios, markded } = currentInstance.appContext.config.globalProperties;
     let content = ref(" ");
     let bVal = ref("提交");
     let loading = ref(false);
     const challenge = useChallengeStore();
-    let {cur} = storeToRefs(challenge);
+    let { cur } = storeToRefs(challenge);
     let totalChallengeNum = ref();
     let bStyle = reactive({
       "background-color": "#1a8fdd",
@@ -135,6 +136,9 @@ export default {
     let id = parseInt(getCookie("id"));
     let onePageAnswers = reactive([]);
     let questions = ref([]);
+
+    let errorMessage = ref("test");
+    let rankings = ref([]);
 
     //进入页面，初始化用户
     const getUserDone = async () => {
@@ -145,14 +149,8 @@ export default {
       //获取闯关数，以及跳转至正在闯的关卡
       userPassedNum.value = res.data.data.episode;
       challenge.cur = userPassedNum.value + 1;
-      //不刷新默认按钮就是 提交
-      freshBtnStyle();
-    };
 
-    //更新学生闯关数
-    const getUserPassedNumber = async () => {
-      let res = await axios.get(`/api/studentInfo/getStudent/${userId.value}`);
-      userPassedNum.value = res.data.data.episode;
+      freshBtnStyle();
     };
 
     //点击按钮
@@ -166,6 +164,10 @@ export default {
           currentMission: cur.value,
           currentStudent: userId.value,
         });
+        //闯第一关点击按钮 从后台刷新计时器
+        if (userPassedNum.value == 0) {
+          freshTime();
+        }
         if (res.data.status === 200) {
           loading.value = false;
           const curType = await obtainType();
@@ -184,15 +186,27 @@ export default {
         } else {
           //闯关失败
           loading.value = false;
+          errorMessage.value = res.data.message;
+          challengeError(res.data.data.mes);
         }
-      } else if (challenge.cur < userPassedNum.value) {
-        //已经闯过的关卡，进入下一关后还是闯过的关卡
+      } else if (challenge.cur <= userPassedNum.value) {
+
         turnToChallenge(challenge.cur + 1);
-      } else if (challenge.cur == userPassedNum.value) {
-        //已经闯过的关卡。进入下一关后是正在闯的关卡
-        turnToChallenge(challenge.cur + 1);
-        freshBtnStyle();
       }
+    };
+
+    const challengeError = (res) => {
+
+      let errorReason = "";
+
+      (Object.keys(res)).forEach((key) =>{
+        errorReason += key + ":" + res[key]+"-------------------------------------------------------------------- ";
+      })
+      Modal.error({
+        title: errorMessage.value,
+        content: errorReason
+
+      });
     };
 
     //点击上面步骤条 切换关卡
@@ -260,7 +274,7 @@ export default {
     const getQuestion = async () => {
       await sleepFun(1000);
       let r = await axios.get("/api/questionnaire/getone", {
-        params: {missionNum: cur.value},
+        params: { missionNum: cur.value },
       });
       questions.value = r.data.data;
       initAnswer();
@@ -269,7 +283,7 @@ export default {
     //初始化答案
     const initAnswer = () => {
       for (let i = 0; i < questions.value.length; i++) {
-        onePageAnswers.push({fill: "", selectOptions: []});
+        onePageAnswers.push({ fill: "", selectOptions: [] });
       }
     };
 
@@ -277,7 +291,7 @@ export default {
     const getMd = async () => {
       await sleepFun(1000);
       let res = await axios.get("/api/episode/getOne", {
-        params: {id: cur.value},
+        params: { id: cur.value },
       });
       let url = res.data.data.markdownUrl;
       if (url) {
@@ -286,10 +300,22 @@ export default {
       }
     };
 
-    //刷新
+    const getRanking = async () => {
+      let res = await axios.get("/api/studentInfo/getRanking");
+      rankings.value = res.data.data;
+    };
+
+    //刷新页面【排名榜， 问卷，markdown】
     const forceRerender = async () => {
+      await getRanking();
       await getQuestion();
       await getMd();
+    };
+
+    //刷新 time
+    const freshTime = async () => {
+      let res = await axios.get(`/api/studentInfo/getStudent/${userId.value}`);
+      user.value["cDate"] = res.data.data.beginDate;
     };
 
     const sleepFun = (time) => {
@@ -319,11 +345,15 @@ export default {
       getMd,
       initAnswer,
       uploadStudentAnswer,
-      getUserPassedNumber,
       btnToSubmit,
       btnToNext,
       freshBtnStyle,
       sleepFun,
+      errorMessage,
+      challengeError,
+      rankings,
+      getRanking,
+      freshTime,
     };
   },
   async created() {
@@ -353,10 +383,6 @@ export default {
       );
       this.users = res.data.data;
     },
-    async getRanking() {
-      let res = await this.axios.get("/api/studentInfo/getRanking");
-      this.rankings = res.data.data;
-    },
 
     async getChallengeNum() {
       let res = await this.axios.get("/api/episode/counts");
@@ -371,7 +397,6 @@ export default {
   data() {
     return {
       users: [],
-      rankings: [],
     };
   },
 };
@@ -391,7 +416,6 @@ aside {
   border-bottom: 1px solid #000;
   padding-bottom: 12%;
 }
-
 }
 
 main {
@@ -403,7 +427,6 @@ main {
   display: flex;
   justify-content: center;
 }
-
 }
 }
 </style>
