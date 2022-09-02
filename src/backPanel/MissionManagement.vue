@@ -187,7 +187,7 @@ export default {
       this.tDataLength = this.tData.length;
     },
     customRequest(option) {
-      const {onProgress, onError, onSuccess, fileItem, name} = option
+      const {onProgress, onError, onSuccess, fileItem} = option
       const xhr = new XMLHttpRequest();
       if (xhr.upload) {
         xhr.upload.onprogress = function (event) {
