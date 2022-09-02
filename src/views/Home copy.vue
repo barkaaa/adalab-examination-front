@@ -96,7 +96,7 @@ export default {
       // 成功
       if (status.value === 1) {
         //  刷新子组件
-        
+
         if (challenge.cur < totalChallenge.value) {
           challenge.cur++;
           let curType = await obtainType();
@@ -106,13 +106,13 @@ export default {
         }
         if (challenge.cur === totalChallenge.value) {
           // 已通关，跳到通关页面
-          
+
           await router.push("/success");
         }
 
         forceRerender();
         //  按键恢复
-        
+
         let curType = await obtainType();
         if (curType != 0) {
           btnReset();
@@ -153,7 +153,6 @@ export default {
             }
           })
           .catch(function (error) {
-            console.log(error);
           });
       } else if (curType === 0) {
         this.btnSuccess();
@@ -207,7 +206,6 @@ export default {
       axios
         .get(`/api/studentInfo/setDoneMission/${userId.value}`)
         .then((res) => {
-          console.log(res);
         });
       userDoneNum.value += 1;
     };

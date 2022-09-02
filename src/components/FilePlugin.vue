@@ -28,12 +28,10 @@ export default {
 
   methods: {
     getFileContent(aString) {
-      console.log("address:" + aString);
       this.axios
           .post(`/api/studentInfo/fileContent`, {src: aString})
           .then((res) => {
             this.fileContent = res.data.data;
-            console.log("getdaole:" + this.fileContent);
           });
     },
     emitFileContent() {

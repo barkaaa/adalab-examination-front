@@ -95,7 +95,6 @@ export default {
 
 
     const envSet = (stage) => {
-      console.log(stage)
       router.push({
         name: "test",
         params: {
@@ -156,7 +155,6 @@ export default {
       this.$message.info("您取消了删除");
     },
     handleClose() {
-      console.log(this.$refs.form)
       this.$refs.form.resetFields();
     },
     edit(stage, type) {
@@ -178,7 +176,6 @@ export default {
         type: this.type
       })
 
-      // console.log(this.$message.)
       this.$message.success(res.data.message)
       this.visible = false;
       await this.getData();

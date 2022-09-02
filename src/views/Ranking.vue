@@ -1,7 +1,7 @@
 <template>
-<!--   
+<!--
   <RankingPlugin v-bind:users="users">123</RankingPlugin>
-  
+
   <a href="#dick">xixi</a>
   <div id="dick">fuq<a href=""><p>x</p></a></div>
 
@@ -60,23 +60,22 @@ export default {
     };
   },
    mounted() {
-    console.log('123');
     // this.axios.get('/api/studentInfo/getRanking')
     //   .then(res=>{
     //     this.users = res.data;
     //     //console.log(res.data[0].id);
     //   });
-    
+
     // this.axios.get('/api/studentInfo/getPagingRanking/1')
     //   .then(res=>{
     //     this.users = res.data;
     //     //console.log(res.data[0].id);
     //   });
-      
-    
+
+
   },
   methods:{
-   
+
 
   },
   //   props: {

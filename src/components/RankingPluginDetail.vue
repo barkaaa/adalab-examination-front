@@ -182,13 +182,11 @@ export default {
       this.axios.get(`/api/studentInfo/getWeekData/${this.page}`).then((res) => {
         this.users = res.data.data;
       })
-      console.log(this.selectedKeys)
     },
     getPassData() {
       this.axios.get(`/api/studentInfo/getPass/${this.page}`).then((res) => {
         this.users = res.data.data;
       })
-      console.log(this.selectedKeys)
     },
 
     async getWeekPage() {
@@ -203,7 +201,6 @@ export default {
       this.axios
           .post("/api/studentInfo/studentCode/FilesTree/DingZHneg", {step: 1})
           .then((res) => {
-            console.log(res.data.data);
             this.arr1 = res.data.data;
           });
     },
@@ -212,7 +209,6 @@ export default {
       this.axios
           .post(url, {step: level})
           .then((res) => {
-            console.log(res.data.data);
             this.arr2 = res.data.data;
           });
     },
@@ -220,7 +216,6 @@ export default {
       if (this.allUsrFile[user.name] !== undefined) {
         if (this.allUsrFile[user.name]["step" + level] !== undefined) {
           this.file = this.allUsrFile[user.name]["step" + level];
-          console.log("imanoName:" + user.name + "imanoName:" + "step" + level)
         }
 
       }
@@ -235,7 +230,6 @@ export default {
           .get(url)
           .then((res) => {
             this.tableData = res.data.data;
-            console.log(res.data.data);
           });
     },
     getPreviousPage() {
@@ -267,7 +261,6 @@ export default {
           .get(url)
           .then((res) => {
             this.totalPage = res.data.data;
-            console.log(res.data.data);
           });
     },
     getPage() {
@@ -279,16 +272,13 @@ export default {
     getAll() {
       this.axios.get(`/api/studentInfo/studentCode/FilesTree`)
           .then(res => {
-            console.log("获取到树状结构" + res.data.data);
             this.allUsrFile = res.data.data;
-            console.log("所有提交的文件：" + this.allUsrFile['佐々木玲奈']['step1']);
-          });
+                    });
     },
     getCounts() {
       this.axios.get('/api/episode/counts')
           .then(res => {
             this.trueEpisodeNum = res.data.data;
-            console.log("实际关卡数：" + this.trueEpisodeNum)
           });
     },
 
@@ -311,12 +301,8 @@ export default {
     }
     const questionnaireDetails = (id) => {
       vis.value = true;
-      console.log(id)
       axios.get("/api/reply/getReply/" + id).then((res) => {
         dList.value = res.data.data;
-        console.log("++++++++++++++++++++++++++++++")
-        console.log(dList);
-        console.log("++++++++++++++++++++++++++++++")
         // list.map((item) => {
         //   item.value = tData.value[item.label];
         // })
@@ -454,7 +440,7 @@ a {
 /* a-progress{
   text-align: center;
   size: large;
-  
+
 } */
 
 .modal-window {

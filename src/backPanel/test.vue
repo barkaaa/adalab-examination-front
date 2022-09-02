@@ -41,7 +41,7 @@ export default {
       }
 
       this.axios.post('/api/episode/docker', formData, config).then(function (res) {
-        console.log(res.data);
+
       })
 
     }
