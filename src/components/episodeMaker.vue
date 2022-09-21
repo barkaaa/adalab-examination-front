@@ -83,7 +83,7 @@ export default {
 
     },
     getImg() {
-      this.axios.get("/api/episode/images")
+      this.axios.get("/api/test/images")
           .then(res => {
             this.images = res.data.data;
           });

@@ -2,7 +2,7 @@
   <!-- 手搓模态2 -->
   <div id="folderList" class="modal-window">
     <div>
-      <a href=" " title="Close" class="modal-close">Close</a>
+      <a href="#" title="Close" class="modal-close">Close</a>
       <div>
         <a href="#fileList" v-for="(value,key) in file" @click="changeClickKey(key)">
           <file-card v-bind:folderName="key">
@@ -16,7 +16,7 @@
   <!-- v-bind:fileName="[key,value,this.clickedName,this.clickedStep]" -->
   <div id="fileList" class="modal-window">
     <div class="modal-container">
-      <a href=" " title="Close" class="modal-close">Close</a>
+      <a href="#" title="Close" class="modal-close">Close</a>
       <div class="modal-content">
         <div id="file-list-style">
           <FilePlugin
@@ -191,7 +191,7 @@ export default {
         }
       ],
       pagination: {
-        pageSize: 4,
+        pageSize: 8,
       },
       tableData: [12, 123123, 1231231],
       mydata: [],
@@ -263,7 +263,7 @@ export default {
       this.$router.push(key);
     },
     getTableData(item) {
-      const url = `/api/studentInfo/getSubmission/${item.name}`
+      const url = `/api/studentInfo/getSubmission/${item.id}`
       this.axios
           .get(url)
           .then((res) => {

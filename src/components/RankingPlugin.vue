@@ -155,7 +155,7 @@ a {
 }
 
 .proportion {
-  font-size: 16px;
+  font-size: 12px;
 }
 
 .outer-container {

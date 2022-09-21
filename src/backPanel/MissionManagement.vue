@@ -233,7 +233,7 @@ export default {
 
       if (type === 1) {
         await this.axios.delete(`/api/questionnaire/DeleteQuestionnaire/${id}`)
-        await this.axios.put(`/api/questionnaire/putQuestionnaire/${id}`)
+        await this.axios.delete(`/api/questionnaire/moveQuestionnaire/${id}`)
       }
       this.$message.success(res.data.message)
       await this.getData()

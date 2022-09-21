@@ -53,7 +53,7 @@ export default {
   //Custom style for main and input for make the page responsive:
   methods: {
     async login() {
-      await this.axios.post("/api/manage/login", {
+      await this.axios.post("/api/auth/login", {
         username: this.username, password: this.password
       }).then((res) => {
         if (res.data.status === 200) {

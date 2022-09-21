@@ -227,13 +227,7 @@ export default defineComponent({
     async saveMission() {
       if (this.routeType == "add") {
         await this.axios
-          .post("/api/episode/createEp", this.episodeAdd)
-          .then((res) => {
-
-          })
-          .catch(function (error) {
-
-          });
+          .post("/api/episode/createEp", this.episodeAdd);
       } else {
         await this.axios.delete(
           `/api/questionnaire/DeleteQuestionnaire/${this.missionNum}`
@@ -241,12 +235,7 @@ export default defineComponent({
       }
       await this.axios
         .put("/api/questionnaire/addorupdate", this.missions)
-        .then((res) => {
-
-        })
-        .catch(function (error) {
-
-        });
+        ;
       this.$router.replace("missionManagement");
     },
   },

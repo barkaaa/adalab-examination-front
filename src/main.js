@@ -49,7 +49,7 @@ app.mount('#app')
 
 router.beforeEach((to, form, next) => {
     //如果进入到的路由是前台登录页或者后台登录页面，则正常展示
-    axios.get(`/api/studentInfo/me`).then(
+    axios.get('/api/auth/me').then(
         (res) => {
             if (to.path === '/login' || to.path === '/student') {
                 next();

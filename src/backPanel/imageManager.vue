@@ -92,14 +92,14 @@ export default {
 
   methods: {
     delImg(tag, version) {
-      this.axios.delete("/api/episode/images", {
+      this.axios.delete("/api/test/deleteImage", {
         params: {
           id: tag + ':' + version
         }
       }).then(() => this.getImg());
     },
     async getImg() {
-      this.axios.get("/api/episode/images")
+      this.axios.get("/api/test/images")
           .then(res => {
             this.tableData = res.data.data;
           });
@@ -111,7 +111,7 @@ export default {
     },
     pullImage() {
       this.loading = true;
-      this.axios.put("/api/episode/pull", null, {
+      this.axios.put("/api/test/pull", null, {
         params: {
           image: this.pullImageName
         }

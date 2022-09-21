@@ -44,13 +44,13 @@ export default {
       let that = this;
       let formData = new FormData();
       formData.append('tag', this.form.tag);
-      formData.append('docker', this.form.file);
+      formData.append('file', this.form.file);
       let config = {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       }
-      this.axios.post('/api/episode/docker', formData, config).then(function (res) {
+      this.axios.post('/api/test/createimage', formData, config).then(function (res) {
         if (res.data.status === 200) {
           that.$emit('submit', '上传成功');
         } else {
