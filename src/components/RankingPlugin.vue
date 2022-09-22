@@ -53,12 +53,12 @@ export default {
   },
   methods: {
     getCounts() {
-      this.axios.get("/api/episode/counts").then((res) => {
+      this.axios.get("/api/episode/student/counts").then((res) => {
         this.trueEpisodeNum = res.data.data;
       });
     },
     getCurUser() {
-      this.axios.get("/api/studentInfo/me").then((res) => {
+      this.axios.get("/api/studentInfo/student/me").then((res) => {
         this.curUser = res.data.data.id;
       });
     },

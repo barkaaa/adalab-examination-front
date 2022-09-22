@@ -89,22 +89,15 @@ export default {
           });
     },
     getConfig() {
-      this.axios.get("/api/episode/getOne", {
-        params: {id: this.$route.params.stage}
-      }).then(res => {
-        this.cmd = res.data.data.cmd;
-        this.timeOut = res.data.data.timeOut;
-        this.img = res.data.data.imgId;
-      });
+      this.cmd = this.$route.params.cmd;
+      this.timeOut = this.$route.params.timeOut;
+      this.img = this.$route.params.imgId;
     }
-
-
   },
 
   mounted() {
     this.getImg();
     this.getConfig();
-
   }
 }
 </script>

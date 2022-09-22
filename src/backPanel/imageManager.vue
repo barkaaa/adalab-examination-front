@@ -1,6 +1,7 @@
 <template>
-  <a-space direction="vertical"  size="large">
-    <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination=false class="table" bordered="true">
+  <a-space direction="vertical" size="large">
+    <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination=false class="table"
+             :bordered=true>
       <template #delete="{record}">
         <a-button type="primary" v-on:click="delImg(record.imgName,record.imgVersion)">
           <template #icon>
@@ -22,7 +23,7 @@
   </a-modal>
   <a-space direction="vertical" size="large">
     <a-input-search id="pull"
-        v-model="pullImageName" :placeholder="inputText"
+                    v-model="pullImageName" :placeholder="inputText"
                     button-text="拉取镜像" @search="pullImage"
                     search-button :loading="loading"/>
   </a-space>

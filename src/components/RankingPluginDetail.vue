@@ -227,7 +227,12 @@ export default {
       })
     },
     getPassData() {
-      this.axios.get(`/api/studentInfo/getPass/${this.page}`).then((res) => {
+      this.axios.get(`/api/studentInfo/getPass`, {
+        params: {
+          page: this.page,
+          episode: this.trueEpisodeNum
+        }
+      }).then((res) => {
         this.users = res.data.data;
       })
     },
@@ -237,14 +242,19 @@ export default {
       this.totalPage = res.data;
     },
     async getPassPage() {
-      let res = await this.axios.get(`/api/studentInfo/getPassedPage/14`);
+      let res = await this.axios.get(`/api/studentInfo/getPassedPage`, {
+        params: {
+          page: 14,
+          episode: this.trueEpisodeNum
+        }
+      });
       this.totalPage = res.data;
     },
 
     getLocalPersonelInfo(user, level) {
-      if (this.allUsrFile[user.id+""] !== undefined) {
-        if (this.allUsrFile[user.id+""]["step" + level] !== undefined) {
-          this.file = this.allUsrFile[user.id+""]["step" + level];
+      if (this.allUsrFile[user.id + ""] !== undefined) {
+        if (this.allUsrFile[user.id + ""]["step" + level] !== undefined) {
+          this.file = this.allUsrFile[user.id + ""]["step" + level];
           this.clickedName = user.name;
           this.clickId = user.id;
           this.clickedStep = "step" + level;
@@ -314,7 +324,7 @@ export default {
           });
     },
     getCounts() {
-      this.axios.get('/api/episode/counts')
+      this.axios.get('/api/episode/student/counts')
           .then(res => {
             this.trueEpisodeNum = res.data.data;
           });

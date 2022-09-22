@@ -151,7 +151,7 @@ export default {
           });
     },
     getCounts() {
-      this.axios.get("/api/episode/counts")
+      this.axios.get("/api/episode/student/counts")
           .then(res => {
             this.totalNumberOfLevels = res.data.data;
           });

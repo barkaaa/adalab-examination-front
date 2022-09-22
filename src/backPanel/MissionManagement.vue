@@ -52,7 +52,7 @@
       </a-table>
     </a-layout>
     <a-modal v-model:visible="visible" title="添加关卡" @cancel="handleCancel" @ok="handleOk" @close="handleClose">
-      <a-form ref="formRef">
+      <a-form ref="formRef" :model="temp">
         <a-form-item field="name" label="类型">
           <a-select v-model="type" placeholder="请选择关卡类型">
             <a-option>0</a-option>
@@ -77,9 +77,9 @@ export default {
   name: "MissionManagement",
   components: {IconDelete, IconEdit, IconPlus, IconUpload, IconSettings},
   setup() {
-
     const selectedKeys = ref([]);
     const visible = ref(false);
+    let tData = ref([]);
     let url = ref("");
     let type = ref();
     var router = useRouter();
@@ -107,11 +107,13 @@ export default {
       });
     }
     const envSet = (stage) => {
-      console.log(stage)
+      let epInfo = tData.value[stage - 1];
       router.push({
         name: "test",
         params: {
-          stage
+          cmd: epInfo.cmd,
+          timeOut: epInfo.timeOut,
+          imgId: epInfo.imgId
         }
       })
     }
@@ -155,14 +157,17 @@ export default {
       url,
       envSet,
       tDataLength,
+      tData
     }
   }
   ,
   data() {
     return {
-      tData: [],
       stage: 0,
-      formData: ''
+      formData: '',
+      temp: {
+        temp: "temp"
+      }
     }
   },
   methods: {
@@ -225,13 +230,13 @@ export default {
             }
             onSuccess(xhr.response);
             let parse = JSON.parse(xhr.responseText);
-            this.url = parse.url;
+            this.url = parse.data.url;
           }
       )
 
       const formData = new FormData();
       formData.append('file', fileItem.file);
-      xhr.open('post', '/api/oss/uploadFiles', true);
+      xhr.open('post', '/api/oss/uploadFile/markdown', true);
       xhr.send(formData);
       return {
         abort() {
@@ -243,11 +248,6 @@ export default {
     ,
     async handleDelete(id, type) {
       let res = await this.axios.delete("/api/episode/delete/" + id)
-
-      if (type === 1) {
-        await this.axios.delete(`/api/questionnaire/DeleteQuestionnaire/${id}`)
-        await this.axios.delete(`/api/questionnaire/moveQuestionnaire/${id}`)
-      }
       this.$message.success(res.data.message)
       await this.getData()
     }

@@ -118,7 +118,6 @@ export default {
   name: "Home",
   setup() {
     let type = ref();
-    const userId = ref();
     let user = ref({});
     let userPassedNum = ref();
     let currentInstance = getCurrentInstance();
@@ -142,14 +141,14 @@ export default {
 
     //进入页面，初始化用户
     const getUserDone = async () => {
-      let res = await axios.get(`/api/studentInfo/getStudent/${userId.value}`);
+      let res = await axios.get(`/api/studentInfo/student/me`);
       user.value["name"] = res.data.data.name;
+      user.value["id"] = res.data.data.id;
       user.value["avatar"] = res.data.data.avatar;
       user.value["cDate"] = res.data.data.beginDate;
       //获取闯关数，以及跳转至正在闯的关卡
       userPassedNum.value = res.data.data.episode;
       challenge.cur = userPassedNum.value + 1;
-
       freshBtnStyle();
     };
 
@@ -159,10 +158,10 @@ export default {
       if (challenge.cur === userPassedNum.value + 1) {
         //需要发请求
         loading.value = true;
-        const res = await axios.post(`/api/episode/test/${challenge.cur}`, {
+        const res = await axios.post(`/api/episode/student/test/${challenge.cur}`, {
           list: onePageAnswers,
           currentMission: cur.value,
-          currentStudent: userId.value,
+          currentStudent: user.value.id,
         });
         //闯第一关点击按钮 从后台刷新计时器
         if (userPassedNum.value == 0) {
@@ -251,7 +250,7 @@ export default {
 
     const obtainType = async () => {
       // 获取题目类型
-      const res = await axios.get("/api/episode/getOne", {
+      const res = await axios.get("/api/episode/student/getOne", {
         params: {
           id: challenge.cur,
         },
@@ -262,7 +261,7 @@ export default {
     //提交问卷
     const uploadStudentAnswer = async () => {
       let id = parseInt(getCookie("id"));
-      let res = await axios.put("/api/reply/putReply", {
+      let res = await axios.put("/api/reply/student/putReply", {
         list: onePageAnswers,
         currentMission: cur.value,
         currentStudent: id,
@@ -273,7 +272,7 @@ export default {
     //更新问卷页面
     const getQuestion = async () => {
       await sleepFun(1000);
-      let r = await axios.get("/api/questionnaire/getone", {
+      let r = await axios.get("/api/questionnaire/student/getone", {
         params: {missionNum: cur.value},
       });
       questions.value = r.data.data;
@@ -290,7 +289,7 @@ export default {
     //更新markdown页面
     const getMd = async () => {
       await sleepFun(1000);
-      let res = await axios.get("/api/episode/getOne", {
+      let res = await axios.get("/api/episode/student/getOne", {
         params: {id: cur.value},
       });
       let url = res.data.data.markdownUrl;
@@ -301,7 +300,7 @@ export default {
     };
 
     const getRanking = async () => {
-      let res = await axios.get(`/api/studentInfo/getSenven/${userId.value}`);
+      let res = await axios.get(`/api/studentInfo/student/getSeven/${user.value["id"]}`);
       rankings.value = res.data.data;
     };
 
@@ -314,7 +313,7 @@ export default {
 
     //刷新 time
     const freshTime = async () => {
-      let res = await axios.get(`/api/studentInfo/getStudent/${userId.value}`);
+      let res = await axios.get(`/api/studentInfo/student/me`);
       user.value["cDate"] = res.data.data.beginDate;
     };
 
@@ -336,7 +335,6 @@ export default {
       bVal,
       user,
       bStyle,
-      userId,
       userPassedNum,
       id,
       questions,
@@ -357,11 +355,10 @@ export default {
     };
   },
   async created() {
-    await this.getUserId();
-    await this.getData();
+    await this.getUserDone();
     await this.getRanking();
     await this.getChallengeNum();
-    await this.getUserDone();
+
 
     this.type = await this.obtainType();
     if (this.type === 0) {
@@ -372,20 +369,9 @@ export default {
     await this.getMd();
   },
   methods: {
-    async getUserId() {
-      let res = await this.axios.get("/api/studentInfo/me");
-      this.userId = res.data.data.id;
-    },
-
-    async getData() {
-      let res = await this.axios.get(
-          "/api/studentInfo/getStudent/" + this.userId
-      );
-      this.users = res.data.data;
-    },
 
     async getChallengeNum() {
-      let res = await this.axios.get("/api/episode/counts");
+      let res = await this.axios.get("/api/episode/student/counts");
       this.totalChallengeNum = res.data.data;
     },
   },

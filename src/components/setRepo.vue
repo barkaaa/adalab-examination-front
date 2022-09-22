@@ -17,7 +17,7 @@ export default {
   },
   methods: {
     setRepo() {
-      this.axios.patch("/api/studentInfo/update", {
+      this.axios.patch("/api/studentInfo/student/update", {
         webPage: this.url,
       }).then((res) => {
         this.loading = false;
@@ -34,7 +34,7 @@ export default {
     },
 
     getUrl() {
-      this.axios.get("/api/studentInfo/url").then(
+      this.axios.get("/api/studentInfo/student/url").then(
           (res) => {
             if (res.data.data) {
               this.url = res.data.data;
@@ -44,7 +44,6 @@ export default {
           }
       ).catch(() => this.url = "数据获取出错")
     },
-
   },
   mounted() {
     this.getUrl();

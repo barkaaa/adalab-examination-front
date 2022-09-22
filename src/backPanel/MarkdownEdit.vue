@@ -22,17 +22,12 @@ export default {
     async submit() {
       let content = this.contentEditor.getValue();
       // 保存文件到云端
-      let res = await this.axios.put("/api/oss/saveMarkdown", {
-        content
+      let res = await this.axios.put("/api/episode/saveMarkdown", {
+        file: content,
+        id: this.$route.params.stage
       })
-      let markdownUrl = res.data.url;
 
-      let id = this.$route.params.stage;
-      // 修改数据库记录
-      let r = await this.axios.patch("/api/episode/updateChallengeInfo", {
-        id, markdownUrl
-      })
-      this.$message.success(r.data.message);
+      this.$message.success(res.data.message);
       this.$router.push("/backpanel/missionManagement")
     },
 
