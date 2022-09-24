@@ -1,65 +1,4 @@
 <template>
-  <!-- 手搓模态2 -->
-  <div id="folderList" class="modal-window">
-    <div>
-      <a href="#" title="Close" class="modal-close">Close</a>
-      <div>
-        <a href="#fileList" v-for="(value,key) in file" @click="changeClickKey(key)">
-          <file-card v-bind:folderName="key">
-          </file-card>
-        </a>
-      </div>
-    </div>
-  </div>
-  <!-- 手搓模态2 -->
-  <!-- 手搓模态3 -->
-  <!-- v-bind:fileName="[key,value,this.clickedName,this.clickedStep]" -->
-  <div id="fileList" class="modal-window">
-    <div class="modal-container">
-      <a href="#" title="Close" class="modal-close">Close</a>
-      <div class="modal-content">
-        <div id="file-list-style">
-          <FilePlugin
-              v-bind:fileName="[clickKey,file[clickKey],this.clickId,this.clickedStep]"
-              @giveFather="getSon"
-          >
-          </FilePlugin>
-
-        </div>
-        <div>
-          <p>{{ fileContent }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- 手搓模态3 -->
-  <!-- item.clear -->
-  <div id="open-modal" class="modal-window">
-    <div>
-      <a href="#" title="Close" class="modal-close">Close</a>
-      <div>
-        <!-- 提交表 -->
-        <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table">
-          <template #columns>
-            <a-table-column title="测评结果">
-              <template #cell="{ record }">
-                <!-- :status="[record.curEpisode<9 ? 'success':'error']" -->
-                <!-- <a-result status="success" style="width:1vw; " ></a-result> -->
-                <div :class="[Number(record.curEpisode)>Number(record.episode) ? 'success':'fail']"></div>
-                <!-- {{record.curEpisode+"/"+record.episode}} -->
-                <!-- <a-button href="#open-modal">删除</a-button> -->
-              </template>
-            </a-table-column>
-            <a-table-column title="commitID&Link" data-index="link"></a-table-column>
-            <a-table-column title="关卡" data-index="episode"></a-table-column>
-            <a-table-column title="提交时间" data-index="commitTime"></a-table-column>
-            <a-table-column title="当前关卡" data-index="curEpisode"></a-table-column>
-          </template>
-        </a-table>
-      </div>
-    </div>
-  </div>
-
   <!-- 模态框组件 -->
   <a-modal v-model:visible="visible" @ok="handleOk" :hide-cancel="true" :closable="false">
     <template #title>{{ tData.name + "的详细信息" }}</template>
@@ -75,26 +14,38 @@
     </a-descriptions>
   </a-modal>
 
+
   <!-- 模态框组件 -->
   <a-modal v-model:visible="vis" @ok="hOk" :hide-cancel="true" :closable="false">
-    <template #title>{{ dList.name + "的问卷结果" }}</template>
+    <template #title>{{ curName + "的问卷结果" }}</template>
     <a-list :size="sizes">
-      <a-list-item v-for="item of dList.list">
-        {{ item }}
-      </a-list-item>
+      <a-table :columns="quesColumns" :data="stuList">
+        <template #optional="{ record }">
+          <a-button @click="handleDetailClick(curId,record.id)">Open Modal</a-button>
+          <a-modal v-model:visible="detailVis" @ok="handleDetailOk" >
+
+              <a-table :columns="replyColumns" :data="replyList"/>
+
+          </a-modal>
+        </template>
+      </a-table>
     </a-list>
   </a-modal>
 
-  <!-- 模态框组件 -->
 
-  <a-menu mode="horizontal" v-model:selected-keys="selectedKeys" :default-selected-keys="['3']">
-    <a-menu-item key="1" @click="handleWeek">七日数据</a-menu-item>
-    <a-menu-item key="2" @click="handlePass">通关数据</a-menu-item>
-    <a-menu-item key="3" @click="handleAll">全部数据</a-menu-item>
+  <body>
+  <a-menu mode="horizontal" v-model:selected-keys="selectedKeys" :default-selected-keys="['1']"
+          :style="{ top: '0px' ,width:'100%',fontSize:'24px'}">
+    <a-menu-item key="1" @click="handleWeek" :style="{height:'38px',marginRight:'50px',marginLeft:'50px'}">七日数据
+    </a-menu-item>
+    <a-menu-item key="2" @click="handlePass" :style="{height:'38px',marginRight:'50px',marginLeft:'50px'}">通关数据
+    </a-menu-item>
+    <a-menu-item key="3" @click="handleAll" :style="{height:'38px',marginRight:'50px',marginLeft:'50px'}">全部数据
+    </a-menu-item>
   </a-menu>
 
   <div class="list">
-    <div id="bigContainer" v-for="(item) in users">
+    <div id="bigContainer" v-for="(item) in users" :key="item">
       <p class="studentName">{{ item.name }}</p>
       <!-- <a class="btn" href="#open-modal"><p>{{ item.name }}</p></a> -->
       <div
@@ -106,23 +57,24 @@
           align-items: center;
         "
       >
-        <div
-            v-for="count in this.trueEpisodeNum"
-            class="dot"
-            :class="[count <= item.episode ? 'statusGreen' : 'statusNormal']"
-            @click="getLocalPersonelInfo(item, count)"
-        >
-          <a href="#folderList"><p class="number">{{ count }}</p></a>
-        </div>
+        <a-popover title="提交记录地址" trigger="click" v-for="n in trueEpisodeNum" :key="n">
+          <a-button @click="clickStuEp(item,n)" shape="circle" :style="item.episode<n?'':
+          'box-shadow: 0 0 15px 2px #18d047' ">
+            {{ n }}
+          </a-button>
+          <template #content>
+            <a :href="codeLink" v-if="codeLink"><p>点击跳转仓库</p></a>
+            <p v-else>没有提交记录/非测试代码关卡</p>
+          </template>
+        </a-popover>
+
 
       </div>
       <div class="btn"
            style="align-items: center; display: flex; justify-content: center">
-        <a href="#open-modal" @click="getTableData(item)">
-          <icon-history :style="[{ fontSize: '25px' }, { color: 'grey' }]"/>
-        </a>
-        <icon-pen-fill @click="questionnaireDetails(item.id)" :style="[{ fontSize: '25px' }, { color: 'grey' }]"/>
-        <icon-user @click="handleClick(item.name)" :style="[{ fontSize: '25px' }, { color: 'grey' }]"/>
+        <icon-pen-fill @click="questionnaireList(item.id,item.name)"
+                       :style=" {fontSize:'25px' ,color: 'grey',marginRight:'10px'} "/>
+        <icon-user @click="handleClick(item.name)" :style=" {fontSize:'25px' ,color: 'grey',marginRight:'10px'}"/>
         <a :href="'https://' + item.name + '.github.io'">
           <icon-desktop :style="[{ fontSize: '25px' }, { color: 'grey' }]"/>
         </a>
@@ -135,16 +87,16 @@
     <li><a href="#" @click="getPreviousPage" v-if="page>1">«上一页</a></li>
     <li><a href="#" @click="getNextPage" v-if="page<totalPage">下一页»</a></li>
   </ul>
-
+  </body>
 
 </template>
 
 <script>
-import {IconDesktop, IconHistory, IconPenFill, IconUser} from "@arco-design/web-vue/es/icon";
+import {IconDesktop, IconPenFill, IconUser} from "@arco-design/web-vue/es/icon";
 import {getCurrentInstance, ref} from "vue";
 import {Icon} from '@arco-design/web-vue';
-import FilePlugin from "./FilePlugin.vue";
-import FileCard from "@/components/FolderPlugin";
+import BackTemplate from "@/backPanel/BackTemplate";
+
 
 const IconFont = Icon.addFromIconFontCn({src: 'https://at.alicdn.com/t/c/font_3611034_pmqkuts7v7b.js'});
 export default {
@@ -153,25 +105,18 @@ export default {
     // users: Array,
     pageNum: Number,
     step: Number,
-    fileSrc: Array,
   },
   data() {
     return {
-      clickId: '',
-      clickKey: 0,
-      clickedName: "",
-      clickedStep: "",
-      fileContent: "双击左侧显示内容哦",
       selectedKeys: [],
-      file: [],
       trueEpisodeNum: 0,
       page: 1,
       totalPage: 0,
       users: [],
-      allUsrFile: [{}, {}],
+      codeLink: '',
       columns: [
         {
-          title: '测评？果',
+          title: '测评结果',
           slotName: 'cell'
         },
         {
@@ -190,22 +135,30 @@ export default {
           dataIndex: 'curEpisode',
         }
       ],
+      quesColumns: [{
+        title: '问卷',
+        dataIndex: 'name',
+      }, {
+        title: 'Optional',
+        slotName: 'optional'
+      }],
+      replyColumns: [
+        {
+          title:'问题',
+          dataIndex: 'theme',
+        },
+        {
+          title: '回答',
+          dataIndex: 'reply',
+        }],
       pagination: {
         pageSize: 8,
       },
       tableData: [12, 123123, 1231231],
       mydata: [],
-
     };
   },
   methods: {
-    getSon(fileContent) {
-      this.fileContent = fileContent;
-    },
-
-    changeClickKey(key) {
-      this.clickKey = key;
-    },
     handleAll() {
       this.page = 1;
       this.getPage();
@@ -221,16 +174,19 @@ export default {
       this.getPassData();
       await this.getPassPage();
     },
+
     getWeekData() {
       this.axios.get(`/api/studentInfo/getWeekData/${this.page}`).then((res) => {
         this.users = res.data.data;
       })
     },
+
     getPassData() {
       this.axios.get(`/api/studentInfo/getPass`, {
         params: {
           page: this.page,
-          episode: this.trueEpisodeNum
+          episode: this.trueEpisodeNum,
+          size: this.pagination.pageSize
         }
       }).then((res) => {
         this.users = res.data.data;
@@ -238,91 +194,85 @@ export default {
     },
 
     async getWeekPage() {
-      let res = await this.axios.get(`/api/studentInfo/getWeekPage/14`);
+      let res = await this.axios.get(`/api/studentInfo/getWeekPage/${this.pagination.pageSize}`);
       this.totalPage = res.data;
     },
+
     async getPassPage() {
       let res = await this.axios.get(`/api/studentInfo/getPassedPage`, {
         params: {
-          page: 14,
-          episode: this.trueEpisodeNum
+          page: this.pagination.pageSize,
+          episode: this.trueEpisodeNum,
         }
       });
       this.totalPage = res.data;
     },
 
-    getLocalPersonelInfo(user, level) {
-      if (this.allUsrFile[user.id + ""] !== undefined) {
-        if (this.allUsrFile[user.id + ""]["step" + level] !== undefined) {
-          this.file = this.allUsrFile[user.id + ""]["step" + level];
-          this.clickedName = user.name;
-          this.clickId = user.id;
-          this.clickedStep = "step" + level;
-        } else {
-          this.file = undefined;
-          this.clickedName = "";
-          this.clickedStep = "";
-        }
-      } else {
-        this.file = undefined;
-        this.clickedName = "";
-        this.clickedStep = "";
-      }
-    },
-    onClickMenuItem(key) {
-      this.$router.push(key);
-    },
-    getTableData(item) {
-      const url = `/api/studentInfo/getSubmission/${item.id}`
-      this.axios
-          .get(url)
-          .then((res) => {
-            this.tableData = res.data.data;
-          });
-    },
     getPreviousPage() {
-
       this.page--;
       if (this.selectedKeys[0] === '1') {
-        this.getWeekData()
+        this.getWeekData();
       } else if (this.selectedKeys[0] === '2') {
-        this.getPassData()
+        this.getPassData();
       } else {
         this.getPage();
       }
     },
+
     getNextPage() {
       if (this.page < this.totalPage) {
         this.page++;
         if (this.selectedKeys[0] === '1') {
-          this.getWeekData()
+          this.getWeekData();
         } else if (this.selectedKeys[0] === '2') {
-          this.getPassData()
+          this.getPassData();
         } else {
           this.getPage();
         }
       }
     },
+    clickStuEp(stu, ep) {
+      this.axios.get('/api/code/getRev', {
+        params: {
+          ep: ep,
+          stu: stu.id
+        }
+      }).then(res => {
+        if (res.data.data) {
+          let url;
+          if (stu.webPage.endsWith('/')) {
+            url = stu.webPage.substr(0, stu.webPage.length)
+          } else {
+            url = stu.webPage
+          }
+          this.codeLink = url + '/tree/' + res.data.data;
+          console.log(this.codeLink);
+        } else {
+          this.codeLink = ''
+        }
+      })
+    },
+
     getTotalPage() {
-      const url = `/api/studentInfo/getTotalPages/14`
+      const url = `/api/studentInfo/getTotalPages/${this.pagination.pageSize}`
       this.axios
           .get(url)
           .then((res) => {
             this.totalPage = res.data.data;
           });
     },
+
     getPage() {
-      this.axios.get(`/api/studentInfo/getPagingRanking/${this.page}`)
-          .then(res => {
-            this.users = res.data.data;
-          });
+      this.axios.get(`/api/studentInfo/getPagingRanking`, {
+        params: {
+          size: this.pagination.pageSize,
+          page: this.page
+        }
+      }).then(res => {
+        this.users = res.data.data;
+      });
     },
-    getAll() {
-      this.axios.get(`/api/studentInfo/studentCode/FilesTree`)
-          .then(res => {
-            this.allUsrFile = res.data.data;
-          });
-    },
+
     getCounts() {
       this.axios.get('/api/episode/student/counts')
           .then(res => {
@@ -332,30 +282,32 @@ export default {
 
   },
   created() {
-
     this.getPage();
-    this.getAll();
     this.getCounts();
   },
 
   setup() {
     let currentInstance = getCurrentInstance();
     const {axios} = currentInstance.appContext.config.globalProperties;
-    let dList = ref([]);
+    let stuList = ref([]);
+    let replyList = ref([]);
     const vis = ref(false);
+    const detailVis = ref(false);
+    const curName = ref('');
+    const curId = ref('');
     const sizes = ref('large');
     const hOk = () => {
       vis.value = false;
     }
-    const questionnaireDetails = (id) => {
+    const questionnaireList = (id, name) => {
       vis.value = true;
-      axios.get("/api/reply/getReply/" + id).then((res) => {
-        dList.value = res.data.data;
-        // list.map((item) => {
-        //   item.value = tData.value[item.label];
-        // })
+      curName.value = name;
+      curId.value = id;
+      axios.get(`/api/ques/getStuList/${id}`).then((res) => {
+        stuList.value = res.data.data;
       });
     }
+
 
     let tData = ref({});
     const visible = ref(false);
@@ -364,6 +316,7 @@ export default {
     const align = {
       value: 'right'
     }
+
     const handleClick = (name) => {
       visible.value = true;
       axios.post("/api/studentInfo/getDetail", {name}).then((res) => {
@@ -373,9 +326,29 @@ export default {
         })
       });
     }
+
+    const handleDetailClick = (stuId, episodeId) => {
+      detailVis.value = true;
+      axios.get(`/api/reply/getReply`, {
+        params: {
+          stu: stuId,
+          ques: episodeId
+        }
+      }).then((res) => {
+        replyList.value = res.data.data;
+        console.log(replyList.value);
+      })
+
+    }
+
     const handleOk = () => {
       visible.value = false;
     }
+
+    const handleDetailOk = () => {
+      detailVis.value = false;
+    }
+
     const list = [{
       label: 'status',
       value: "",
@@ -408,26 +381,30 @@ export default {
     return {
       visible,
       handleClick,
+      handleDetailClick,
       handleOk,
+      handleDetailOk,
       tData,
       list,
       size,
       align,
-      dList,
+      stuList,
+      replyList,
       vis,
       hOk,
       sizes,
-      questionnaireDetails
+      questionnaireList,
+      curName,
+      detailVis,
+      curId
     }
   },
 
   components: {
-    FileCard,
+    BackTemplate,
     IconUser,
     IconFont,
-    FilePlugin,
     IconPenFill,
-    IconHistory,
     IconDesktop
   },
 };
@@ -448,8 +425,12 @@ export default {
   font-size: 14px !important;
 }
 
-html {
-  scrollbar-width: none;
+
+body {
+  margin-top: -50px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
 }
 
 a {
@@ -460,19 +441,14 @@ a {
   box-sizing: border-box;
 }
 
-/* template{
-  text-align: center;
-} */
 
 .list {
   overflow: scroll;
   overflow-x: hidden;
   /* width:50%;
   height:50%; */
-  padding-left: 5vw;
-  padding-right: 5vw;
-  padding-top: 10vw;
-  padding-bottom: 5vh;
+  padding: 10vw 5vw 5vh;
+  margin-top: -15vh;
 }
 
 .list::-webkit-scrollbar {
@@ -485,33 +461,6 @@ a {
   text-align: center;
 }
 
-/* a-progress{
-  text-align: center;
-  size: large;
-
-} */
-
-.modal-window {
-  position: fixed;
-  /* background-color: rgba(255, 255, 255, 0.25); */
-  background-color: rgba(0, 0, 0, 0.25);
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 999;
-  visibility: hidden;
-  opacity: 0;
-  pointer-events: none;
-  -webkit-transition: all 0.3s;
-  transition: all 0.3s;
-}
-
-.modal-window:target {
-  visibility: visible;
-  opacity: 1;
-  pointer-events: auto;
-}
 
 .modal-window > div {
   width: 80vw;
@@ -534,28 +483,8 @@ a {
   margin: 0 0 15px;
 }
 
-.modal-close {
-  color: #aaa;
-  line-height: 50px;
-  font-size: 80%;
-  position: absolute;
-  right: 0;
-  text-align: center;
-  top: 0;
-  width: 70px;
-  text-decoration: none;
-}
-
-.modal-close:hover {
-  color: black;
-}
-
 a-steps {
   display: flex;
-}
-
-.a-step {
-  background-color: black;
 }
 
 .dot {
@@ -573,45 +502,28 @@ icon-history {
   size: 30px;
 }
 
-/* .dotContainer{
-  display: flex;
-  flex-direction: row;
-} */
-/* 状态 */
-.statusGreen {
-  background-color: rgba(4, 101, 17, 0.51);
-}
 
 #bigContainer {
   display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
 }
 
 .dots {
   flex: 2;
-  border-style: solid;
-  border: #aaa;
+  border: solid #aaa;
 }
 
 .studentName {
   flex: 1;
 }
 
+
 .btn {
   flex: 1;
 }
 
 /*  */
-.trigger-demo-nest {
-  padding: 10px;
-  width: 200px;
-  background-color: var(--color-bg-popup);
-  border-radius: 4px;
-  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.15);
-}
-
-.trigger-demo-nest-popup-content {
-  text-align: right;
-}
 
 .number {
   color: rgba(0, 0, 0, 0.5);
@@ -622,18 +534,15 @@ a-steps {
 }
 
 /* 页码 */
-ul.pagination {
-  display: inline-block;
-  padding-left: 590px;
-  /* padding: 0px; */
-  margin: 0;
+.pagination {
+  margin: 0 auto;
 }
 
-ul.pagination li {
+.pagination li {
   display: inline;
 }
 
-ul.pagination li a {
+.pagination li a {
   color: black;
   float: left;
   padding: 8px 16px;
@@ -643,51 +552,14 @@ ul.pagination li a {
   margin: 0 4px;
 }
 
-.modal-container {
-  display: flex;
-}
-
-.modal-content {
-  display: flex;
-  flex-direction: row;
-}
-
-ul.pagination li a.active {
-  background-color: #4CAF50;
-  color: white;
-  border: 1px solid #4CAF50;
-}
-
-
-ul.pagination li a:hover:not(.active) {
-  background-color: #ddd;
-}
 
 /* 页码 */
 a-result {
   width: 5px;
+
 }
 
 /*  */
-.success {
-  background-color: #4CAF50;
-  width: 10px;
-  height: 10px;
-}
-
-.fail {
-  background-color: red;
-  width: 10px;
-  height: 10px;
-}
-
-.success-text {
-  display: inline
-}
-
-.fail-text {
-  display: none;
-}
 
 /*  */
 

@@ -2,7 +2,7 @@
   <a-layout class="layout-demo">
     <a-layout>
       <a-layout-content class="content">
-        <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table">
+        <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table" >
           <template #header="{record}">
             <!--            <a-switch checked-color="#046511" unchecked-color="#E3E3EC" :disabled="true"-->
             <!--                      :default-checked="record.episode>=10"/>-->
@@ -108,27 +108,35 @@ export default {
         {
           title: 'Header',
           slotName: 'header',
+          align: 'center'
         }, {
           title: '姓名',
           dataIndex: 'name',
+          align: 'center'
         }, {
           title: '在职？',
           dataIndex: 'isWork',
+          align: 'center'
         }, {
           title: '年龄',
           dataIndex: 'age',
+          align: 'center'
         }, {
           title: '电话',
           dataIndex: 'tel',
+          align: 'center'
         }, {
           title: '当前进度',
           dataIndex: 'episode',
+          align: 'center'
         }, {
           title: '链接-详情、网页',
           dataIndex: 'webPage',
+          align: 'center'
         }, {
           title: 'Details',
-          slotName: 'option'
+          slotName: 'option',
+          align: 'center'
         }],
       tableData: [],
       pagination: {
@@ -194,6 +202,5 @@ export default {
 .table {
   width: 80%;
   margin: 5vh auto 5vh;
-
 }
 </style>

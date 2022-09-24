@@ -1,7 +1,6 @@
 import Home from "@/views/Home";
 import Login from "@/views/Login";
 
-import Ranking from "@/views/Ranking";
 import Student from "@/views/StudentLogin";
 import {createRouter, createWebHistory} from "vue-router";
 import RankingList from "./backPanel/RankingList.vue";
@@ -34,11 +33,6 @@ const routes = [
         path: "/student",
         name: "StudentLogin",
         component: Student,
-    },
-    {
-        path: "/ranking",
-        name: "Ranking",
-        component: Ranking,
     },
     {
         path: "/setRepo",

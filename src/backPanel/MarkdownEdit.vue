@@ -26,15 +26,19 @@ export default {
         file: content,
         id: this.$route.params.stage
       })
+      if(res.data.status===200){
+        this.$message.success(res.data.message);
+      }else {
+        this.$message.error(res.data.message);
+      }
 
-      this.$message.success(res.data.message);
       this.$router.push("/backpanel/missionManagement")
     },
 
   },
   async mounted() {
     // 根据题号获取url
-    const res = await this.axios.get("/api/episode/getOne", {
+    const res = await this.axios.get("/api/episode/student/getOne", {
       params: {
         id: this.$route.params.stage,
       }
@@ -57,7 +61,6 @@ export default {
         enable: false,
       },
       upload: {
-
         url: '/api/oss/uploadFiles',   // 上传url
         linkToImgUrl: '/api/oss/uploadFiles',
         fieldName: 'file',
