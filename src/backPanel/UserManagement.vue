@@ -2,7 +2,7 @@
   <a-layout class="layout-demo">
     <a-layout>
       <a-layout-content class="content">
-        <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table" >
+        <a-table :columns="columns" :data="tableData" :column-resizable="true" :pagination="pagination" class="table">
           <template #header="{record}">
             <!--            <a-switch checked-color="#046511" unchecked-color="#E3E3EC" :disabled="true"-->
             <!--                      :default-checked="record.episode>=10"/>-->
@@ -11,32 +11,74 @@
             <icon-exclamation-circle-fill :style="{fontSize:'32px',color:'red'}" :stroke-width="2" v-else/>
           </template>
           <template #option="{ record }">
-            <a-button @click="handleClick(record.name)">
+            <a-button @click="handleClick(record)">
               <icon-list :size="20"/>
             </a-button>
           </template>
         </a-table>
         <a-modal v-model:visible="visible" @ok="handleOk" :footer="false" :hide-cancel="true" :closable="false">
           <template #title>
-            {{ tData.name + "的详细信息" }}
-          </template>
-          <a-descriptions style="margin-top: 20px" :data="list" :column="1" :align="align" :size="size">
-            <a-descriptions-item v-for="item of list" :label="item.label">
-              <template #label>
-                <icon-font :type="item.cName" :size="20" style="vertical-align: middle">
-                </icon-font>
-                {{ item.label }}
+            {{ selectName + "的详细信息" }}
+            <a-popover position="bl">
+              <a-button class="button" style="background: white">
+                <template #icon>
+                  <icon-settings/>
+                </template>
+              </a-button>
+              <template #content>
+                <p>添加或删除问卷绑定标签</p>
+                <div class="tag_box">
+                  <a-tag
+                      v-for="tag of tags"
+                      style="margin-bottom: 5px"
+                      :key="tag"
+                      :closable="true"
+                      @close="handleRemove(tag)"
+                  >
+                    {{ tag.tag }}
+                  </a-tag>
+
+                  <a-input
+                      v-if="showInput"
+                      ref="inputRef"
+                      :style="{ width: '90px'}"
+                      size="mini"
+                      v-model.trim="inputVal"
+                      @keyup.enter="handleAdd"
+                      @blur="handleAdd"
+                  />
+                  <a-tag
+                      v-else
+                      @click="handleEdit"
+                  >
+                    <template #icon>
+                      <icon-plus/>
+                    </template>
+                    Add Tag
+                  </a-tag>
+                </div>
               </template>
-              <a-tag>{{ item.value }}</a-tag>
-            </a-descriptions-item>
-          </a-descriptions>
+            </a-popover>
+          </template>
+          <a-list>
+            <template #header>
+              Tags
+            </template>
+            <a-list-item v-for="item in tagList" :key="item.tag">
+              <a-space size="large">
+                <a-tag style="min-width: 100px;">{{ item.tag }}</a-tag>
+                <a-tag>{{ item.info }}</a-tag>
+              </a-space>
+            </a-list-item>
+
+          </a-list>
         </a-modal>
       </a-layout-content>
     </a-layout>
   </a-layout>
 </template>
 <script>
-import {getCurrentInstance, ref} from "vue";
+import {getCurrentInstance, ref, nextTick} from "vue";
 import {Icon} from '@arco-design/web-vue';
 import {IconCheckCircleFill, IconExclamationCircleFill, IconList} from '@arco-design/web-vue/es/icon';
 
@@ -47,59 +89,93 @@ export default {
     const visible = ref(false);
     const size = ref('large');
     let currentInstance = getCurrentInstance();
+    let tagList = ref([]);
+    let tags = ref([]);
+    let selectName = ref();
+    const inputRef = ref(null);
+    const showInput = ref(false);
+    const inputVal = ref('');
     const {axios} = currentInstance.appContext.config.globalProperties
     const align = {
       value: 'right'
     }
-    const handleClick = (name) => {
+    const handleClick = async (stu) => {
+      getTags();
+      selectName.value = stu.name;
+      let res = await axios.get(`/api/tag/getStuTagInfo/${stu.id}`);
+      tagList.value = res.data.data;
+      tagList.value.push({tag: 'create_date', info: stu.createdDate});
+      tagList.value.push({tag: 'begin_date', info: stu.beginDate});
+      tagList.value.push({tag: 'lastEdited', info: stu.lastEdited});
       visible.value = true;
-      axios.post("/api/studentInfo/getDetail", {name}).then((res) => {
-        tData.value = res.data.data;
-        list.map((item) => {
-          item.value = tData.value[item.label];
-        })
-      });
     }
     const handleOk = () => {
       visible.value = false;
     }
-    const list = [{
-      label: 'status',
-      value: "",
-      cName: "icon-sort",
-    }, {
-      label: 'Days needed',
-      value: '',
-      cName: "icon-arrows-alt",
-    }, {
-      label: 'Actual Days',
-      value: '',
-      cName: "icon-arrows-alt",
-    }, {
-      label: 'Date Created',
-      value: '',
-      cName: "icon-shijian",
-    }, {
-      label: 'Last Edited',
-      value: '',
-      cName: "icon-shijian",
-    }, {
-      label: 'Current Week',
-      value: '',
-      cName: "icon-accesskeys",
-    }, {
-      label: 'Type',
-      value: '',
-      cName: "icon-sort",
-    }];
+
+    const getTags = async () => {
+       let res = await axios.get("/api/tag/tags");
+      tags.value=res.data.data;
+    }
+
+    const handleEdit = () => {
+      showInput.value = true;
+
+      nextTick(() => {
+        if (inputRef.value) {
+          inputRef.value.focus();
+        }
+      });
+    };
+
+    const handleAdd = async () => {
+      if (inputVal.value) {
+        await axios.get("/api/tag/create", {
+          params: {
+            name:inputVal.value
+          }
+        })
+       getTags();
+        inputVal.value = '';
+      }
+      showInput.value = false;
+    };
+
+    const handleRemove = async (key) => {
+      axios.delete(`/api/tag/delete/${key.id}`);
+    };
+    const list = [
+      {
+        label: 'Date Created',
+        value: '',
+        cName: "icon-shijian",
+      }, {
+        label: 'Begin Date',
+        value: '',
+        cName: "icon-shijian",
+      }, {
+        label: 'Last Edited',
+        value: '',
+        cName: "icon-shijian",
+      }];
     return {
       visible,
       handleClick,
       handleOk,
+      handleAdd,
+      handleEdit,
+      handleRemove,
       tData,
       list,
       size,
-      align
+      align,
+      tagList,
+      selectName,
+      inputRef,
+      inputVal,
+      showInput,
+      tags,
+      getTags
     }
   },
   data() {
@@ -112,18 +188,6 @@ export default {
         }, {
           title: '姓名',
           dataIndex: 'name',
-          align: 'center'
-        }, {
-          title: '在职？',
-          dataIndex: 'isWork',
-          align: 'center'
-        }, {
-          title: '年龄',
-          dataIndex: 'age',
-          align: 'center'
-        }, {
-          title: '电话',
-          dataIndex: 'tel',
           align: 'center'
         }, {
           title: '当前进度',
@@ -202,5 +266,10 @@ export default {
 .table {
   width: 80%;
   margin: 5vh auto 5vh;
+}
+
+.tag_box {
+  display: flex;
+  flex-direction: column;
 }
 </style>

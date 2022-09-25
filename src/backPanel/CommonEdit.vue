@@ -11,7 +11,7 @@
           width: 100%;
         "
 
-               v-model="missions.name" :placeholder="missions.name? missions.name:'请输入问卷名'"/>
+             v-model="missions.name" :placeholder="missions.name? missions.name:'请输入问卷名'"/>
       <a-divider :margin="0"></a-divider>
       <a-layout>
         <a-layout-content style="padding: 30px">
@@ -51,32 +51,41 @@
                   <template #title>题号{{ index + 1 }}</template>
                   <div style="display: flex; flex-direction: column">
                     题型
-                    <a-select
-                        :default-value="question.questionType"
-                        v-model="changeTypeMark"
+                    <select
+                        v-model="question.questionType"
                         :style="{ width: '320px' }"
                     >
-                      <a-option>填空</a-option>
-                      <a-option>选择</a-option>
-                    </a-select>
+                      <option :selected="question.questionType===1" :value="1">填空</option>
+                      <option :selected="question.questionType===2" :value="2">选择</option>
+                    </select>
                     <a-divider/>
+
+                    绑定字段
+                    <select
+                        v-model="question.binding"
+                        :style="{ width: '320px' }"
+                    >
+                      <option v-for="tag in tags" :value="tag.id" :key="tag.id">{{tag.tag}}</option>
+                    </select>
+                    <a-divider/>
+
                     问题描述
                     <a-textarea v-model="question.description" auto-size/>
-                    <div v-if="changeTypeMark == '选择'">
+                    <div v-if="question.questionType === 2">
                       <a-divider/>
                       选择题选项
                       <div
-                          v-for="index in changeOptionsMark"
+                          v-for="(content,index) in question.options"
                           v-bind:key="index"
                       >
-                        {{ alphabet[index - 1] }}.
+                        {{ alphabet[index] }}.
                         <a-textarea
-                            v-model="changeChoices[index - 1]"
+                            v-model="question.options[index]"
                             auto-size
                         />
                       </div>
-                      <a-button @click="addOptionsMark">添加选项</a-button>
-                      <a-button @click="minusOptionsMark">减少选项</a-button>
+                      <a-button @click="addOptionsMark(index)">添加选项</a-button>
+                      <a-button @click="minusOptionsMark(index)">减少选项</a-button>
                       <a-divider/>
                       <a-space direction="vertical" size="large">
                         是否为多选
@@ -95,7 +104,7 @@
                 </a-modal>
                 <div style="font-size: 20px; text-align: left">
                   <span style="color: rgb(90, 160, 160)">题型：</span
-                  >{{ question.questionType }}
+                  >{{ question.questionType === 1 ? "填空" : "选择" }}
                 </div>
                 <a-divider/>
                 <div
@@ -113,7 +122,7 @@
                   {{ question.description }}
                 </div>
                 <a-collapse
-                    v-if="question.questionType == '选择'"
+                    v-if="question.questionType === 2"
                     :bordered="false"
                 >
                   <a-collapse-item header="展开选项">
@@ -142,8 +151,8 @@
                       :style="{ width: '320px' }"
                       placeholder="选择问题类型 ..."
                   >
-                    <a-option>填空</a-option>
-                    <a-option>选择</a-option>
+                    <a-option :value="1">填空</a-option>
+                    <a-option :value="2">选择</a-option>
                   </a-select>
                   问题描述
                   <a-textarea
@@ -151,7 +160,7 @@
                       default-value=""
                       auto-size
                   />
-                  <div v-show="isChoose == '选择'">
+                  <div v-show="isChoose === 2">
                     选择题选项
                     <div v-for="index in choicesNumber" v-bind:key="index">
                       {{ alphabet[index - 1] }}.
@@ -211,7 +220,7 @@ export default defineComponent({
         "Y",
         "Z",
       ],
-      id:''
+      id: ''
     };
   },
   components: {},
@@ -223,33 +232,37 @@ export default defineComponent({
       if (!this.$route.params.ques) {
         return;
       }
-      this.id=this.$route.params.ques;
-      this.missions.id=this.$route.params.ques;
-      this.missions.name=this.$route.params.name;
+      this.id = this.$route.params.ques;
+      this.missions.id = this.$route.params.ques;
+      this.missions.name = this.$route.params.name;
+      this.axios.get('/api/tag/tags').then((res) => {
+        this.tags=res.data.data;
+      });
       let r = await this.axios.get(`/api/ques/student/getone/${this.$route.params.ques}`);
       const rData = r.data.data;
 
 
       for (let i = 0; i < rData.length; i++) {
         this.missions.textContents.push({
+          id: "",
           questionType: "",
           description: "",
           isAdditional: "",
           isMultiple: "",
+          binding: "",
           options: [],
         });
+        this.missions.textContents[i].id = rData[i].id;
         this.missions.textContents[i].description = rData[i].theme;
         this.missions.textContents[i].isAdditional = rData[i].isAdditional;
         this.missions.textContents[i].isMultiple = rData[i].isMultiple;
+        this.missions.textContents[i].questionType = rData[i].questionType;
+        if (rData[i].binding) {
+          this.missions.textContents[i].binding = rData[i].binding;
+        }
         this.missions.textContents[i].options = rData[i].options
             .split("?")
             .slice(0, -1);
-        const type = rData[i].questionType;
-        if (type == 2) {
-          this.missions.textContents[i].questionType = "选择";
-        } else {
-          this.missions.textContents[i].questionType = "填空";
-        }
       }
     },
     onClickMenuItem(key) {
@@ -285,7 +298,7 @@ export default defineComponent({
     var changeOptionsMark = ref();
     var changeChoices = ref([]);
     var changeDescription = ref();
-
+    var tags = ref([]);
     const deepCopy = (obj) => {
       if (typeof obj != "object") {
         return obj;
@@ -310,7 +323,7 @@ export default defineComponent({
     };
     const handleClick2 = () => {
       visible2.value = true;
-      choicesNumber.value = 4;
+      isChoose.value = 4;
     };
     const moreDetails = (index, question) => {
       visible3.value[index] = true;
@@ -326,9 +339,9 @@ export default defineComponent({
     };
 
     const OkNewquestion = (done) => {
-      if (isChoose.value == "选择") {
+      if (isChoose.value === 2) {
         missions.textContents.push({
-          questionType: "选择",
+          questionType: 2,
           description: deepCopy(newDescription.value),
           options: arrayDeepCopy(choices.value),
           isMultiple: "false",
@@ -372,13 +385,12 @@ export default defineComponent({
       choicesNumber.value++;
     };
 
-    const addOptionsMark = () => {
-      changeOptionsMark.value++;
+    const addOptionsMark = (index) => {
+      missions.textContents[index].options.push("");
     };
 
-    const minusOptionsMark = () => {
-      changeOptionsMark.value--;
-      changeChoices.value.length = changeChoices.value.length - 1;
+    const minusOptionsMark = (index) => {
+      missions.textContents[index].options.pop();
     };
 
     const saveChange = (question) => {
@@ -411,6 +423,7 @@ export default defineComponent({
       minusOptionsMark,
       confirmDelete,
       episodeAdd,
+      tags
     };
   },
 });

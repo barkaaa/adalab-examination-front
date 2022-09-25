@@ -105,7 +105,7 @@ a {
   border-radius: 15px;
   /* border-top-left-radius: 15px;
   border-bottom-left-radius: 15px; */
-  margin: 0px;
+  margin: 0;
   padding: 0px;
   height: 15px;
 }

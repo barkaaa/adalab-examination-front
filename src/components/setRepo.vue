@@ -1,7 +1,6 @@
 <template>
   <a-space direction="vertical" size="large">
-    <a-input-search :style="{width:'320px'}" v-model="url"
-                    :placeholder="url" button-text="添加" search-button @search="setRepo" :loading="loading"/>
+    <a-input-search :style="{width:'320px'}" v-model="url" button-text="添加" search-button @search="setRepo" :loading="loading" @focus="clear"/>
   </a-space>
 </template>
 
@@ -44,6 +43,10 @@ export default {
           }
       ).catch(() => this.url = "数据获取出错")
     },
+
+    clear(){
+      this.url="";
+    }
   },
   mounted() {
     this.getUrl();

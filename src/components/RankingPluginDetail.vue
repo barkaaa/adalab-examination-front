@@ -75,7 +75,7 @@
         <icon-pen-fill @click="questionnaireList(item.id,item.name)"
                        :style=" {fontSize:'25px' ,color: 'grey',marginRight:'10px'} "/>
         <icon-user @click="handleClick(item.name)" :style=" {fontSize:'25px' ,color: 'grey',marginRight:'10px'}"/>
-        <a :href="'https://' + item.name + '.github.io'">
+        <a :href="item.webPage">
           <icon-desktop :style="[{ fontSize: '25px' }, { color: 'grey' }]"/>
         </a>
       </div>

@@ -77,12 +77,7 @@
       <div class="box">
         <div v-html="content"/>
       </div>
-      <div
-          v-if="cur > totalChallengeNum"
-          style="text-align: center; font-size: 60px; padding: 100px"
-      >
-        您通关了
-      </div>
+
 
       <div class="submit_box">
         <div class="episode_button" v-if="cur.id === user.episode+1||(cur.type===1&&!(submitted))">
@@ -123,6 +118,7 @@ import {IconDoubleRight} from "@arco-design/web-vue/es/icon";
 import {getCookie} from "../utils/Utils";
 import {ref, getCurrentInstance, reactive} from "vue";
 import {Modal} from "@arco-design/web-vue";
+import router from "@/router";
 
 export default {
   name: "Home",
@@ -182,21 +178,15 @@ export default {
     };
 
     const challengeError = (res) => {
-      let errorReason = "";
-      (Object.keys(res)).forEach((key) => {
-        errorReason += key + ":" + res[key] + "-------------------------------------------------------------------- ";
-      })
       Modal.error({
         title: errorMessage.value,
-        content: errorReason
-
+        content: res
       });
     };
 
 
     //更新问卷页面
     const getQuestion = async () => {
-      await sleepFun(1000);
       let r = await axios.get(`/api/ques/student/getone/${cur.value["ques"]}`);
       questions.value = r.data.data;
       initAnswer();
@@ -205,13 +195,16 @@ export default {
     //初始化答案
     const initAnswer = () => {
       for (let i = 0; i < questions.value.length; i++) {
-        onePageAnswers.push({id:questions.value[i].id,fill: "", selectOptions: []});
+        onePageAnswers.push({id:questions.value[i].id,fill: "", selectOptions: [],binding:questions.value[i].binding});
       }
     };
 
     const goNewEp = async (ep) => {
       if (ep > user.value["episode"] + 1) {
         return;
+      }
+      if(ep>totalChallengeNum.value){
+        router.push("/success");
       }
       let res = await axios.get("/api/episode/student/getOne", {
         params: {id: ep},
@@ -222,8 +215,10 @@ export default {
       cur.value["type"] = res.data.data.type;
       cur.value["ques"] = res.data.data.questionnaire;
       if (res.data.data.type === 1) {
+        content.value="";
         getQuestion();
       } else {
+        questions.value=[];
         let url = res.data.data.markdownUrl;
         if (url) {
           let md = (await axios.get(url)).data;
@@ -272,7 +267,7 @@ export default {
     await this.getUserDone();
     await this.getRanking();
     await this.getChallengeNum();
-    await this.goNewEp(this.user["episode"] + 1)
+    await this.goNewEp(Math.min(this.user["episode"] + 1,this.totalChallengeNum))
 
   },
   methods: {

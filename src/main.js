@@ -51,31 +51,35 @@ router.beforeEach((to, form, next) => {
     //如果进入到的路由是前台登录页或者后台登录页面，则正常展示
     axios.get('/api/auth/me').then(
         (res) => {
-            if (to.path === '/login' || to.path === '/student') {
-                next();
-            } else if (res.data.data) {
-                if (res.data.data.role === "root") {
-                    if (/\/backpanel\/[\d\D]*/.test(to.path)) {
-                        next();
-                    } else {
-                        next('/student');
-                    }
-                } else {
-                    if (/\/home\/[\d\D]*/.test(to.path)) {
-                        next();
-                    } else {
-                        next('/login');
-                    }
-                }
-            } else {
-                if (/\/backpanel\/[\d\D]*/.test(to.path)) {
-                    next('/login');
+            let user = res.data.data;
+            if (/\/home[\d\D]*/.test(to.path) || to.path === '/success') {
+                if (user && user.role === 'student') {
+                    next();
                 } else {
                     next('/student');
                 }
-            }
-        }
-    );
+            } else if (/\/backpanel[\d\D]*/.test(to.path)) {
+                if (user && user.role === 'root') {
+                    next();
+                } else {
+                    next('/login');
+                }
+            } else if (to.path === '/login') {
+                if (user && user.role === 'root') {
+                    next('/backpanel');
+                } else {
+                    next();
+                }
 
+            } else if (to.path === '/student' && user && user.role === 'student') {
+                if (user && user.role === 'student') {
+                    next('/home');
+                } else {
+                    next();
+                }
+            }else {
+                next();
+            }
+        });
 
 })

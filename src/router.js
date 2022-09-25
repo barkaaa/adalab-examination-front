@@ -11,9 +11,7 @@ import image from "@/backPanel/imageManager";
 import MissionManagement from "./backPanel/MissionManagement";
 import MarkdownEdit from "@/backPanel/MarkdownEdit";
 import Test from "@/components/episodeMaker"
-import Challenge from "@/views/Challenge";
-import Success from "@/components/Success";
-import YAYTest from "@/components/popOver"
+import SuccessPage from "@/views/Success";
 
 const routes = [
     {
@@ -21,35 +19,24 @@ const routes = [
         redirect: "/student",
     },
     {
-        path: "/success",
-        component: Success
-    },
-    {
         path: "/login",
         name: "Login",
         component: Login,
+    }, {
+        path: "/success",
+        name: "success",
+        component: SuccessPage
     },
+
     {
         path: "/student",
         name: "StudentLogin",
         component: Student,
     },
     {
-        path: "/setRepo",
-        name: "setRepo",
-        component: YAYTest,
-    },
-    {
         path: "/home",
         name: "Home",
         component: Home,
-        redirect: "/home/challenge",
-        children: [
-            {
-                path: "challenge",
-                component: Challenge,
-            },
-        ],
     }, {
         path: "/backpanel",
         component: BackTemplate,
